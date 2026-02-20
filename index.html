@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallio – Never Lose a ChatGPT or Claude Conversation Again</title>
+  <meta name="description" content="Recallio automatically saves and indexes all your AI conversations. Search through your entire ChatGPT and Claude history instantly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #06060f;
+      --surface: #0d0d1a;
+      --surface2: #131320;
+      --border: #1e1e35;
+      --accent: #7c6aff;
+      --accent2: #ff6a9a;
+      --text: #f0f0ff;
+      --text2: #7878aa;
+      --text3: #4444aa;
+      --chatgpt: #10a37f;
+      --claude: #cc785c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Background atmosphere */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -20%;
+      width: 80vw;
+      height: 80vw;
+      background: radial-gradient(circle, rgba(124,106,255,0.07) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%;
+      right: -20%;
+      width: 70vw;
+      height: 70vw;
+      background: radial-gradient(circle, rgba(255,106,154,0.05) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(6,6,15,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    .nav-cta:hover { background: #6b59ff !important; opacity: 1; }
+
+    /* Sections */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124,106,255,0.1);
+      border: 1px solid rgba(124,106,255,0.25);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(44px, 8vw, 86px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      max-width: 900px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    h1 .gradient {
+      background: linear-gradient(135deg, var(--accent) 30%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text2);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      font-weight: 300;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent), #6b59ff);
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 32px rgba(124,106,255,0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(124,106,255,0.45);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text2);
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 400;
+      font-family: 'DM Sans', sans-serif;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .hero-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text3);
+      animation: fadeUp 0.6s ease 0.4s both;
+    }
+
+    /* Mock UI */
+    .hero-visual {
+      margin-top: 60px;
+      width: 100%;
+      max-width: 460px;
+      animation: fadeUp 0.8s ease 0.5s both;
+    }
+
+    .mock-extension {
+      background: #0a0a0f;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,106,255,0.1);
+    }
+
+    .mock-header {
+      background: #12121a;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mock-logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .mock-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .mock-stats {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mock-chip {
+      background: #1a1a26;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mock-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .mock-dot-purple { background: var(--accent); }
+    .mock-dot-green { background: var(--chatgpt); }
+    .mock-dot-orange { background: var(--claude); }
+
+    .mock-search {
+      background: #1a1a26;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px 8px 32px;
+      font-size: 12px;
+      color: var(--text2);
+      position: relative;
+    }
+
+    .mock-filters {
+      display: flex;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #12121a;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mock-filter {
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 10px;
+    }
+
+    .mock-filter-active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .mock-filter-inactive {
+      background: #1a1a26;
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+
+    .mock-results { padding: 8px; }
+
+    .mock-card {
+      background: #12121a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 5px;
+    }
+
+    .mock-card-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+
+    .mock-badge {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .mock-badge-g { background: rgba(16,163,127,0.2); color: var(--chatgpt); }
+    .mock-badge-c { background: rgba(204,120,92,0.2); color: var(--claude); }
+
+    .mock-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .mock-preview {
+      font-size: 10px;
+      color: var(--text2);
+      line-height: 1.4;
+    }
+
+    .mock-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .mock-date, .mock-msgs {
+      font-size: 9px;
+      color: var(--text3);
+    }
+
+    .mock-msgs {
+      background: #1a1a26;
+      border-radius: 8px;
+      padding: 1px 6px;
+    }
+
+    /* Social proof */
+    .social-proof {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px 24px 60px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s ease 0.6s both;
+    }
+
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .proof-icon { font-size: 16px; }
+    .proof-sep { width: 4px; height: 4px; background: var(--border); border-radius: 50%; }
+
+    /* Problem section */
+    .problem {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 60px;
+      max-width: 700px;
+      line-height: 1.1;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .pain-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s;
+    }
+
+    .pain-card:hover { border-color: rgba(124,106,255,0.3); }
+
+    .pain-emoji { font-size: 28px; margin-bottom: 14px; }
+
+    .pain-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .pain-desc { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+    /* Features */
+    .features {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover { border-color: rgba(124,106,255,0.2); transform: translateY(-2px); }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(124,106,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .feature-desc { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+    /* How it works */
+    .how {
+      padding: 100px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: white;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .step-desc { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+    /* Pricing */
+    .pricing {
+      padding: 100px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      text-align: left;
+      transition: border-color 0.2s;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(124,106,255,0.06) 0%, var(--surface) 100%);
+    }
+
+    .pricing-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .pricing-plan {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pricing-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+
+    .pricing-price span {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text2);
+    }
+
+    .pricing-desc {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 24px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text2);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-features li:last-child { border: none; }
+
+    .check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(124,106,255,0.15);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .pricing-btn {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .pricing-btn-primary {
+      background: linear-gradient(135deg, var(--accent), #6b59ff);
+      color: white;
+      box-shadow: 0 4px 20px rgba(124,106,255,0.3);
+    }
+
+    .pricing-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(124,106,255,0.4);
+    }
+
+    .pricing-btn-secondary {
+      background: var(--surface2);
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    .pricing-btn-secondary:hover { border-color: var(--accent); color: var(--text); }
+
+    /* Privacy */
+    .privacy-section {
+      padding: 60px 24px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .privacy-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+    }
+
+    .privacy-icon { font-size: 40px; margin-bottom: 16px; }
+
+    .privacy-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .privacy-desc {
+      color: var(--text2);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .privacy-points {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .privacy-point {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text2);
+    }
+
+    .privacy-check {
+      color: var(--chatgpt);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* CTA */
+    .final-cta {
+      padding: 120px 24px;
+      text-align: center;
+    }
+
+    .final-cta h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .final-cta p {
+      color: var(--text2);
+      font-size: 17px;
+      margin-bottom: 36px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-logo">recallio</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+      <li><a href="#" class="nav-cta">Add to Chrome — Free</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Works on ChatGPT &amp; Claude
+    </div>
+
+    <h1>Never lose an AI<br>conversation <span class="gradient">again.</span></h1>
+
+    <p class="hero-sub">
+      Recallio automatically saves and indexes every ChatGPT and Claude conversation. Search your entire AI history in seconds — completely private, stored only on your device.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Add to Chrome — It's Free
+      </a>
+      <a href="#features" class="btn-secondary">See how it works →</a>
+    </div>
+
+    <p class="hero-note">Free for 50 conversations · No account required · 100% private</p>
+
+    <!-- Mock Extension UI -->
+    <div class="hero-visual">
+      <div class="mock-extension">
+        <div class="mock-header">
+          <div class="mock-logo-row">
+            <span class="mock-logo">recallio</span>
+            <div class="mock-stats">
+              <div class="mock-chip"><span class="mock-dot mock-dot-purple"></span>142 saved</div>
+              <div class="mock-chip"><span class="mock-dot mock-dot-green"></span>89</div>
+              <div class="mock-chip"><span class="mock-dot mock-dot-orange"></span>53</div>
+            </div>
+          </div>
+          <div class="mock-search">🔍 &nbsp;Search your AI conversations…</div>
+        </div>
+        <div class="mock-filters">
+          <span class="mock-filter mock-filter-active">All</span>
+          <span class="mock-filter mock-filter-inactive">ChatGPT</span>
+          <span class="mock-filter mock-filter-inactive">Claude</span>
+        </div>
+        <div class="mock-results">
+          <div class="mock-card">
+            <div class="mock-card-top">
+              <div class="mock-badge mock-badge-g">G</div>
+              <div class="mock-title">Python async/await explained simply</div>
+            </div>
+            <div class="mock-preview">Can you explain async functions in Python like I'm a beginner? I keep getting confused about when to use await...</div>
+            <div class="mock-meta">
+              <span class="mock-date">2h ago</span>
+              <span class="mock-msgs">12 messages</span>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-top">
+              <div class="mock-badge mock-badge-c">C</div>
+              <div class="mock-title">Marketing email for product launch</div>
+            </div>
+            <div class="mock-preview">Write me a compelling email announcing our new SaaS product to existing customers. Tone should be excited but professional...</div>
+            <div class="mock-meta">
+              <span class="mock-date">Yesterday</span>
+              <span class="mock-msgs">8 messages</span>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-top">
+              <div class="mock-badge mock-badge-g">G</div>
+              <div class="mock-title">Negotiating salary tips</div>
+            </div>
+            <div class="mock-preview">I have a job offer for $95k but I was expecting more. How do I negotiate without seeming greedy? The company is a startup...</div>
+            <div class="mock-meta">
+              <span class="mock-date">3 days ago</span>
+              <span class="mock-msgs">6 messages</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social proof -->
+  <div class="social-proof">
+    <div class="proof-item"><span class="proof-icon">⚡</span>Instant search</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item"><span class="proof-icon">🔒</span>100% local storage</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item"><span class="proof-icon">🤖</span>ChatGPT + Claude</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item"><span class="proof-icon">🆓</span>Free to start</div>
+  </div>
+
+  <!-- Problem section -->
+  <section class="problem" id="features">
+    <div class="fade-in">
+      <p class="section-label">The Problem</p>
+      <h2 class="section-title">Sound familiar?</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card fade-in">
+        <div class="pain-emoji">😤</div>
+        <div class="pain-title">"I had an amazing conversation last week…"</div>
+        <div class="pain-desc">You scroll through hundreds of untitled chats labeled "New conversation" trying to find the one where Claude explained something perfectly. You never find it.</div>
+      </div>
+      <div class="pain-card fade-in">
+        <div class="pain-emoji">🔍</div>
+        <div class="pain-title">Native search is basically useless</div>
+        <div class="pain-desc">ChatGPT and Claude's built-in search is shallow and unreliable. It only matches exact titles, not the actual content of your conversations.</div>
+      </div>
+      <div class="pain-card fade-in">
+        <div class="pain-emoji">🔄</div>
+        <div class="pain-title">Explaining yourself over and over</div>
+        <div class="pain-desc">You had a great session that solved your problem perfectly. Now you're facing the same issue again and have to re-explain everything from scratch.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features fade-in">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything you need</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Instant full-text search</div>
+        <div class="feature-desc">Search through the actual content of every conversation, not just titles. Find anything in under a second across your entire history.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤫</div>
+        <div class="feature-title">Completely automatic</div>
+        <div class="feature-desc">Install once, forget about it. Recallio silently captures every conversation as you chat. No buttons to click, nothing to set up.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Both platforms in one</div>
+        <div class="feature-desc">ChatGPT and Claude conversations are saved and searchable in one unified interface. Filter by platform or search across both at once.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏷️</div>
+        <div class="feature-title">Smart conversation titles</div>
+        <div class="feature-desc">No more "New Conversation #347." Recallio automatically generates meaningful titles based on what you actually discussed.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Timeline view</div>
+        <div class="feature-desc">Browse your AI conversations chronologically. See everything you've worked on this week, month, or find that thing from three months ago.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <div class="feature-title">One-click to open</div>
+        <div class="feature-desc">Found what you're looking for? Click any result to jump straight back to that exact conversation in ChatGPT or Claude.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how fade-in" id="how">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Up and running in 60 seconds</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Install the extension</div>
+        <div class="step-desc">One click from the Chrome Web Store. No account needed, no email required.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Chat normally</div>
+        <div class="step-desc">Use ChatGPT and Claude exactly as you always do. Recallio works silently in the background.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Search anything</div>
+        <div class="step-desc">Click the Recallio icon anytime and search your entire AI history instantly.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy -->
+  <section class="privacy-section fade-in" id="privacy">
+    <div class="privacy-box">
+      <div class="privacy-icon">🔒</div>
+      <div class="privacy-title">Your conversations stay yours</div>
+      <div class="privacy-desc">
+        AI conversations are personal. You ask things you wouldn't say out loud. We take that seriously.
+      </div>
+      <div class="privacy-points">
+        <div class="privacy-point">
+          <span class="privacy-check">✓</span>
+          Everything is stored locally on your device — never on our servers
+        </div>
+        <div class="privacy-point">
+          <span class="privacy-check">✓</span>
+          We cannot see your conversations, even if we wanted to
+        </div>
+        <div class="privacy-point">
+          <span class="privacy-check">✓</span>
+          No data is ever transmitted anywhere without your permission
+        </div>
+        <div class="privacy-point">
+          <span class="privacy-check">✓</span>
+          Delete your entire history anytime with one click
+        </div>
+        <div class="privacy-point">
+          <span class="privacy-check">✓</span>
+          Open source — the code is fully auditable on GitHub
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing fade-in" id="pricing">
+    <p class="section-label">Pricing</p>
+    <h2 class="section-title">Simple and honest</h2>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Free</div>
+        <div class="pricing-price">$0 <span>forever</span></div>
+        <div class="pricing-desc">Perfect for trying it out</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span>50 conversations saved</li>
+          <li><span class="check">✓</span>Full-text search</li>
+          <li><span class="check">✓</span>ChatGPT + Claude support</li>
+          <li><span class="check">✓</span>Local storage, fully private</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-secondary">Add to Chrome Free</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-tag">MOST POPULAR</div>
+        <div class="pricing-plan">Pro</div>
+        <div class="pricing-price">$6 <span>/ month</span></div>
+        <div class="pricing-desc">For daily AI power users</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span>Unlimited conversations</li>
+          <li><span class="check">✓</span>Full-text search</li>
+          <li><span class="check">✓</span>ChatGPT + Claude support</li>
+          <li><span class="check">✓</span>Export to PDF / Markdown</li>
+          <li><span class="check">✓</span>Star & organize favorites</li>
+          <li><span class="check">✓</span>Priority support</li>
+        </ul>
+        <a href="#" class="pricing-btn pricing-btn-primary">Start Free Trial</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta fade-in">
+    <h2>Start searching your<br><span style="background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI history today.</span></h2>
+    <p>Join thousands of people who never lose a conversation again.</p>
+    <a href="#" class="btn-primary" style="font-size: 16px; padding: 16px 36px;">
+      Add to Chrome — It's Free
+    </a>
+    <p style="margin-top: 14px; font-size: 13px; color: var(--text3);">No account. No email. No credit card.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <a href="#" class="footer-logo">recallio</a>
+    <ul class="footer-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">GitHub</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <span class="footer-copy">© 2025 Recallio. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
