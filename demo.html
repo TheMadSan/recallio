@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallio – Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #04040d;
+      --accent1: #6366f1;
+      --accent2: #a855f7;
+      --accent3: #06b6d4;
+      --text: #f1f5f9;
+      --text2: #94a3b8;
+      --text3: #334155;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --chatgpt: #10a37f;
+      --claude: #f97316;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      overflow-x: hidden;
+    }
+
+    /* Ambient orbs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 60vw; height: 60vw;
+      background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%;
+      right: -10%;
+      width: 50vw; height: 50vw;
+      background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ── DEMO WRAPPER ── */
+    .demo-wrapper {
+      width: 100%;
+      max-width: 960px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .demo-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .demo-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 5px 16px;
+      font-size: 12px;
+      color: var(--accent3);
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .demo-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .demo-title span {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .demo-sub {
+      font-size: 16px;
+      color: var(--text2);
+      font-weight: 300;
+    }
+
+    /* ── STAGE ── */
+    .stage {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    /* Stage top bar */
+    .stage-bar {
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stage-dots { display: flex; gap: 6px; }
+    .stage-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .stage-title {
+      font-size: 12px;
+      color: var(--text2);
+      margin: 0 auto;
+      letter-spacing: 0.5px;
+    }
+
+    /* Step indicators */
+    .step-indicators {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .step-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--glass-border);
+      transition: all 0.4s ease;
+    }
+
+    .step-dot.active {
+      background: var(--accent1);
+      box-shadow: 0 0 8px rgba(99,102,241,0.6);
+    }
+
+    .step-dot.done {
+      background: var(--accent2);
+    }
+
+    /* ── SCENE CONTAINER ── */
+    .scenes {
+      position: relative;
+      height: 480px;
+      overflow: hidden;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+
+    .scene.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .scene.exit {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    /* ── SCENE LAYOUTS ── */
+    .scene-left {
+      flex: 1;
+      max-width: 380px;
+    }
+
+    .scene-right {
+      flex: 1;
+      max-width: 340px;
+    }
+
+    .scene-step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent1);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .step-num-badge {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(99,102,241,0.2);
+      border: 1px solid rgba(99,102,241,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+      color: var(--accent1);
+    }
+
+    .scene-heading {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .scene-heading .highlight {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .scene-body {
+      font-size: 15px;
+      color: var(--text2);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── MOCK BROWSER ── */
+    .mock-browser {
+      background: rgba(4,4,13,0.9);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .browser-top {
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .b-dots { display: flex; gap: 5px; }
+    .b-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .b-url {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 10px;
+      color: var(--text2);
+    }
+
+    /* ChatGPT mock content */
+    .chatgpt-content {
+      padding: 16px;
+    }
+
+    .chat-msg {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .chat-msg.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chat-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+
+    .avatar-user {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: white;
+    }
+
+    .avatar-gpt {
+      background: rgba(16,163,127,0.2);
+      border: 1px solid rgba(16,163,127,0.3);
+      color: var(--chatgpt);
+    }
+
+    .chat-bubble {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .chat-bubble.user-bubble {
+      background: rgba(99,102,241,0.1);
+      border-color: rgba(99,102,241,0.2);
+    }
+
+    /* Typing indicator */
+    .typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 0;
+    }
+
+    .typing span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text2);
+      animation: typing-bounce 1.2s infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing-bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* Recallio saving indicator */
+    .saving-toast {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-size: 10px;
+      color: var(--accent1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+      font-weight: 500;
+    }
+
+    .saving-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .saving-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent1);
+      animation: pulse-dot 1s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── MOCK EXTENSION POPUP ── */
+    .mock-popup {
+      background: rgba(4,4,13,0.95);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.08);
+      width: 100%;
+    }
+
+    .popup-header {
+      padding: 12px 14px 10px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .popup-logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .popup-logo {
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .popup-chips {
+      display: flex;
+      gap: 5px;
+    }
+
+    .popup-chip {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 2px 8px;
+      font-size: 9px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .p-dot { width: 4px; height: 4px; border-radius: 50%; }
+
+    .popup-search {
+      background: rgba(99,102,241,0.07);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 11px;
+      color: var(--text2);
+      box-shadow: 0 0 12px rgba(99,102,241,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-cursor {
+      display: inline-block;
+      width: 1px;
+      height: 12px;
+      background: var(--accent1);
+      vertical-align: middle;
+      margin-left: 1px;
+      animation: blink-cursor 1s infinite;
+    }
+
+    @keyframes blink-cursor {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .popup-filters {
+      display: flex;
+      gap: 5px;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .p-filter {
+      border-radius: 100px;
+      padding: 3px 10px;
+      font-size: 10px;
+    }
+
+    .p-filter-active {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: white;
+      font-weight: 500;
+    }
+
+    .p-filter-inactive {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text2);
+    }
+
+    .popup-results {
+      padding: 8px;
+    }
+
+    .popup-result {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 9px 11px;
+      margin-bottom: 5px;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .popup-result.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .popup-result.highlighted {
+      border-color: rgba(99,102,241,0.4);
+      background: rgba(99,102,241,0.08);
+      box-shadow: 0 0 20px rgba(99,102,241,0.08);
+    }
+
+    /* Scanning line effect */
+    .popup-result.highlighted::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.12), transparent);
+      animation: scan 1.5s ease infinite;
+    }
+
+    @keyframes scan {
+      from { left: -60%; }
+      to { left: 120%; }
+    }
+
+    .pr-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .pr-badge {
+      width: 16px; height: 16px;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .pr-badge-g { background: rgba(16,163,127,0.15); border: 1px solid rgba(16,163,127,0.2); color: var(--chatgpt); }
+    .pr-badge-c { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.2); color: var(--claude); }
+
+    .pr-title { font-size: 11px; font-weight: 500; color: var(--text); }
+    .pr-preview { font-size: 10px; color: var(--text2); line-height: 1.4; }
+
+    .pr-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+
+    .pr-date { font-size: 9px; color: var(--text3); }
+    .pr-msgs { font-size: 9px; color: var(--text3); background: var(--glass); border-radius: 6px; padding: 1px 5px; }
+
+    /* Highlight text in search results */
+    .search-match {
+      background: rgba(99,102,241,0.3);
+      border-radius: 2px;
+      padding: 0 1px;
+      color: var(--text);
+    }
+
+    /* ── SCENE 3: Problem ── */
+    .pain-visual {
+      width: 100%;
+    }
+
+    .chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .chat-list-item {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+
+    .chat-list-item.show { opacity: 1; transform: translateX(0); }
+
+    .chat-list-item.lost {
+      border-color: rgba(239,68,68,0.2);
+      background: rgba(239,68,68,0.04);
+    }
+
+    .chat-list-icon { font-size: 14px; flex-shrink: 0; }
+    .chat-list-name { font-size: 11px; color: var(--text2); flex: 1; }
+    .chat-list-date { font-size: 10px; color: var(--text3); }
+
+    .lost-badge {
+      font-size: 9px;
+      color: #f87171;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 100px;
+      padding: 2px 7px;
+      font-weight: 500;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-steps {
+      display: flex;
+      gap: 8px;
+    }
+
+    .progress-step {
+      font-size: 11px;
+      color: var(--text3);
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--glass);
+    }
+
+    .progress-step.active {
+      color: var(--text);
+      border-color: rgba(99,102,241,0.4);
+      background: rgba(99,102,241,0.1);
+    }
+
+    .progress-step.done {
+      color: var(--accent2);
+      border-color: rgba(168,85,247,0.3);
+    }
+
+    .progress-timer {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .progress-bar-track {
+      height: 3px;
+      background: var(--glass-border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+      border-radius: 100px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .ctrl-btn {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 10px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .ctrl-btn:hover {
+      border-color: rgba(99,102,241,0.4);
+      color: var(--text);
+    }
+
+    .ctrl-btn.primary {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 0 24px rgba(99,102,241,0.3);
+    }
+
+    .ctrl-btn.primary:hover {
+      box-shadow: 0 0 40px rgba(99,102,241,0.5);
+      transform: translateY(-1px);
+    }
+
+    .ctrl-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Pulse animation for play button */
+    .play-pulse {
+      animation: play-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes play-glow {
+      0%, 100% { box-shadow: 0 0 24px rgba(99,102,241,0.3); }
+      50% { box-shadow: 0 0 48px rgba(99,102,241,0.6); }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="demo-wrapper">
+
+  <!-- Header -->
+  <div class="demo-header">
+    <div class="demo-tag">✦ Live Demo</div>
+    <h2 class="demo-title">See <span>Recallio in action</span></h2>
+    <p class="demo-sub">Watch how Recallio saves and finds your AI conversations automatically</p>
+  </div>
+
+  <!-- Stage -->
+  <div class="stage">
+
+    <!-- Stage top bar -->
+    <div class="stage-bar">
+      <div class="stage-dots">
+        <div class="stage-dot dot-r"></div>
+        <div class="stage-dot dot-y"></div>
+        <div class="stage-dot dot-g"></div>
+      </div>
+      <div class="stage-title" id="stageTitle">Recallio — Interactive Demo</div>
+      <div class="step-indicators">
+        <div class="step-dot active" id="sd0"></div>
+        <div class="step-dot" id="sd1"></div>
+        <div class="step-dot" id="sd2"></div>
+        <div class="step-dot" id="sd3"></div>
+      </div>
+    </div>
+
+    <!-- Scenes -->
+    <div class="scenes">
+
+      <!-- SCENE 0: Welcome -->
+      <div class="scene active" id="scene0">
+        <div class="scene-left">
+          <div class="scene-step-label">
+            <div class="step-num-badge">★</div>
+            Welcome
+          </div>
+          <h3 class="scene-heading">
+            You've had <span class="highlight">hundreds</span> of AI conversations.<br>
+            Can you find them?
+          </h3>
+          <p class="scene-body">
+            ChatGPT and Claude have no real search. Great conversations get buried and lost forever. Recallio fixes this — automatically, privately, and instantly.
+          </p>
+        </div>
+        <div class="scene-right">
+          <div class="chat-list pain-visual">
+            <div class="chat-list-item lost" id="lost0">
+              <span class="chat-list-icon">💬</span>
+              <span class="chat-list-name">New conversation</span>
+              <span class="lost-badge">lost</span>
+            </div>
+            <div class="chat-list-item lost" id="lost1">
+              <span class="chat-list-icon">💬</span>
+              <span class="chat-list-name">New conversation</span>
+              <span class="lost-badge">lost</span>
+            </div>
+            <div class="chat-list-item lost" id="lost2">
+              <span class="chat-list-icon">💬</span>
+              <span class="chat-list-name">New conversation</span>
+              <span class="lost-badge">lost</span>
+            </div>
+            <div class="chat-list-item" id="lost3" style="border-color:rgba(99,102,241,0.3); background:rgba(99,102,241,0.06);">
+              <span class="chat-list-icon">🔍</span>
+              <span class="chat-list-name" style="color:var(--text);">With Recallio — find anything instantly</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 1: Saving -->
+      <div class="scene" id="scene1">
+        <div class="scene-left">
+          <div class="scene-step-label">
+            <div class="step-num-badge">1</div>
+            Step 1 of 3
+          </div>
+          <h3 class="scene-heading">
+            Chat normally.<br>
+            <span class="highlight">Recallio saves silently.</span>
+          </h3>
+          <p class="scene-body">
+            Use ChatGPT and Claude exactly as you always do. Recallio watches in the background and automatically saves every conversation to your device — no clicks needed.
+          </p>
+        </div>
+        <div class="scene-right">
+          <div class="mock-browser">
+            <div class="browser-top">
+              <div class="b-dots">
+                <div class="b-dot" style="background:#ff5f57"></div>
+                <div class="b-dot" style="background:#febc2e"></div>
+                <div class="b-dot" style="background:#28c840"></div>
+              </div>
+              <div class="b-url">chatgpt.com/c/a3b9...</div>
+            </div>
+            <div class="chatgpt-content" style="position:relative;">
+              <div class="chat-msg" id="msg0">
+                <div class="chat-avatar avatar-user">S</div>
+                <div class="chat-bubble user-bubble">How do I negotiate a higher salary at a startup? I have an offer for $95k.</div>
+              </div>
+              <div class="chat-msg" id="msg1">
+                <div class="chat-avatar avatar-gpt">G</div>
+                <div class="chat-bubble">
+                  <div class="typing" id="typing1">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div id="reply1" style="display:none;">Great position to negotiate from. Here are 3 key strategies: Lead with market data, not personal need. Reference the $110k median for this role...</div>
+                </div>
+              </div>
+              <div class="saving-toast" id="savingToast">
+                <div class="saving-dot"></div>
+                Recallio saving...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 2: Searching -->
+      <div class="scene" id="scene2">
+        <div class="scene-left">
+          <div class="scene-step-label">
+            <div class="step-num-badge">2</div>
+            Step 2 of 3
+          </div>
+          <h3 class="scene-heading">
+            Weeks later —<br>
+            <span class="highlight">find it in seconds.</span>
+          </h3>
+          <p class="scene-body">
+            Click the Recallio icon. Type any keyword from the conversation. It searches through the actual content — not just titles. Your entire AI history, instantly searchable.
+          </p>
+        </div>
+        <div class="scene-right">
+          <div class="mock-popup">
+            <div class="popup-header">
+              <div class="popup-logo-row">
+                <div class="popup-logo">recallio</div>
+                <div class="popup-chips">
+                  <div class="popup-chip"><span class="p-dot" style="background:var(--accent1)"></span>89</div>
+                  <div class="popup-chip"><span class="p-dot" style="background:var(--chatgpt)"></span>54</div>
+                  <div class="popup-chip"><span class="p-dot" style="background:var(--claude)"></span>35</div>
+                </div>
+              </div>
+              <div class="popup-search" id="popupSearch">
+                <span id="searchText">🔍 &nbsp;</span><span class="search-cursor" id="searchCursor"></span>
+              </div>
+            </div>
+            <div class="popup-filters">
+              <span class="p-filter p-filter-active">All</span>
+              <span class="p-filter p-filter-inactive">ChatGPT</span>
+              <span class="p-filter p-filter-inactive">Claude</span>
+            </div>
+            <div class="popup-results">
+              <div class="popup-result" id="pr0">
+                <div class="pr-top">
+                  <div class="pr-badge pr-badge-g">G</div>
+                  <div class="pr-title">Salary negotiation at <span class="search-match" id="sm0"></span></div>
+                </div>
+                <div class="pr-preview">Lead with market data, not personal need. Reference the $110k median...</div>
+                <div class="pr-meta"><span class="pr-date">3 weeks ago</span><span class="pr-msgs">8 msgs</span></div>
+              </div>
+              <div class="popup-result" id="pr1">
+                <div class="pr-top">
+                  <div class="pr-badge pr-badge-c">C</div>
+                  <div class="pr-title">Python async explained simply</div>
+                </div>
+                <div class="pr-preview">Can you explain async functions like I'm a beginner...</div>
+                <div class="pr-meta"><span class="pr-date">2 weeks ago</span><span class="pr-msgs">12 msgs</span></div>
+              </div>
+              <div class="popup-result" id="pr2">
+                <div class="pr-top">
+                  <div class="pr-badge pr-badge-g">G</div>
+                  <div class="pr-title">Marketing email for product launch</div>
+                </div>
+                <div class="pr-preview">Write a compelling announcement email...</div>
+                <div class="pr-meta"><span class="pr-date">1 week ago</span><span class="pr-msgs">6 msgs</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 3: Result -->
+      <div class="scene" id="scene3">
+        <div class="scene-left">
+          <div class="scene-step-label">
+            <div class="step-num-badge">3</div>
+            Step 3 of 3
+          </div>
+          <h3 class="scene-heading">
+            One click —<br>
+            <span class="highlight">back to that conversation.</span>
+          </h3>
+          <p class="scene-body">
+            Click any result to jump straight back to that exact conversation in ChatGPT or Claude. Your history is yours forever — stored locally, completely private, always searchable.
+          </p>
+        </div>
+        <div class="scene-right">
+          <div class="mock-browser">
+            <div class="browser-top">
+              <div class="b-dots">
+                <div class="b-dot" style="background:#ff5f57"></div>
+                <div class="b-dot" style="background:#febc2e"></div>
+                <div class="b-dot" style="background:#28c840"></div>
+              </div>
+              <div class="b-url" id="finalUrl">chatgpt.com/c/a3b9...</div>
+            </div>
+            <div class="chatgpt-content">
+              <div class="chat-msg visible" style="opacity:1; transform:none;">
+                <div class="chat-avatar avatar-user">S</div>
+                <div class="chat-bubble user-bubble">How do I negotiate a higher salary at a startup? I have an offer for $95k.</div>
+              </div>
+              <div class="chat-msg visible" id="finalReply" style="opacity:0; transform:translateY(8px); transition: all 0.5s ease 0.3s;">
+                <div class="chat-avatar avatar-gpt">G</div>
+                <div class="chat-bubble">Great position to negotiate from. Here are 3 key strategies: Lead with market data, not personal need. Reference the $110k median for this role...</div>
+              </div>
+              <div class="chat-msg visible" id="finalTag" style="opacity:0; transform:translateY(8px); transition: all 0.5s ease 0.6s;">
+                <div style="width:100%; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:10px; padding:10px 14px; font-size:11px; color:var(--accent1); text-align:center;">
+                  ✓ Found via Recallio search · Saved 3 weeks ago · Stored locally on your device
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <div class="progress-steps">
+          <div class="progress-step active" onclick="goToScene(0)" id="ps0">Intro</div>
+          <div class="progress-step" onclick="goToScene(1)" id="ps1">Auto-save</div>
+          <div class="progress-step" onclick="goToScene(2)" id="ps2">Search</div>
+          <div class="progress-step" onclick="goToScene(3)" id="ps3">Result</div>
+        </div>
+        <div class="progress-timer" id="timerLabel">Auto-advancing in 8s</div>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="ctrl-btn" id="prevBtn" onclick="prevScene()" disabled>← Prev</button>
+    <button class="ctrl-btn primary play-pulse" id="playBtn" onclick="togglePlay()">⏸ Pause</button>
+    <button class="ctrl-btn" id="nextBtn" onclick="nextScene()">Next →</button>
+  </div>
+
+</div>
+
+<script>
+  // ── State ──
+  let currentScene = 0;
+  let isPlaying = true;
+  let progressInterval = null;
+  let sceneTimeout = null;
+  let progressValue = 0;
+
+  const SCENE_DURATION = 8000; // ms per scene
+  const TICK = 50;
+
+  const scenes = [
+    { id: 'scene0', title: 'The Problem — Lost Conversations', onEnter: enterScene0 },
+    { id: 'scene1', title: 'Step 1 — Auto-saving your chats',  onEnter: enterScene1 },
+    { id: 'scene2', title: 'Step 2 — Search your history',     onEnter: enterScene2 },
+    { id: 'scene3', title: 'Step 3 — Jump back instantly',     onEnter: enterScene3 },
+  ];
+
+  // ── Navigation ──
+  function goToScene(index) {
+    if (index === currentScene) return;
+    clearTimers();
+
+    const oldEl = document.getElementById(scenes[currentScene].id);
+    oldEl.classList.remove('active');
+    oldEl.classList.add('exit');
+    setTimeout(() => oldEl.classList.remove('exit'), 500);
+
+    currentScene = index;
+    const newEl = document.getElementById(scenes[currentScene].id);
+    newEl.classList.add('active');
+
+    updateUI();
+    scenes[currentScene].onEnter();
+
+    if (isPlaying) startProgress();
+  }
+
+  function nextScene() {
+    goToScene((currentScene + 1) % scenes.length);
+  }
+
+  function prevScene() {
+    goToScene((currentScene - 1 + scenes.length) % scenes.length);
+  }
+
+  function togglePlay() {
+    isPlaying = !isPlaying;
+    const btn = document.getElementById('playBtn');
+    if (isPlaying) {
+      btn.textContent = '⏸ Pause';
+      btn.classList.add('primary', 'play-pulse');
+      startProgress();
+    } else {
+      btn.textContent = '▶ Play';
+      btn.classList.remove('primary', 'play-pulse');
+      clearTimers();
+    }
+  }
+
+  function clearTimers() {
+    clearInterval(progressInterval);
+    clearTimeout(sceneTimeout);
+    progressValue = 0;
+    document.getElementById('progressFill').style.width = '0%';
+  }
+
+  function startProgress() {
+    clearTimers();
+    progressValue = 0;
+    const totalTicks = SCENE_DURATION / TICK;
+
+    progressInterval = setInterval(() => {
+      progressValue++;
+      const pct = (progressValue / totalTicks) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+
+      const remaining = Math.ceil((SCENE_DURATION - progressValue * TICK) / 1000);
+      document.getElementById('timerLabel').textContent = `Auto-advancing in ${remaining}s`;
+
+      if (progressValue >= totalTicks) {
+        clearInterval(progressInterval);
+        nextScene();
+      }
+    }, TICK);
+  }
+
+  function updateUI() {
+    // Step dots
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById('sd' + i);
+      dot.classList.remove('active', 'done');
+      if (i === currentScene) dot.classList.add('active');
+      else if (i < currentScene) dot.classList.add('done');
+    }
+
+    // Progress steps
+    for (let i = 0; i < 4; i++) {
+      const ps = document.getElementById('ps' + i);
+      ps.classList.remove('active', 'done');
+      if (i === currentScene) ps.classList.add('active');
+      else if (i < currentScene) ps.classList.add('done');
+    }
+
+    // Stage title
+    document.getElementById('stageTitle').textContent = scenes[currentScene].title;
+
+    // Buttons
+    document.getElementById('prevBtn').disabled = currentScene === 0;
+  }
+
+  // ── Scene Animations ──
+
+  function enterScene0() {
+    // Animate the lost items staggered
+    const items = ['lost0','lost1','lost2','lost3'];
+    items.forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.classList.remove('show');
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(10px)';
+      setTimeout(() => {
+        el.style.transition = 'all 0.4s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(0)';
+      }, 200 + i * 150);
+    });
+  }
+
+  function enterScene1() {
+    // Reset
+    ['msg0','msg1'].forEach(id => {
+      document.getElementById(id).classList.remove('visible');
+    });
+    document.getElementById('typing1').style.display = 'flex';
+    document.getElementById('reply1').style.display = 'none';
+    document.getElementById('savingToast').classList.remove('show');
+
+    // Sequence
+    setTimeout(() => {
+      document.getElementById('msg0').classList.add('visible');
+    }, 400);
+
+    setTimeout(() => {
+      document.getElementById('msg1').classList.add('visible');
+    }, 1200);
+
+    setTimeout(() => {
+      document.getElementById('typing1').style.display = 'none';
+      document.getElementById('reply1').style.display = 'block';
+    }, 3000);
+
+    setTimeout(() => {
+      document.getElementById('savingToast').classList.add('show');
+    }, 3800);
+
+    setTimeout(() => {
+      document.getElementById('savingToast').textContent = '';
+      document.getElementById('savingToast').innerHTML = '<div class="saving-dot" style="background:#10a37f"></div> Saved to Recallio ✓';
+      document.getElementById('savingToast').style.borderColor = 'rgba(16,163,127,0.4)';
+      document.getElementById('savingToast').style.color = '#10a37f';
+    }, 5500);
+  }
+
+  function enterScene2() {
+    // Reset search and results
+    document.getElementById('searchText').textContent = '🔍 \u00a0';
+    ['pr0','pr1','pr2'].forEach(id => {
+      document.getElementById(id).classList.remove('show','highlighted');
+    });
+    document.getElementById('sm0').textContent = '';
+
+    const searchQuery = 'salary';
+    const letters = searchQuery.split('');
+    let typed = '';
+
+    // Type the search query character by character
+    letters.forEach((letter, i) => {
+      setTimeout(() => {
+        typed += letter;
+        document.getElementById('searchText').textContent = '🔍 \u00a0' + typed;
+
+        // Show results as typing progresses
+        if (i === 1) {
+          document.getElementById('pr2').classList.add('show');
+        }
+        if (i === 3) {
+          document.getElementById('pr1').classList.add('show');
+          document.getElementById('pr0').classList.add('show');
+          document.getElementById('sm0').textContent = 'startup';
+        }
+        if (i === letters.length - 1) {
+          setTimeout(() => {
+            document.getElementById('pr0').classList.add('highlighted');
+          }, 400);
+        }
+      }, 600 + i * 180);
+    });
+  }
+
+  function enterScene3() {
+    // Show final reply and tag with delay
+    const reply = document.getElementById('finalReply');
+    const tag = document.getElementById('finalTag');
+    reply.style.opacity = '0';
+    tag.style.opacity = '0';
+
+    setTimeout(() => { reply.style.opacity = '1'; }, 300);
+    setTimeout(() => { tag.style.opacity = '1'; }, 700);
+
+    // Animate URL bar
+    const urlBar = document.getElementById('finalUrl');
+    urlBar.style.transition = 'color 0.3s';
+    setTimeout(() => {
+      urlBar.style.color = '#10a37f';
+      urlBar.textContent = '✓ chatgpt.com/c/a3b9... (opened)';
+    }, 500);
+  }
+
+  // ── Init ──
+  updateUI();
+  enterScene0();
+  startProgress();
+</script>
+
+</body>
+</html>
