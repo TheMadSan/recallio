@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nestiq – Your AI Conversations, Always Within Reach</title>
+  <title>Nestiq – Your AI Knowledge Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -313,185 +313,6 @@
 
     .sp-stars { color: #f5a623; font-size: 12px; letter-spacing: 1px; }
 
-    /* ─── HERO MOCKUP ─── */
-    .hero-mockup {
-      position: relative;
-      margin-top: 60px;
-      width: 100%;
-      max-width: 900px;
-      animation: fadeUp 0.7s ease 0.5s both;
-    }
-
-    .mockup-glow {
-      position: absolute;
-      inset: -40px;
-      background: radial-gradient(ellipse at center, var(--glow) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .mockup-window {
-      position: relative;
-      z-index: 1;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: var(--shadow), inset 0 1px 0 var(--border);
-      backdrop-filter: blur(20px);
-    }
-
-    .mockup-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .dots { display: flex; gap: 6px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; }
-    .dot-y { background: #febc2e; }
-    .dot-g { background: #28c840; }
-
-    .mockup-title {
-      font-size: 12px;
-      color: var(--text2);
-      margin: 0 auto;
-      font-weight: 400;
-    }
-
-    /* Sidebar mockup */
-    .sidebar-mock {
-      display: flex;
-      height: 400px;
-    }
-
-    .sidebar-left {
-      width: 320px;
-      border-right: 1px solid var(--border);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .search-bar {
-      background: var(--surface-hover);
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-size: 13px;
-      color: var(--text2);
-      font-family: 'DM Sans', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .platform-pills {
-      display: flex;
-      gap: 6px;
-    }
-
-    .plat-pill {
-      font-size: 11px;
-      font-weight: 500;
-      padding: 4px 12px;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
-    .plat-pill.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      border-color: transparent;
-    }
-    .plat-pill.chatgpt { color: var(--chatgpt); border-color: rgba(16,163,127,0.3); }
-    .plat-pill.claude { color: var(--claude); border-color: rgba(249,115,22,0.3); }
-
-    .conv-list { display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
-
-    .conv-item {
-      padding: 10px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.15s;
-      border: 1px solid transparent;
-    }
-    .conv-item:hover { background: var(--surface); border-color: var(--border); }
-    .conv-item.active { background: var(--surface); border-color: var(--border-strong); }
-
-    .conv-top { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
-
-    .conv-badge {
-      width: 18px; height: 18px;
-      border-radius: 4px;
-      font-size: 9px;
-      font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    .badge-g { background: var(--chatgpt); }
-    .badge-c { background: var(--claude); }
-
-    .conv-title { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .conv-preview { font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-    .conv-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); }
-
-    /* Chat area */
-    .chat-area {
-      flex: 1;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      overflow: hidden;
-    }
-
-    .chat-msg { display: flex; gap: 10px; align-items: flex-start; }
-    .chat-msg.user { flex-direction: row-reverse; }
-
-    .chat-av {
-      width: 28px; height: 28px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 600;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      color: #fff;
-    }
-    .av-user { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
-    .av-gpt { background: var(--chatgpt); }
-
-    .chat-bubble {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.6;
-      max-width: 85%;
-    }
-    .chat-msg.user .chat-bubble {
-      background: linear-gradient(135deg, rgba(124,106,247,0.18), rgba(176,106,247,0.12));
-      border-color: rgba(124,106,247,0.25);
-    }
-
-    .nestiq-tag {
-      background: rgba(124,106,247,0.08);
-      border: 1px solid rgba(124,106,247,0.2);
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 11px;
-      color: var(--accent);
-      text-align: center;
-    }
-
     /* ─── SECTIONS ─── */
     .container { max-width: 1160px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
 
@@ -547,11 +368,17 @@
 
     .feats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 2px;
       background: var(--border);
       border-radius: 24px;
       overflow: hidden;
+    }
+    @media (max-width: 900px) {
+      .feats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .feats-grid { grid-template-columns: 1fr; }
     }
 
     .feat-item {
@@ -828,8 +655,8 @@
   </h1>
 
   <p class="hero-sub">
-    Nestiq automatically captures every ChatGPT and Claude conversation to your device.
-    Search your entire history in milliseconds. Organise. Export. Keep your AI work yours — always.
+    Nestiq automatically captures every ChatGPT and Claude conversation to your device — your AI Knowledge Vault.
+    Search your entire history in milliseconds. Organise. Export. Keep your best thinking, always.
   </p>
 
   <div class="hero-ctas">
@@ -852,70 +679,6 @@
     <span style="color: var(--text2)">Loved by 1,200+ daily AI users</span>
   </div>
 
-  <!-- Mockup -->
-  <div class="hero-mockup">
-    <div class="mockup-glow"></div>
-    <div class="mockup-window">
-      <div class="mockup-bar">
-        <div class="dots">
-          <div class="dot dot-r"></div>
-          <div class="dot dot-y"></div>
-          <div class="dot dot-g"></div>
-        </div>
-        <div class="mockup-title">Nestiq — Your AI Conversation Library</div>
-      </div>
-      <div class="sidebar-mock">
-        <div class="sidebar-left">
-          <div class="search-bar">
-            <span>🔍</span>
-            <span style="opacity:0.5">Search your conversations…</span>
-          </div>
-          <div class="platform-pills">
-            <span class="plat-pill active">All</span>
-            <span class="plat-pill chatgpt">ChatGPT</span>
-            <span class="plat-pill claude">Claude</span>
-          </div>
-          <div class="conv-list">
-            <div class="conv-item active">
-              <div class="conv-top">
-                <div class="conv-badge badge-g">G</div>
-                <div class="conv-title">Salary negotiation tactics</div>
-              </div>
-              <div class="conv-preview">How do I negotiate above the offer range…</div>
-              <div class="conv-meta"><span>2h ago</span><span>8 msgs</span></div>
-            </div>
-            <div class="conv-item">
-              <div class="conv-top">
-                <div class="conv-badge badge-c">C</div>
-                <div class="conv-title">Product launch email series</div>
-              </div>
-              <div class="conv-preview">Write a 5-email drip campaign for…</div>
-              <div class="conv-meta"><span>Yesterday</span><span>14 msgs</span></div>
-            </div>
-            <div class="conv-item">
-              <div class="conv-top">
-                <div class="conv-badge badge-g">G</div>
-                <div class="conv-title">Python async/await explained</div>
-              </div>
-              <div class="conv-preview">Can you explain async functions like…</div>
-              <div class="conv-meta"><span>3 days ago</span><span>12 msgs</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="chat-area">
-          <div class="chat-msg user">
-            <div class="chat-av av-user">Y</div>
-            <div class="chat-bubble">I have a job offer for $95k but I expected more. How do I negotiate effectively?</div>
-          </div>
-          <div class="chat-msg">
-            <div class="chat-av av-gpt">G</div>
-            <div class="chat-bubble">Great position to negotiate from. Lead with market data — the median for this role is $110k. Reference competing offers if you have them, and frame it as ensuring long-term fit...</div>
-          </div>
-          <div class="nestiq-tag">✓ Saved by Nestiq — 2 hours ago · Stored locally on your device</div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- Main content -->
@@ -1337,7 +1100,7 @@
   /* ── INLINE DEMO LOGIC ── */
   (function(){
     let cur = 0, playing = true, pInterval = null, pTimeout = null, pVal = 0;
-    const DUR = 8000, TICK = 50;
+    const DUR = 4500, TICK = 50;
     const sceneIds = ['iscene0','iscene1','iscene2','iscene3'];
     const enterFns = [enter0, enter1, enter2, enter3];
 
@@ -1391,11 +1154,14 @@
     }
 
     function enter0() {
-      ['ilost0','ilost1','ilost2','ilost3'].forEach((id, i) => {
-        const el = document.getElementById(id);
-        el.classList.remove('show');
-        el.style.opacity='0'; el.style.transform='translateX(10px)';
-        setTimeout(() => el.classList.add('show'), 200 + i * 160);
+      const ids = ['ilost0','ilost1','ilost2','ilost3'];
+      // Strip show class first, then re-add with stagger so animation fires every time
+      ids.forEach(id => document.getElementById(id).classList.remove('show'));
+      // rAF ensures the removal paints before we re-add
+      requestAnimationFrame(() => {
+        ids.forEach((id, i) => {
+          setTimeout(() => document.getElementById(id).classList.add('show'), 80 + i * 140);
+        });
       });
     }
 
@@ -1457,7 +1223,9 @@
 
     // Init
     document.getElementById(sceneIds[0]).classList.add('active');
-    updateUI(); enter0(); startProgress();
+    updateUI();
+    // Small delay so the active scene has painted before we trigger animations
+    setTimeout(() => { enter0(); startProgress(); }, 50);
   })();
   </script>
 
