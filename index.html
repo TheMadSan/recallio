@@ -1,95 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recallio – AI Memory, Perfected</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Nestiq – Your AI Conversations, Always Within Reach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* ─── THEME TOKENS ─── */
     :root {
-      --bg: #04040d;
-      --accent1: #6366f1;
-      --accent2: #a855f7;
-      --accent3: #06b6d4;
-      --neon: #67e8f9;
-      --text: #f1f5f9;
-      --text2: #94a3b8;
-      --text3: #334155;
-      --glass: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.08);
-      --chatgpt: #10a37f;
-      --claude: #f97316;
+      --transition-theme: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    [data-theme="dark"] {
+      --bg:           #080810;
+      --bg2:          #0e0e1a;
+      --surface:      rgba(255,255,255,0.03);
+      --surface-hover:rgba(255,255,255,0.06);
+      --border:       rgba(255,255,255,0.08);
+      --border-strong:rgba(255,255,255,0.14);
+      --text:         #f0f0f8;
+      --text2:        #8888aa;
+      --text3:        #3a3a55;
+      --accent:       #7c6af7;
+      --accent2:      #b06af7;
+      --accent3:      #5ec4f7;
+      --chatgpt:      #10a37f;
+      --claude:       #f97316;
+      --dither-front: #7c6af7;
+      --dither-back:  #0a0a14;
+      --card-bg:      rgba(14,14,26,0.9);
+      --nav-bg:       rgba(8,8,16,0.75);
+      --shadow:       0 40px 120px rgba(0,0,0,0.6);
+      --glow:         rgba(124,106,247,0.25);
+    }
+
+    [data-theme="light"] {
+      --bg:           #f5f5fa;
+      --bg2:          #ebebf5;
+      --surface:      rgba(255,255,255,0.8);
+      --surface-hover:rgba(255,255,255,1);
+      --border:       rgba(0,0,0,0.08);
+      --border-strong:rgba(0,0,0,0.14);
+      --text:         #12121e;
+      --text2:        #555570;
+      --text3:        #aaaacc;
+      --accent:       #5b47f0;
+      --accent2:      #9245e8;
+      --accent3:      #0a9ed4;
+      --chatgpt:      #0d9070;
+      --claude:       #e86810;
+      --dither-front: #5b47f0;
+      --dither-back:  #e8e8f5;
+      --card-bg:      rgba(245,245,250,0.9);
+      --nav-bg:       rgba(245,245,250,0.82);
+      --shadow:       0 20px 80px rgba(91,71,240,0.1);
+      --glow:         rgba(91,71,240,0.18);
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Outfit', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       overflow-x: hidden;
       line-height: 1.6;
+      transition: var(--transition-theme);
+      min-height: 100vh;
     }
 
-    /* Animated background */
-    .bg-orbs {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .orb {
+    /* ─── DITHERING CANVAS — hero only ─── */
+    /* ─── DITHERING CANVAS — hero only ─── */
+    #dither-canvas {
       position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      animation: float 8s ease-in-out infinite;
-    }
-
-    .orb-1 { width: 600px; height: 600px; background: rgba(99,102,241,0.12); top: -200px; left: -100px; animation-delay: 0s; }
-    .orb-2 { width: 500px; height: 500px; background: rgba(168,85,247,0.08); top: 20%; right: -150px; animation-delay: 2s; }
-    .orb-3 { width: 400px; height: 400px; background: rgba(6,182,212,0.08); bottom: 10%; left: 20%; animation-delay: 4s; }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -20px) scale(1.05); }
-      66% { transform: translate(-20px, 10px) scale(0.95); }
-    }
-
-    /* Grid overlay */
-    body::after {
-      content: '';
-      position: fixed;
       inset: 0;
-      background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-      background-size: 60px 60px;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 0;
+      opacity: 0;
+      transition: opacity 1.4s ease;
     }
+    #dither-canvas.ready { opacity: 1; }
+    /* Soft gradient fade at the very bottom of the hero so dither dissolves into the page */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 260px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Make sure all hero content sits above the canvas + fade overlay */
+    .hero > * { position: relative; z-index: 2; }
 
-    /* Nav */
+    /* ─── NAV ─── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
+      z-index: 200;
+      height: 66px;
       padding: 0 48px;
-      height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(4,4,13,0.7);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border);
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition-theme);
     }
 
     .logo {
-      font-size: 20px;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-decoration: none;
@@ -98,11 +127,11 @@
     .nav-center {
       display: flex;
       align-items: center;
-      gap: 4px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
+      gap: 2px;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 100px;
-      padding: 6px;
+      padding: 5px;
     }
 
     .nav-link {
@@ -114,75 +143,91 @@
       border-radius: 100px;
       transition: all 0.2s;
     }
+    .nav-link:hover { color: var(--text); background: var(--surface-hover); }
 
-    .nav-link:hover { color: var(--text); background: var(--glass); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .theme-toggle {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: all 0.2s;
+      color: var(--text2);
+    }
+    .theme-toggle:hover { background: var(--surface-hover); color: var(--text); }
 
     .nav-cta {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
       text-decoration: none;
       padding: 9px 22px;
       border-radius: 100px;
       font-size: 13px;
       font-weight: 500;
-      transition: all 0.2s;
-      box-shadow: 0 0 20px rgba(99,102,241,0.3);
+      transition: all 0.25s;
+      box-shadow: 0 0 20px var(--glow);
     }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 30px var(--glow); }
 
-    .nav-cta:hover { box-shadow: 0 0 32px rgba(99,102,241,0.5); transform: translateY(-1px); }
-
-    /* Hero */
+    /* ─── HERO ─── */
     .hero {
       position: relative;
-      z-index: 1;
+      overflow: hidden;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 100px 24px 60px;
+      padding: 120px 24px 80px;
     }
 
     .hero-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
       border-radius: 100px;
       padding: 6px 16px 6px 8px;
       font-size: 12px;
       font-weight: 500;
-      color: var(--neon);
-      margin-bottom: 32px;
-      animation: fadeUp 0.6s ease both;
+      color: var(--accent3);
+      margin-bottom: 36px;
+      animation: fadeUp 0.7s ease both;
     }
 
-    .pill-badge {
-      background: rgba(103,232,249,0.15);
-      border: 1px solid rgba(103,232,249,0.2);
-      border-radius: 100px;
-      padding: 2px 10px;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    .pill-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent3);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(94,196,247,0.5); }
+      50% { box-shadow: 0 0 0 5px rgba(94,196,247,0); }
     }
 
     h1 {
-      font-size: clamp(48px, 8vw, 96px);
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(52px, 8vw, 104px);
+      font-weight: 400;
       line-height: 1.0;
-      letter-spacing: -3px;
-      max-width: 900px;
-      margin-bottom: 24px;
-      animation: fadeUp 0.6s ease 0.1s both;
+      letter-spacing: -2px;
+      max-width: 1000px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.7s ease 0.1s both;
     }
 
     .h1-line1 { display: block; color: var(--text); }
     .h1-line2 {
       display: block;
-      background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 50%, var(--accent3) 100%);
+      font-style: italic;
+      background: linear-gradient(125deg, var(--accent) 0%, var(--accent2) 55%, var(--accent3) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -190,11 +235,11 @@
     .hero-sub {
       font-size: clamp(15px, 2vw, 18px);
       color: var(--text2);
-      max-width: 560px;
-      line-height: 1.75;
-      margin-bottom: 44px;
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 48px;
       font-weight: 300;
-      animation: fadeUp 0.6s ease 0.2s both;
+      animation: fadeUp 0.7s ease 0.2s both;
     }
 
     .hero-ctas {
@@ -203,542 +248,680 @@
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      animation: fadeUp 0.6s ease 0.3s both;
+      margin-bottom: 56px;
+      animation: fadeUp 0.7s ease 0.3s both;
     }
 
-    .btn-glow {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
-      text-decoration: none;
-      padding: 14px 32px;
-      border-radius: 100px;
-      font-size: 15px;
-      font-weight: 600;
-      transition: all 0.2s;
-      box-shadow: 0 0 40px rgba(99,102,241,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+    .btn-primary {
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 30px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.25s;
+      box-shadow: 0 4px 30px var(--glow);
+      border: none;
+      cursor: pointer;
     }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px var(--glow); }
 
-    .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(99,102,241,0.6), inset 0 1px 0 rgba(255,255,255,0.1); }
-
-    .btn-glass {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      color: var(--text2);
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      color: var(--text);
       text-decoration: none;
       padding: 14px 28px;
       border-radius: 100px;
       font-size: 15px;
       font-weight: 400;
+      border: 1px solid var(--border-strong);
       transition: all 0.2s;
-      display: inline-flex;
+    }
+    .btn-secondary:hover { background: var(--surface-hover); }
+
+    .social-proof {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(10px);
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text2);
+      animation: fadeUp 0.7s ease 0.4s both;
     }
 
-    .btn-glass:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+    .sp-avatars {
+      display: flex;
+      gap: -4px;
+    }
+    .sp-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      margin-left: -6px;
+      font-size: 11px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-weight: 600;
+    }
 
-    .hero-note { margin-top: 20px; font-size: 12px; color: var(--text3); animation: fadeUp 0.6s ease 0.4s both; }
+    .sp-stars { color: #f5a623; font-size: 12px; letter-spacing: 1px; }
 
-    /* Mock UI - floating glass card */
-    .hero-visual {
-      margin-top: 64px;
-      width: 100%;
-      max-width: 480px;
-      animation: fadeUp 0.8s ease 0.5s both;
+    /* ─── HERO MOCKUP ─── */
+    .hero-mockup {
       position: relative;
+      margin-top: 60px;
+      width: 100%;
+      max-width: 900px;
+      animation: fadeUp 0.7s ease 0.5s both;
     }
 
-    .mock-glow {
+    .mockup-glow {
       position: absolute;
       inset: -40px;
-      background: radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, transparent 70%);
+      background: radial-gradient(ellipse at center, var(--glow) 0%, transparent 65%);
       pointer-events: none;
+      z-index: 0;
     }
 
-    .mock-card {
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
+    .mockup-window {
+      position: relative;
+      z-index: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
-      position: relative;
+      box-shadow: var(--shadow), inset 0 1px 0 var(--border);
+      backdrop-filter: blur(20px);
     }
 
-    .mock-top-bar {
-      padding: 16px 20px 14px;
-      border-bottom: 1px solid var(--glass-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mock-logo-g {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .mock-chips { display: flex; gap: 6px; }
-
-    .mock-chip {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 100px;
-      padding: 3px 10px;
-      font-size: 10px;
-      color: var(--text2);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .chip-dot { width: 5px; height: 5px; border-radius: 50%; }
-
-    .mock-search-row {
+    .mockup-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       padding: 12px 20px;
-      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .mock-search-inner {
-      background: var(--glass);
-      border: 1px solid rgba(99,102,241,0.3);
-      border-radius: 10px;
-      padding: 9px 14px;
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .mockup-title {
       font-size: 12px;
       color: var(--text2);
-      box-shadow: 0 0 16px rgba(99,102,241,0.1);
+      margin: 0 auto;
+      font-weight: 400;
     }
 
-    .mock-filter-row {
+    /* Sidebar mockup */
+    .sidebar-mock {
       display: flex;
-      gap: 6px;
-      padding: 10px 20px;
-      border-bottom: 1px solid var(--glass-border);
+      height: 400px;
     }
 
-    .mock-f {
-      border-radius: 100px;
-      padding: 4px 12px;
-      font-size: 11px;
+    .sidebar-left {
+      width: 320px;
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .mock-f-active {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
-      font-weight: 500;
-    }
-
-    .mock-f-inactive {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
+    .search-bar {
+      background: var(--surface-hover);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
       color: var(--text2);
-    }
-
-    .mock-list { padding: 10px; }
-
-    .mock-row {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 6px;
-      transition: all 0.2s;
-    }
-
-    .mock-row:hover { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.06); }
-
-    .mock-row-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-
-    .mock-badge-g {
-      width: 20px; height: 20px; border-radius: 6px;
-      background: rgba(16,163,127,0.15);
-      border: 1px solid rgba(16,163,127,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 9px; font-weight: 700; color: var(--chatgpt); flex-shrink: 0;
-    }
-
-    .mock-badge-c {
-      width: 20px; height: 20px; border-radius: 6px;
-      background: rgba(249,115,22,0.15);
-      border: 1px solid rgba(249,115,22,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 9px; font-weight: 700; color: var(--claude); flex-shrink: 0;
-    }
-
-    .mock-row-title { font-size: 12px; font-weight: 500; color: var(--text); }
-    .mock-row-preview { font-size: 11px; color: var(--text2); line-height: 1.4; }
-    .mock-row-meta { display: flex; justify-content: space-between; margin-top: 6px; }
-    .mock-row-date { font-size: 10px; color: var(--text3); }
-    .mock-row-msgs { font-size: 10px; color: var(--text3); background: var(--glass); border-radius: 8px; padding: 1px 6px; }
-
-    /* Sections */
-    section { position: relative; z-index: 1; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
-
-    .section-tag {
-      display: inline-flex;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
       align-items: center;
       gap: 8px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 100px;
-      padding: 4px 14px;
+    }
+
+    .platform-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .plat-pill {
       font-size: 11px;
       font-weight: 500;
-      color: var(--neon);
-      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .plat-pill.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border-color: transparent;
+    }
+    .plat-pill.chatgpt { color: var(--chatgpt); border-color: rgba(16,163,127,0.3); }
+    .plat-pill.claude { color: var(--claude); border-color: rgba(249,115,22,0.3); }
+
+    .conv-list { display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+
+    .conv-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border: 1px solid transparent;
+    }
+    .conv-item:hover { background: var(--surface); border-color: var(--border); }
+    .conv-item.active { background: var(--surface); border-color: var(--border-strong); }
+
+    .conv-top { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+
+    .conv-badge {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .badge-g { background: var(--chatgpt); }
+    .badge-c { background: var(--claude); }
+
+    .conv-title { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .conv-preview { font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+    .conv-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); }
+
+    /* Chat area */
+    .chat-area {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    .chat-msg { display: flex; gap: 10px; align-items: flex-start; }
+    .chat-msg.user { flex-direction: row-reverse; }
+
+    .chat-av {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .av-user { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+    .av-gpt { background: var(--chatgpt); }
+
+    .chat-bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 85%;
+    }
+    .chat-msg.user .chat-bubble {
+      background: linear-gradient(135deg, rgba(124,106,247,0.18), rgba(176,106,247,0.12));
+      border-color: rgba(124,106,247,0.25);
+    }
+
+    .nestiq-tag {
+      background: rgba(124,106,247,0.08);
+      border: 1px solid rgba(124,106,247,0.2);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 11px;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    /* ─── SECTIONS ─── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      color: var(--accent3);
+      margin-bottom: 14px;
     }
 
     .section-title {
-      font-size: clamp(32px, 4vw, 52px);
-      font-weight: 700;
-      letter-spacing: -1.5px;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 4.5vw, 60px);
+      font-weight: 400;
+      letter-spacing: -1px;
       line-height: 1.1;
       margin-bottom: 60px;
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      background: linear-gradient(125deg, var(--accent), var(--accent2), var(--accent3));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      font-style: italic;
     }
 
-    /* Pain section */
-    .pain { padding: 100px 0; }
+    /* ─── PAIN SECTION ─── */
+    .pain { padding: 100px 0 60px; }
 
-    .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
 
     .pain-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 32px;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.25s;
     }
+    .pain-card:hover { border-color: var(--border-strong); background: var(--surface-hover); transform: translateY(-2px); }
 
-    .pain-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-
-    .pain-icon { font-size: 32px; margin-bottom: 16px; }
-    .pain-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .pain-icon { font-size: 28px; margin-bottom: 14px; }
+    .pain-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
     .pain-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
 
-    /* Features */
-    .feats { padding: 100px 0; }
+    /* ─── FEATURES ─── */
+    .feats { padding: 60px 0; }
 
-    .feats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--glass-border); border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); }
-
-    .feat-item {
-      background: var(--bg);
-      padding: 36px 32px;
-      transition: background 0.2s;
-      position: relative;
+    .feats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2px;
+      background: var(--border);
+      border-radius: 24px;
       overflow: hidden;
     }
 
-    .feat-item::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2));
-      opacity: 0;
-      transition: opacity 0.3s;
+    .feat-item {
+      background: var(--bg);
+      padding: 32px;
+      transition: background 0.2s;
     }
+    .feat-item:hover { background: var(--bg2); }
 
-    .feat-item:hover { background: rgba(99,102,241,0.04); }
-    .feat-item:hover::before { opacity: 1; }
-
-    .feat-icon-wrap {
+    .feat-icon {
       width: 44px; height: 44px;
       border-radius: 12px;
-      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));
-      border: 1px solid rgba(99,102,241,0.2);
+      background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(176,106,247,0.08));
+      border: 1px solid rgba(124,106,247,0.2);
       display: flex; align-items: center; justify-content: center;
       font-size: 20px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
-    .feat-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .feat-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
     .feat-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
 
-    /* Steps */
-    .steps-section { padding: 100px 0; text-align: center; }
+    /* ─── HOW IT WORKS ─── */
+    .steps-section { padding: 80px 0; }
 
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px; position: relative; }
-
-    .steps-grid::before {
-      content: '';
-      position: absolute;
-      top: 36px;
-      left: calc(16.66% + 20px);
-      right: calc(16.66% + 20px);
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
-      opacity: 0.3;
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
     }
 
-    .step-card { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-
-    .step-bubble {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2));
-      border: 1px solid rgba(99,102,241,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 700;
-      color: var(--accent1);
+    .step-card {
       position: relative;
-      box-shadow: 0 0 30px rgba(99,102,241,0.15);
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
     }
 
-    .step-title { font-size: 16px; font-weight: 600; }
+    .step-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      color: var(--text3);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .step-title { font-weight: 600; font-size: 17px; margin-bottom: 8px; }
     .step-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
 
-    /* Pricing */
-    .pricing-section { padding: 100px 0; text-align: center; }
+    /* ─── DEMO ─── */
+    .demo-section { padding: 80px 0; }
 
-    .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 760px; margin: 0 auto; }
-
-    .p-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
+    .demo-embed {
       border-radius: 20px;
-      padding: 40px 36px;
-      text-align: left;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: block;
     }
 
-    .p-card.featured {
-      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1));
-      border-color: rgba(99,102,241,0.4);
-      box-shadow: 0 0 60px rgba(99,102,241,0.1);
-    }
-
-    .p-tag {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 100px;
-      margin-bottom: 16px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .p-name { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-    .p-price { font-size: 52px; font-weight: 700; letter-spacing: -2px; margin-bottom: 4px; line-height: 1; }
-    .p-price span { font-size: 16px; font-weight: 300; color: var(--text2); }
-    .p-desc { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
-
-    .p-features { list-style: none; margin-bottom: 28px; }
-    .p-features li { font-size: 14px; color: var(--text2); padding: 9px 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 10px; }
-    .p-features li:last-child { border: none; }
-
-    .p-check {
-      width: 18px; height: 18px; border-radius: 50%;
-      background: rgba(99,102,241,0.15);
-      color: var(--accent1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; flex-shrink: 0;
-    }
-
-    .p-btn {
-      display: block; text-align: center;
-      text-decoration: none;
-      padding: 12px;
-      border-radius: 100px;
-      font-size: 14px; font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .p-btn-glow {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
-      box-shadow: 0 4px 20px rgba(99,102,241,0.3);
-    }
-
-    .p-btn-glow:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(99,102,241,0.5); }
-
-    .p-btn-outline {
-      border: 1px solid var(--glass-border);
-      color: var(--text2);
-    }
-
-    .p-btn-outline:hover { border-color: rgba(99,102,241,0.4); color: var(--text); }
-
-    /* Privacy */
-    .privacy-section {
-      padding: 80px 0;
-    }
+    /* ─── PRIVACY ─── */
+    .privacy-section { padding: 80px 0; }
 
     .privacy-box {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 56px;
-      backdrop-filter: blur(10px);
+      padding: 48px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 60px;
-      align-items: center;
+      align-items: start;
     }
 
-    .privacy-left {}
-    .privacy-icon { font-size: 48px; margin-bottom: 16px; }
-    .privacy-title { font-size: 28px; font-weight: 700; letter-spacing: -1px; margin-bottom: 12px; }
-    .privacy-desc { font-size: 15px; color: var(--text2); line-height: 1.7; }
+    .privacy-icon { font-size: 40px; margin-bottom: 16px; }
+    .privacy-title { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 12px; }
+    .privacy-desc { font-size: 15px; color: var(--text2); line-height: 1.75; }
 
-    .privacy-points { display: flex; flex-direction: column; gap: 14px; }
-    .privacy-point { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--text2); line-height: 1.5; }
-    .pcheck { color: #4ade80; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .privacy-points { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
 
-    /* Final CTA */
-    .final-section { padding: 140px 0; text-align: center; }
+    .privacy-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
 
-    .final-section h2 { font-size: clamp(40px, 6vw, 72px); font-weight: 700; letter-spacing: -2px; margin-bottom: 16px; line-height: 1.1; }
-    .final-section p { font-size: 17px; color: var(--text2); margin-bottom: 40px; font-weight: 300; }
+    .pcheck {
+      color: #10a37f;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
 
-    /* Footer */
+    /* ─── PRICING ─── */
+    .pricing-section { padding: 80px 0; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .p-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .p-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .p-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 40px var(--glow);
+    }
+
+    .p-tag {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .p-name { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .p-price { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1; margin-bottom: 4px; }
+    .p-price span { font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text2); }
+    .p-desc { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+
+    .p-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .p-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); }
+    .p-check { color: var(--chatgpt); font-weight: 700; flex-shrink: 0; }
+
+    .p-btn {
+      display: block;
+      text-align: center;
+      padding: 13px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .p-btn-outline {
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+    }
+    .p-btn-outline:hover { background: var(--surface-hover); }
+    .p-btn-glow {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 24px var(--glow);
+    }
+    .p-btn-glow:hover { transform: translateY(-1px); box-shadow: 0 8px 32px var(--glow); }
+
+    /* ─── FINAL CTA ─── */
+    .final-section {
+      padding: 100px 0 120px;
+      text-align: center;
+      position: relative;
+    }
+
+    .final-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .final-section p {
+      font-size: 18px;
+      color: var(--text2);
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+
+    .final-section small {
+      display: block;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    /* ─── FOOTER ─── */
     footer {
-      border-top: 1px solid var(--glass-border);
-      padding: 32px 48px;
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
       position: relative;
       z-index: 1;
     }
 
     .footer-logo {
-      font-size: 18px; font-weight: 700;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-decoration: none;
     }
 
-    .footer-links { display: flex; gap: 24px; list-style: none; }
-    .footer-links a { font-size: 13px; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+    .footer-links { list-style: none; display: flex; gap: 24px; }
+    .footer-links a { color: var(--text2); text-decoration: none; font-size: 13px; transition: color 0.2s; }
     .footer-links a:hover { color: var(--text); }
     .footer-copy { font-size: 12px; color: var(--text3); }
 
-    /* Animations */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* ─── REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
 
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: none; }
+    }
 
-    @media (max-width: 900px) {
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
       nav { padding: 0 20px; }
       .nav-center { display: none; }
-      .hero { padding: 80px 20px 40px; }
       .container { padding: 0 20px; }
-      .pain-grid, .feats-grid, .steps-grid { grid-template-columns: 1fr; }
-      .steps-grid::before { display: none; }
-      .pricing-grid { grid-template-columns: 1fr; }
-      .privacy-box { grid-template-columns: 1fr; padding: 32px; }
-      .final-section { padding: 80px 0; }
-      footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
+      .sidebar-left { display: none; }
+      .privacy-box { grid-template-columns: 1fr; gap: 32px; }
+      footer { flex-direction: column; text-align: center; padding: 28px 20px; }
     }
   </style>
 </head>
 <body>
 
-<div class="bg-orbs">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-
+<!-- Nav -->
 <nav>
-  <a href="#" class="logo">recallio</a>
+  <a href="#" class="logo">nestiq</a>
   <div class="nav-center">
     <a href="#features" class="nav-link">Features</a>
     <a href="#demo" class="nav-link">Demo</a>
     <a href="#pricing" class="nav-link">Pricing</a>
     <a href="#privacy" class="nav-link">Privacy</a>
   </div>
-  <a href="#" class="nav-cta">Add to Chrome — Free</a>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+    <a href="#" class="nav-cta">Add to Chrome →</a>
+  </div>
 </nav>
 
+<!-- Hero -->
 <section class="hero">
+  <canvas id="dither-canvas"></canvas>
   <div class="hero-pill">
-    <span class="pill-badge">NEW</span>
-    Works on ChatGPT &amp; Claude
+    <div class="pill-dot"></div>
+    Works with ChatGPT &amp; Claude
   </div>
 
   <h1>
-    <span class="h1-line1">Your AI memory,</span>
-    <span class="h1-line2">perfected.</span>
+    <span class="h1-line1">Never lose a</span>
+    <span class="h1-line2">great conversation.</span>
   </h1>
 
-  <p class="hero-sub">Every conversation you've had with ChatGPT or Claude — saved automatically, searchable instantly, stored only on your device. Never lose a thought again.</p>
+  <p class="hero-sub">
+    Nestiq automatically captures every ChatGPT and Claude conversation to your device.
+    Search your entire history in milliseconds. Organise. Export. Keep your AI work yours — always.
+  </p>
 
   <div class="hero-ctas">
-    <a href="#" class="btn-glow">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Add to Chrome — Free
+    <a href="#" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2z"/><circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none"/></svg>
+      Add to Chrome — It's Free
     </a>
-    <a href="#features" class="btn-glass">See how it works →</a>
+    <a href="#demo" class="btn-secondary">
+      Watch demo →
+    </a>
   </div>
 
-  <p class="hero-note">Free for 50 conversations · No account required · 100% private</p>
+  <div class="social-proof">
+    <div class="sp-avatars">
+      <div class="sp-avatar">A</div>
+      <div class="sp-avatar" style="background: linear-gradient(135deg, #10a37f, #06b6d4)">B</div>
+      <div class="sp-avatar" style="background: linear-gradient(135deg, #f97316, #a855f7)">C</div>
+    </div>
+    <span class="sp-stars">★★★★★</span>
+    <span style="color: var(--text2)">Loved by 1,200+ daily AI users</span>
+  </div>
 
-  <div class="hero-visual">
-    <div class="mock-glow"></div>
-    <div class="mock-card">
-      <div class="mock-top-bar">
-        <div class="mock-logo-g">recallio</div>
-        <div class="mock-chips">
-          <div class="mock-chip"><span class="chip-dot" style="background:#6366f1"></span>142</div>
-          <div class="mock-chip"><span class="chip-dot" style="background:#10a37f"></span>89</div>
-          <div class="mock-chip"><span class="chip-dot" style="background:#f97316"></span>53</div>
+  <!-- Mockup -->
+  <div class="hero-mockup">
+    <div class="mockup-glow"></div>
+    <div class="mockup-window">
+      <div class="mockup-bar">
+        <div class="dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
         </div>
+        <div class="mockup-title">Nestiq — Your AI Conversation Library</div>
       </div>
-      <div class="mock-search-row">
-        <div class="mock-search-inner">🔍 &nbsp;Search your AI conversations…</div>
-      </div>
-      <div class="mock-filter-row">
-        <span class="mock-f mock-f-active">All</span>
-        <span class="mock-f mock-f-inactive">ChatGPT</span>
-        <span class="mock-f mock-f-inactive">Claude</span>
-      </div>
-      <div class="mock-list">
-        <div class="mock-row">
-          <div class="mock-row-top"><div class="mock-badge-g">G</div><div class="mock-row-title">Python async/await explained simply</div></div>
-          <div class="mock-row-preview">Can you explain async functions in Python like I'm a beginner...</div>
-          <div class="mock-row-meta"><span class="mock-row-date">2h ago</span><span class="mock-row-msgs">12 msgs</span></div>
+      <div class="sidebar-mock">
+        <div class="sidebar-left">
+          <div class="search-bar">
+            <span>🔍</span>
+            <span style="opacity:0.5">Search your conversations…</span>
+          </div>
+          <div class="platform-pills">
+            <span class="plat-pill active">All</span>
+            <span class="plat-pill chatgpt">ChatGPT</span>
+            <span class="plat-pill claude">Claude</span>
+          </div>
+          <div class="conv-list">
+            <div class="conv-item active">
+              <div class="conv-top">
+                <div class="conv-badge badge-g">G</div>
+                <div class="conv-title">Salary negotiation tactics</div>
+              </div>
+              <div class="conv-preview">How do I negotiate above the offer range…</div>
+              <div class="conv-meta"><span>2h ago</span><span>8 msgs</span></div>
+            </div>
+            <div class="conv-item">
+              <div class="conv-top">
+                <div class="conv-badge badge-c">C</div>
+                <div class="conv-title">Product launch email series</div>
+              </div>
+              <div class="conv-preview">Write a 5-email drip campaign for…</div>
+              <div class="conv-meta"><span>Yesterday</span><span>14 msgs</span></div>
+            </div>
+            <div class="conv-item">
+              <div class="conv-top">
+                <div class="conv-badge badge-g">G</div>
+                <div class="conv-title">Python async/await explained</div>
+              </div>
+              <div class="conv-preview">Can you explain async functions like…</div>
+              <div class="conv-meta"><span>3 days ago</span><span>12 msgs</span></div>
+            </div>
+          </div>
         </div>
-        <div class="mock-row">
-          <div class="mock-row-top"><div class="mock-badge-c">C</div><div class="mock-row-title">Marketing email for product launch</div></div>
-          <div class="mock-row-preview">Write a compelling email announcing our new SaaS product...</div>
-          <div class="mock-row-meta"><span class="mock-row-date">Yesterday</span><span class="mock-row-msgs">8 msgs</span></div>
-        </div>
-        <div class="mock-row">
-          <div class="mock-row-top"><div class="mock-badge-g">G</div><div class="mock-row-title">Salary negotiation strategy</div></div>
-          <div class="mock-row-preview">I have a job offer for $95k but expected more. How do I negotiate...</div>
-          <div class="mock-row-meta"><span class="mock-row-date">3 days ago</span><span class="mock-row-msgs">6 msgs</span></div>
+        <div class="chat-area">
+          <div class="chat-msg user">
+            <div class="chat-av av-user">Y</div>
+            <div class="chat-bubble">I have a job offer for $95k but I expected more. How do I negotiate effectively?</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-av av-gpt">G</div>
+            <div class="chat-bubble">Great position to negotiate from. Lead with market data — the median for this role is $110k. Reference competing offers if you have them, and frame it as ensuring long-term fit...</div>
+          </div>
+          <div class="nestiq-tag">✓ Saved by Nestiq — 2 hours ago · Stored locally on your device</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- Main content -->
 <div class="container">
+
+  <!-- Pain -->
   <section class="pain reveal" id="features">
     <div class="section-tag">The Problem</div>
     <h2 class="section-title">Sound <span class="gradient-text">familiar?</span></h2>
@@ -746,111 +929,555 @@
       <div class="pain-card">
         <div class="pain-icon">😤</div>
         <div class="pain-title">"I had that conversation last week…"</div>
-        <div class="pain-desc">Scrolling through hundreds of untitled chats trying to find the one that solved your problem perfectly. You never find it.</div>
+        <div class="pain-desc">Scrolling through hundreds of untitled chats hunting the one that solved your problem. You never find it in time.</div>
       </div>
       <div class="pain-card">
         <div class="pain-icon">🔍</div>
         <div class="pain-title">Native search is broken</div>
-        <div class="pain-desc">ChatGPT and Claude only match titles, not content. Their search is so shallow it's almost useless for real history.</div>
+        <div class="pain-desc">ChatGPT and Claude only search titles. Your most valuable thinking is buried in content their search completely ignores.</div>
       </div>
       <div class="pain-card">
         <div class="pain-icon">🔄</div>
-        <div class="pain-title">Explaining from scratch again</div>
-        <div class="pain-desc">You had a perfect session. Now you're facing the same problem and have to re-explain all the context again. Frustrating.</div>
+        <div class="pain-title">Re-explaining from scratch again</div>
+        <div class="pain-desc">You had a perfect session. Now you're facing the same problem with zero memory of it. All that context — gone.</div>
       </div>
     </div>
   </section>
 
+  <!-- Features -->
   <section class="feats reveal">
     <div class="section-tag">Features</div>
     <h2 class="section-title">Built for how you <span class="gradient-text">actually work.</span></h2>
     <div class="feats-grid">
       <div class="feat-item">
-        <div class="feat-icon-wrap">⚡</div>
+        <div class="feat-icon">⚡</div>
         <div class="feat-title">Instant full-text search</div>
-        <div class="feat-desc">Search actual conversation content — not just titles. Find anything across your entire history in milliseconds.</div>
+        <div class="feat-desc">Search actual conversation content, not just titles. Find anything across your entire history in milliseconds from local storage.</div>
       </div>
       <div class="feat-item">
-        <div class="feat-icon-wrap">🤫</div>
+        <div class="feat-icon">🤫</div>
         <div class="feat-title">Completely automatic</div>
-        <div class="feat-desc">Install once and forget it. Every conversation saved silently in the background. Zero clicks required from you.</div>
+        <div class="feat-desc">Install once. Nestiq silently captures every conversation in the background across ChatGPT and Claude — zero effort required.</div>
       </div>
       <div class="feat-item">
-        <div class="feat-icon-wrap">🎯</div>
-        <div class="feat-title">Both platforms unified</div>
-        <div class="feat-desc">ChatGPT and Claude in one interface. Filter by platform or search everything at once.</div>
+        <div class="feat-icon">🎯</div>
+        <div class="feat-title">Both platforms, one place</div>
+        <div class="feat-desc">ChatGPT and Claude unified in a single interface. Filter by platform or search everything at once.</div>
       </div>
       <div class="feat-item">
-        <div class="feat-icon-wrap">🔗</div>
-        <div class="feat-title">One-click return</div>
-        <div class="feat-desc">Found it? Click any result to jump straight back to that conversation instantly.</div>
+        <div class="feat-icon">📁</div>
+        <div class="feat-title">Collections &amp; organisation</div>
+        <div class="feat-desc">Group conversations into colour-coded collections. Multi-select, bulk-manage, keep your library clean. (Pro)</div>
       </div>
       <div class="feat-item">
-        <div class="feat-icon-wrap">🔒</div>
-        <div class="feat-title">Local-first privacy</div>
-        <div class="feat-desc">Nothing ever leaves your device. No servers, no accounts, no data collection. Fully auditable.</div>
+        <div class="feat-icon">💾</div>
+        <div class="feat-title">Prompt library</div>
+        <div class="feat-desc">Save reusable prompts with titles. Insert any saved prompt into a conversation with one click — stop retyping the same context.</div>
       </div>
       <div class="feat-item">
-        <div class="feat-icon-wrap">🚀</div>
+        <div class="feat-icon">📤</div>
+        <div class="feat-title">Export to PDF &amp; Markdown</div>
+        <div class="feat-desc">Export individual conversations or entire batches. Clean formatting, ready to use anywhere outside the extension. (Pro)</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">Usage analytics</div>
+        <div class="feat-desc">Track streaks, platform usage, peak patterns, and top topics. Generate shareable milestone cards as downloadable images. (Pro)</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🔒</div>
+        <div class="feat-title">Local-first, always private</div>
+        <div class="feat-desc">Everything lives in Chrome's local storage API. No server, no account, no transmission. Nestiq cannot phone home — by architecture.</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🚀</div>
         <div class="feat-title">Zero setup</div>
-        <div class="feat-desc">No configuration. No onboarding flow. Install and it just works — immediately, silently, perfectly.</div>
+        <div class="feat-desc">No onboarding. No configuration. Install and it works immediately, silently, perfectly — from the very first conversation.</div>
       </div>
     </div>
   </section>
 
+  <!-- Steps -->
   <section class="steps-section reveal">
     <div class="section-tag">How it works</div>
     <h2 class="section-title">Up and running in <span class="gradient-text">60 seconds.</span></h2>
     <div class="steps-grid">
       <div class="step-card">
-        <div class="step-bubble">1</div>
+        <div class="step-num">01</div>
         <div class="step-title">Install the extension</div>
-        <div class="step-desc">One click from the Chrome Web Store. No account, no email, nothing to fill out.</div>
+        <div class="step-desc">One click from the Chrome Web Store. No account, no email, nothing to fill in. It's live before you blink.</div>
       </div>
       <div class="step-card">
-        <div class="step-bubble">2</div>
+        <div class="step-num">02</div>
         <div class="step-title">Chat as normal</div>
-        <div class="step-desc">Use ChatGPT and Claude exactly as always. Recallio works invisibly in the background.</div>
+        <div class="step-desc">Use ChatGPT and Claude exactly as you always have. Nestiq works invisibly in the sidebar background.</div>
       </div>
       <div class="step-card">
-        <div class="step-bubble">3</div>
-        <div class="step-title">Search anything</div>
-        <div class="step-desc">Click the icon. Type anything. Your entire AI history is instantly searchable.</div>
+        <div class="step-num">03</div>
+        <div class="step-title">Search your entire history</div>
+        <div class="step-desc">Click the icon, type anything. Every conversation you've had — searchable, organised, and one click away.</div>
       </div>
     </div>
   </section>
 
-  <!-- Demo Section -->
-    <section style="padding: 100px 0;" id="demo">
+  <!-- Demo -->
+  <section class="demo-section reveal" id="demo">
     <div style="text-align: center; margin-bottom: 40px;">
-        <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #06b6d4; font-weight: 500; margin-bottom: 12px;">See It In Action</p>
-        <h2 style="font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.1;">
-        Watch how it <span style="background: linear-gradient(135deg, #6366f1, #a855f7, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">works.</span>
-        </h2>
+      <div class="section-tag" style="display:inline-block">See It In Action</div>
+      <h2 class="section-title" style="margin-bottom: 0">
+        Watch how it <span class="gradient-text">works.</span>
+      </h2>
     </div>
-    <iframe
-        src="demo.html"
-        width="100%"
-        height="700px"
-        frameborder="0"
-        scrolling="no"
-        style="border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); display: block;">
-    </iframe>
-    </section>
 
+    <!-- Inline interactive demo (no iframe) -->
+    <div class="idemo-wrap">
+
+      <!-- Top bar -->
+      <div class="idemo-bar">
+        <div class="idemo-dots">
+          <span class="idemo-dot" style="background:#ff5f57"></span>
+          <span class="idemo-dot" style="background:#febc2e"></span>
+          <span class="idemo-dot" style="background:#28c840"></span>
+        </div>
+        <div class="idemo-title" id="idemoTitle">The Problem — Lost Conversations</div>
+        <div class="idemo-stepdots">
+          <span class="idemo-sd" id="isd0"></span>
+          <span class="idemo-sd" id="isd1"></span>
+          <span class="idemo-sd" id="isd2"></span>
+          <span class="idemo-sd" id="isd3"></span>
+        </div>
+      </div>
+
+      <!-- Scenes -->
+      <div class="idemo-scenes">
+
+        <!-- Scene 0: Problem -->
+        <div class="idemo-scene" id="iscene0">
+          <div class="idemo-left">
+            <div class="idemo-steplabel"><span class="idemo-stepbadge">!</span> The Problem</div>
+            <h3 class="idemo-heading">Your AI history is <span class="idemo-hl">scattered & unsearchable.</span></h3>
+            <p class="idemo-body">You've had hundreds of brilliant AI conversations. But without a way to find them, they're as good as deleted. ChatGPT and Claude only search titles — not the actual content where your thinking lives.</p>
+          </div>
+          <div class="idemo-right">
+            <div class="idemo-lost-list">
+              <div class="idemo-lost-item" id="ilost0"><span class="idemo-lost-icon">💭</span><div><div class="idemo-lost-title">That marketing email framework…</div><div class="idemo-lost-sub">3 weeks ago · ChatGPT · Can't find it</div></div></div>
+              <div class="idemo-lost-item" id="ilost1"><span class="idemo-lost-icon">💭</span><div><div class="idemo-lost-title">The Python refactor pattern I used…</div><div class="idemo-lost-sub">2 weeks ago · Claude · Scrolled past forever</div></div></div>
+              <div class="idemo-lost-item" id="ilost2"><span class="idemo-lost-icon">💭</span><div><div class="idemo-lost-title">Salary negotiation script that worked…</div><div class="idemo-lost-sub">Last month · ChatGPT · Lost in 300+ chats</div></div></div>
+              <div class="idemo-lost-item" id="ilost3"><span class="idemo-lost-icon">✨</span><div><div class="idemo-lost-title" style="color:var(--accent)">Nestiq finds them all. Instantly.</div><div class="idemo-lost-sub" style="color:var(--accent3)">Full-text search · Both platforms · Local only</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 1: Auto-save -->
+        <div class="idemo-scene" id="iscene1">
+          <div class="idemo-left">
+            <div class="idemo-steplabel"><span class="idemo-stepbadge">1</span> Auto-Capture</div>
+            <h3 class="idemo-heading">Every conversation <span class="idemo-hl">saved automatically.</span></h3>
+            <p class="idemo-body">Nestiq silently watches your ChatGPT and Claude tabs. The moment a conversation happens, it's captured — title, date, platform, and full content. Nothing to click. Nothing to remember.</p>
+          </div>
+          <div class="idemo-right">
+            <div class="idemo-browser">
+              <div class="idemo-browser-bar">
+                <div class="idemo-b-dots"><span class="idemo-dot" style="background:#ff5f57;width:8px;height:8px"></span><span class="idemo-dot" style="background:#febc2e;width:8px;height:8px"></span><span class="idemo-dot" style="background:#28c840;width:8px;height:8px"></span></div>
+                <div class="idemo-url">chatgpt.com</div>
+              </div>
+              <div class="idemo-chat">
+                <div class="idemo-cmsg idemo-cuser" id="imsg0"><div class="idemo-cav" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">Y</div><div class="idemo-cbubble idemo-cuser-b">How do I set up CI/CD with GitHub Actions for a Node.js app?</div></div>
+                <div class="idemo-cmsg" id="imsg1"><div class="idemo-cav" style="background:var(--chatgpt)">G</div><div id="itypingwrap"><div class="idemo-typing" id="ityping1"><span></span><span></span><span></span></div><div class="idemo-cbubble" id="ireply1" style="display:none">Here's a complete workflow: Create <code>.github/workflows/ci.yml</code>, define your Node version matrix, run <code>npm ci</code> then <code>npm test</code> on push…</div></div></div>
+                <div class="idemo-save-toast" id="isavetoast"><div class="idemo-save-dot"></div> Saving to Nestiq…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 2: Search -->
+        <div class="idemo-scene" id="iscene2">
+          <div class="idemo-left">
+            <div class="idemo-steplabel"><span class="idemo-stepbadge">2</span> Full-Text Search</div>
+            <h3 class="idemo-heading">Find anything <span class="idemo-hl">in milliseconds.</span></h3>
+            <p class="idemo-body">Type any word or phrase — Nestiq searches the actual content of every saved conversation, not just titles. Results appear as you type, across both ChatGPT and Claude simultaneously.</p>
+          </div>
+          <div class="idemo-right">
+            <div class="idemo-sidebar">
+              <div class="idemo-search-box"><span>🔍</span><span class="idemo-search-text" id="isearchtext">Search conversations…</span><span class="idemo-cursor" id="isearchcursor">|</span></div>
+              <div class="idemo-filter-row">
+                <span class="idemo-filter idemo-f-active">All</span>
+                <span class="idemo-filter" style="color:var(--chatgpt)">ChatGPT</span>
+                <span class="idemo-filter" style="color:var(--claude)">Claude</span>
+              </div>
+              <div class="idemo-results" id="iresults">
+                <div class="idemo-result" id="ires0">
+                  <div class="idemo-res-top"><div class="idemo-res-badge" style="background:var(--chatgpt)">G</div><div class="idemo-res-title">Salary negotiation at a startup</div></div>
+                  <div class="idemo-res-preview">…lead with market data, the median for this role is $110k. Reference competing <mark id="ism0"></mark>…</div>
+                </div>
+                <div class="idemo-result" id="ires1">
+                  <div class="idemo-res-top"><div class="idemo-res-badge" style="background:var(--claude)">C</div><div class="idemo-res-title">Job offer evaluation framework</div></div>
+                  <div class="idemo-res-preview">…total comp matters: base + equity + benefits. For a <mark id="ism1"></mark> role at this stage…</div>
+                </div>
+                <div class="idemo-result" id="ires2">
+                  <div class="idemo-res-top"><div class="idemo-res-badge" style="background:var(--chatgpt)">G</div><div class="idemo-res-title">Resume for senior engineering role</div></div>
+                  <div class="idemo-res-preview">…quantify impact: "reduced deploy time by 60%". Mention the <mark id="ism2"></mark> tools you used…</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 3: Result -->
+        <div class="idemo-scene" id="iscene3">
+          <div class="idemo-left">
+            <div class="idemo-steplabel"><span class="idemo-stepbadge">3</span> Jump Back</div>
+            <h3 class="idemo-heading">One click back to <span class="idemo-hl">any conversation.</span></h3>
+            <p class="idemo-body">Found it? Click the result and Nestiq opens the exact ChatGPT or Claude conversation in a new tab — right where you left off. Your past work, always one search away.</p>
+          </div>
+          <div class="idemo-right">
+            <div class="idemo-browser">
+              <div class="idemo-browser-bar">
+                <div class="idemo-b-dots"><span style="width:8px;height:8px;border-radius:50%;background:#ff5f57;display:inline-block"></span><span style="width:8px;height:8px;border-radius:50%;background:#febc2e;display:inline-block;margin:0 3px"></span><span style="width:8px;height:8px;border-radius:50%;background:#28c840;display:inline-block"></span></div>
+                <div class="idemo-url" id="ifinalurl">chatgpt.com/c/a3b9…</div>
+              </div>
+              <div class="idemo-chat">
+                <div class="idemo-cmsg idemo-cuser"><div class="idemo-cav" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">Y</div><div class="idemo-cbubble idemo-cuser-b">I have a job offer for $95k. How do I negotiate higher?</div></div>
+                <div class="idemo-cmsg" id="ifinalreply" style="opacity:0;transition:opacity 0.5s ease 0.3s"><div class="idemo-cav" style="background:var(--chatgpt)">G</div><div class="idemo-cbubble">Lead with market data — $110k median for this role. Frame it as alignment, not demand. Have a walk-away number ready…</div></div>
+                <div class="idemo-nestiq-tag" id="ifinaltag" style="opacity:0;transition:opacity 0.5s ease 0.7s">✓ Found via Nestiq · Saved 3 weeks ago · Stored locally on your device</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /scenes -->
+
+      <!-- Progress + controls -->
+      <div class="idemo-footer">
+        <div class="idemo-progress-row">
+          <div class="idemo-steps-nav">
+            <div class="idemo-step-btn" id="ips0" onclick="iGoTo(0)">Problem</div>
+            <div class="idemo-step-btn" id="ips1" onclick="iGoTo(1)">Auto-save</div>
+            <div class="idemo-step-btn" id="ips2" onclick="iGoTo(2)">Search</div>
+            <div class="idemo-step-btn" id="ips3" onclick="iGoTo(3)">Result</div>
+          </div>
+          <div class="idemo-timer-label" id="itimerLabel">Auto-advancing in 8s</div>
+        </div>
+        <div class="idemo-progress-track"><div class="idemo-progress-fill" id="iprogressFill"></div></div>
+        <div class="idemo-ctrl-row">
+          <button class="idemo-btn" id="iprevBtn" onclick="iPrev()" disabled>← Prev</button>
+          <button class="idemo-btn idemo-btn-primary" id="iplayBtn" onclick="iTogglePlay()">⏸ Pause</button>
+          <button class="idemo-btn" id="inextBtn" onclick="iNext()">Next →</button>
+        </div>
+      </div>
+
+    </div><!-- /idemo-wrap -->
+  </section>
+
+  <style>
+    /* ── INLINE DEMO STYLES ── */
+    .idemo-wrap {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .idemo-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .idemo-dots { display: flex; gap: 6px; }
+    .idemo-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .idemo-title { font-size: 12px; color: var(--text2); flex: 1; text-align: center; }
+    .idemo-stepdots { display: flex; gap: 5px; }
+    .idemo-sd { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); transition: all 0.4s; }
+    .idemo-sd.active { background: var(--accent); box-shadow: 0 0 6px var(--glow); }
+    .idemo-sd.done { background: var(--accent2); }
+
+    .idemo-scenes { position: relative; height: 420px; overflow: hidden; }
+
+    .idemo-scene {
+      position: absolute; inset: 0;
+      padding: 36px 44px;
+      display: flex; align-items: center; gap: 48px;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+    }
+    .idemo-scene.active { opacity: 1; transform: none; pointer-events: all; }
+    .idemo-scene.exit   { opacity: 0; transform: translateY(-16px); }
+
+    .idemo-left { flex: 1; max-width: 380px; }
+    .idemo-right { flex: 1; max-width: 360px; }
+
+    .idemo-steplabel {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .idemo-stepbadge {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(124,106,247,0.18); border: 1px solid rgba(124,106,247,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: var(--accent); font-weight: 700;
+    }
+    .idemo-heading { font-family: 'DM Serif Display', serif; font-size: clamp(18px,2.4vw,26px); line-height: 1.25; margin-bottom: 12px; }
+    .idemo-hl { background: linear-gradient(125deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-style:italic; }
+    .idemo-body { font-size: 14px; color: var(--text2); line-height: 1.75; font-weight: 300; }
+
+    /* Lost list */
+    .idemo-lost-list { display: flex; flex-direction: column; gap: 10px; }
+    .idemo-lost-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 11px 14px;
+      opacity: 0; transform: translateX(10px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .idemo-lost-item.show { opacity: 1; transform: none; }
+    .idemo-lost-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .idemo-lost-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+    .idemo-lost-sub { font-size: 11px; color: var(--text2); }
+
+    /* Browser mock */
+    .idemo-browser {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+    .idemo-browser-bar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 9px 12px; display: flex; align-items: center; gap: 9px;
+    }
+    .idemo-b-dots { display: flex; gap: 4px; }
+    .idemo-url {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 5px; padding: 3px 9px; font-size: 10px; color: var(--text2);
+      transition: color 0.3s;
+    }
+
+    /* Chat */
+    .idemo-chat { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .idemo-cmsg { display: flex; gap: 8px; align-items: flex-start; }
+    .idemo-cuser { flex-direction: row-reverse; }
+    .idemo-cav { width: 26px; height: 26px; border-radius: 7px; font-size: 11px; font-weight: 600; display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0; }
+    .idemo-cbubble { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px 12px; font-size:12px; color:var(--text); line-height:1.6; }
+    .idemo-cbubble code { background:rgba(124,106,247,0.12);border-radius:4px;padding:1px 5px;font-size:11px;color:var(--accent); }
+    .idemo-cuser-b { background:linear-gradient(135deg,rgba(124,106,247,0.15),rgba(176,106,247,0.09)); border-color:rgba(124,106,247,0.22); }
+    .idemo-cmsg.visible { opacity:1!important; }
+
+    /* Typing indicator */
+    .idemo-typing { display:flex;gap:4px;align-items:center;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;width:fit-content; }
+    .idemo-typing span { width:5px;height:5px;border-radius:50%;background:var(--text3);animation:iTypePulse 1.2s infinite; }
+    .idemo-typing span:nth-child(2){animation-delay:0.2s}
+    .idemo-typing span:nth-child(3){animation-delay:0.4s}
+    @keyframes iTypePulse {0%,100%{opacity:0.3}50%{opacity:1;transform:translateY(-2px)}}
+
+    /* Save toast */
+    .idemo-save-toast {
+      display:flex;align-items:center;gap:7px;
+      font-size:11px;font-weight:500;color:var(--text2);
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:8px;padding:7px 12px;width:fit-content;
+      opacity:0;transform:translateY(4px);
+      transition:opacity 0.4s ease,transform 0.4s ease;
+    }
+    .idemo-save-toast.show { opacity:1;transform:none; }
+    .idemo-save-dot { width:7px;height:7px;border-radius:50%;background:var(--text3);animation:iSavePulse 1s infinite; }
+    @keyframes iSavePulse{0%,100%{opacity:0.4}50%{opacity:1}}
+
+    /* Sidebar */
+    .idemo-sidebar { background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;padding:12px; }
+    .idemo-search-box { background:var(--surface);border:1px solid var(--border-strong);border-radius:9px;padding:8px 12px;font-size:12px;color:var(--text2);display:flex;gap:7px;align-items:center;margin-bottom:9px; }
+    .idemo-search-text { flex:1; }
+    .idemo-cursor { animation:iCursorBlink 1s step-end infinite;color:var(--accent); }
+    @keyframes iCursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .idemo-filter-row { display:flex;gap:5px;margin-bottom:9px; }
+    .idemo-filter { font-size:11px;font-weight:500;padding:3px 11px;border-radius:100px;border:1px solid var(--border);cursor:pointer; }
+    .idemo-f-active { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent; }
+    .idemo-results { display:flex;flex-direction:column;gap:6px; }
+    .idemo-result {
+      background:var(--surface);border:1px solid var(--border);border-radius:10px;
+      padding:10px 12px;cursor:pointer;transition:all 0.2s;
+      opacity:0;transform:translateY(6px);
+    }
+    .idemo-result.show { opacity:1;transform:none; }
+    .idemo-result.highlighted { border-color:var(--accent);background:rgba(124,106,247,0.07); }
+    .idemo-res-top { display:flex;align-items:center;gap:7px;margin-bottom:3px; }
+    .idemo-res-badge { width:16px;height:16px;border-radius:4px;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0; }
+    .idemo-res-title { font-size:12px;font-weight:500;color:var(--text); }
+    .idemo-res-preview { font-size:11px;color:var(--text2);line-height:1.5; }
+    .idemo-res-preview mark { background:rgba(124,106,247,0.25);color:var(--accent);border-radius:2px;padding:0 2px; }
+
+    /* Nestiq tag */
+    .idemo-nestiq-tag { background:rgba(124,106,247,0.07);border:1px solid rgba(124,106,247,0.18);border-radius:9px;padding:8px 12px;font-size:11px;color:var(--accent);text-align:center; }
+
+    /* Footer */
+    .idemo-footer { border-top:1px solid var(--border);padding:14px 20px 16px; }
+    .idemo-progress-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
+    .idemo-steps-nav { display:flex;gap:4px; }
+    .idemo-step-btn { font-size:11px;padding:4px 12px;border-radius:100px;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all 0.2s; }
+    .idemo-step-btn:hover { border-color:var(--accent);color:var(--accent); }
+    .idemo-step-btn.active { background:var(--accent);color:#fff;border-color:var(--accent); }
+    .idemo-step-btn.done { color:var(--text);border-color:var(--border-strong); }
+    .idemo-timer-label { font-size:11px;color:var(--text3); }
+    .idemo-progress-track { height:2px;background:var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden; }
+    .idemo-progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:none; }
+    .idemo-ctrl-row { display:flex;gap:8px;justify-content:center; }
+    .idemo-btn { background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:100px;padding:6px 18px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s; }
+    .idemo-btn:hover:not(:disabled) { border-color:var(--border-strong);color:var(--text); }
+    .idemo-btn:disabled { opacity:0.3;cursor:default; }
+    .idemo-btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent; }
+    .idemo-btn-primary:hover { opacity:0.9; }
+  </style>
+
+  <script>
+  /* ── INLINE DEMO LOGIC ── */
+  (function(){
+    let cur = 0, playing = true, pInterval = null, pTimeout = null, pVal = 0;
+    const DUR = 8000, TICK = 50;
+    const sceneIds = ['iscene0','iscene1','iscene2','iscene3'];
+    const enterFns = [enter0, enter1, enter2, enter3];
+
+    function goTo(idx) {
+      if (idx === cur) return;
+      clearTimers();
+      const old = document.getElementById(sceneIds[cur]);
+      old.classList.remove('active'); old.classList.add('exit');
+      setTimeout(() => old.classList.remove('exit'), 450);
+      cur = idx;
+      document.getElementById(sceneIds[cur]).classList.add('active');
+      updateUI(); enterFns[cur]();
+      if (playing) startProgress();
+    }
+    window.iGoTo = goTo;
+    window.iNext = () => goTo((cur + 1) % 4);
+    window.iPrev = () => goTo((cur - 1 + 4) % 4);
+    window.iTogglePlay = function() {
+      playing = !playing;
+      const btn = document.getElementById('iplayBtn');
+      if (playing) { btn.textContent = '⏸ Pause'; btn.classList.add('idemo-btn-primary'); startProgress(); }
+      else          { btn.textContent = '▶ Play';  btn.classList.remove('idemo-btn-primary'); clearTimers(); }
+    };
+
+    function clearTimers() {
+      clearInterval(pInterval); clearTimeout(pTimeout);
+      pVal = 0; document.getElementById('iprogressFill').style.width = '0%';
+    }
+    function startProgress() {
+      clearTimers(); pVal = 0;
+      const total = DUR / TICK;
+      pInterval = setInterval(() => {
+        pVal++;
+        document.getElementById('iprogressFill').style.width = (pVal / total * 100) + '%';
+        const rem = Math.ceil((DUR - pVal * TICK) / 1000);
+        document.getElementById('itimerLabel').textContent = 'Auto-advancing in ' + rem + 's';
+        if (pVal >= total) { clearInterval(pInterval); window.iNext(); }
+      }, TICK);
+    }
+
+    function updateUI() {
+      for (let i = 0; i < 4; i++) {
+        const sd = document.getElementById('isd' + i);
+        const ps = document.getElementById('ips' + i);
+        sd.className = 'idemo-sd' + (i === cur ? ' active' : i < cur ? ' done' : '');
+        ps.className = 'idemo-step-btn' + (i === cur ? ' active' : i < cur ? ' done' : '');
+      }
+      document.getElementById('iprevBtn').disabled = cur === 0;
+      const titles = ['The Problem — Lost Conversations','Step 1 — Auto-saving your chats','Step 2 — Search your history','Step 3 — Jump back instantly'];
+      document.getElementById('idemoTitle').textContent = titles[cur];
+    }
+
+    function enter0() {
+      ['ilost0','ilost1','ilost2','ilost3'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.remove('show');
+        el.style.opacity='0'; el.style.transform='translateX(10px)';
+        setTimeout(() => el.classList.add('show'), 200 + i * 160);
+      });
+    }
+
+    function enter1() {
+      const msg0 = document.getElementById('imsg0');
+      const msg1 = document.getElementById('imsg1');
+      const typing = document.getElementById('ityping1');
+      const reply  = document.getElementById('ireply1');
+      const toast  = document.getElementById('isavetoast');
+      const saveDot = toast.querySelector('.idemo-save-dot');
+      msg0.style.opacity='0'; msg0.style.transform='translateY(8px)';
+      msg1.style.opacity='0'; msg1.style.transform='translateY(8px)';
+      typing.style.display='flex'; reply.style.display='none';
+      toast.classList.remove('show'); toast.style.borderColor=''; toast.style.color='';
+      saveDot.style.background = 'var(--text3)';
+      toast.innerHTML = '<div class="idemo-save-dot"></div> Saving to Nestiq…';
+      setTimeout(() => { msg0.style.transition='all 0.4s'; msg0.style.opacity='1'; msg0.style.transform='none'; }, 300);
+      setTimeout(() => { msg1.style.transition='all 0.4s'; msg1.style.opacity='1'; msg1.style.transform='none'; }, 900);
+      setTimeout(() => { typing.style.display='none'; reply.style.display='block'; }, 2800);
+      setTimeout(() => { toast.classList.add('show'); }, 3600);
+      setTimeout(() => {
+        toast.style.borderColor='rgba(16,163,127,0.35)'; toast.style.color='#10a37f';
+        toast.innerHTML = '<div class="idemo-save-dot" style="background:#10a37f"></div> Saved to Nestiq ✓';
+      }, 5200);
+    }
+
+    function enter2() {
+      document.getElementById('isearchtext').textContent = '';
+      ['ires0','ires1','ires2'].forEach(id => document.getElementById(id).classList.remove('show','highlighted'));
+      ['ism0','ism1','ism2'].forEach(id => { document.getElementById(id).textContent=''; });
+      const query = 'salary'; let typed = '';
+      query.split('').forEach((ch, i) => {
+        setTimeout(() => {
+          typed += ch;
+          document.getElementById('isearchtext').textContent = typed;
+          if (i === 1) document.getElementById('ires2').classList.add('show');
+          if (i === 3) {
+            document.getElementById('ires1').classList.add('show');
+            document.getElementById('ires0').classList.add('show');
+            ['ism0','ism1','ism2'].forEach(id => { document.getElementById(id).textContent='salary'; });
+          }
+          if (i === query.length - 1) {
+            setTimeout(() => document.getElementById('ires0').classList.add('highlighted'), 350);
+          }
+        }, 500 + i * 190);
+      });
+    }
+
+    function enter3() {
+      const reply = document.getElementById('ifinalreply');
+      const tag   = document.getElementById('ifinaltag');
+      const url   = document.getElementById('ifinalurl');
+      reply.style.opacity='0'; tag.style.opacity='0';
+      url.style.color = ''; url.textContent = 'chatgpt.com/c/a3b9…';
+      setTimeout(() => { reply.style.opacity='1'; }, 280);
+      setTimeout(() => { tag.style.opacity='1'; },   700);
+      setTimeout(() => { url.style.color='#10a37f'; url.textContent='✓ chatgpt.com/c/a3b9… (opened)'; }, 500);
+    }
+
+    // Init
+    document.getElementById(sceneIds[0]).classList.add('active');
+    updateUI(); enter0(); startProgress();
+  })();
+  </script>
+
+  <!-- Pricing -->
   <section class="pricing-section reveal" id="pricing">
-    <div class="section-tag">Pricing</div>
-    <h2 class="section-title">Simple and <span class="gradient-text">transparent.</span></h2>
+    <div style="text-align: center;">
+      <div class="section-tag">Pricing</div>
+      <h2 class="section-title">Simple and <span class="gradient-text">transparent.</span></h2>
+    </div>
     <div class="pricing-grid">
       <div class="p-card">
         <div class="p-name">Free</div>
         <div class="p-price">$0 <span>forever</span></div>
-        <div class="p-desc">Perfect for getting started</div>
+        <div class="p-desc">Get started immediately</div>
         <ul class="p-features">
           <li><span class="p-check">✓</span>50 conversations saved</li>
+          <li><span class="p-check">✓</span>5 saved prompts</li>
           <li><span class="p-check">✓</span>Full-text search</li>
           <li><span class="p-check">✓</span>ChatGPT + Claude</li>
-          <li><span class="p-check">✓</span>Local storage, fully private</li>
+          <li><span class="p-check">✓</span>100% local, fully private</li>
         </ul>
         <a href="#" class="p-btn p-btn-outline">Add to Chrome</a>
       </div>
@@ -860,60 +1487,180 @@
         <div class="p-price">$6.99 <span>/ month</span></div>
         <div class="p-desc">For daily AI power users</div>
         <ul class="p-features">
-          <li><span class="p-check">✓</span>Unlimited conversations</li>
-          <li><span class="p-check">✓</span>Full-text search</li>
+          <li><span class="p-check">✓</span>400 conversations</li>
+          <li><span class="p-check">✓</span>Unlimited prompts</li>
+          <li><span class="p-check">✓</span>Collections &amp; folders</li>
           <li><span class="p-check">✓</span>Export PDF / Markdown</li>
-          <li><span class="p-check">✓</span>Star & organize favorites</li>
-          <li><span class="p-check">✓</span>Priority support</li>
+          <li><span class="p-check">✓</span>Analytics + milestone cards</li>
         </ul>
         <a href="#" class="p-btn p-btn-glow">Start Free Trial</a>
       </div>
     </div>
   </section>
 
+  <!-- Privacy -->
   <section class="privacy-section reveal" id="privacy">
     <div class="privacy-box">
       <div class="privacy-left">
         <div class="privacy-icon">🔒</div>
         <div class="privacy-title">Your conversations stay yours.</div>
-        <p class="privacy-desc">AI conversations are deeply personal. You ask things you wouldn't say out loud. We built Recallio with local-first architecture so we literally cannot see your data.</p>
+        <p class="privacy-desc">AI conversations are personal. You ask things you wouldn't say aloud. Nestiq is built with local-first architecture so we literally cannot access your data — not even in principle.</p>
       </div>
       <div class="privacy-points">
-        <div class="privacy-point"><span class="pcheck">✓</span>Everything stored locally via Chrome storage API — never on our servers</div>
-        <div class="privacy-point"><span class="pcheck">✓</span>We have no backend that receives your conversation data</div>
-        <div class="privacy-point"><span class="pcheck">✓</span>No data is ever transmitted without your explicit permission</div>
-        <div class="privacy-point"><span class="pcheck">✓</span>Delete your entire history with a single click anytime</div>
-        <div class="privacy-point"><span class="pcheck">✓</span>Fully open source — the code is on GitHub for anyone to audit</div>
+        <div class="privacy-point"><span class="pcheck">✓</span>Everything stored in Chrome's local storage API — never on our servers</div>
+        <div class="privacy-point"><span class="pcheck">✓</span>No backend exists to receive your conversation data</div>
+        <div class="privacy-point"><span class="pcheck">✓</span>No data transmission without your explicit action</div>
+        <div class="privacy-point"><span class="pcheck">✓</span>Delete your entire history in one click, anytime</div>
+        <div class="privacy-point"><span class="pcheck">✓</span>Open source — the code is on GitHub for anyone to audit</div>
       </div>
     </div>
   </section>
 
+  <!-- Final CTA -->
   <section class="final-section reveal">
-    <h2>Stop losing your<br><span class="gradient-text">best conversations.</span></h2>
-    <p>Install free. No account. No email. No risk.</p>
-    <a href="#" class="btn-glow" style="font-size:16px; padding: 16px 40px; display:inline-flex;">
+    <h2>Stop losing your<br><span class="gradient-text">best thinking.</span></h2>
+    <p>Free forever. No account. No email. No risk.</p>
+    <a href="#" class="btn-primary" style="font-size:16px; padding:16px 40px;">
       Add to Chrome — It's Free
     </a>
-    <p style="margin-top: 16px; font-size: 13px; color: var(--text3);">No account · No email · No credit card</p>
+    <small>No account · No email · No credit card</small>
   </section>
 </div>
 
 <footer>
-  <a href="#" class="footer-logo">recallio</a>
+  <a href="#" class="footer-logo">nestiq</a>
   <ul class="footer-links">
     <li><a href="#">Privacy</a></li>
     <li><a href="#">Terms</a></li>
     <li><a href="#">GitHub</a></li>
     <li><a href="#">Contact</a></li>
   </ul>
-  <span class="footer-copy">© 2025 Recallio. All rights reserved.</span>
+  <span class="footer-copy">© 2025 Nestiq. All rights reserved.</span>
 </footer>
 
 <script>
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+/* ─── THEME ─── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  updateDitherColors();
+}
+
+/* ─── DITHERING ANIMATION (hero-only, ambient) ─── */
+(function() {
+  const canvas = document.getElementById('dither-canvas');
+  const ctx = canvas.getContext('2d');
+  const hero = canvas.parentElement;
+
+  let w, h, time = 0;
+  // Very slow drift — ambient, not attention-grabbing
+  const SPEED = 0.00045;
+  // Larger pixel blocks = softer, more painterly look
+  const PIXEL = 5;
+
+  function resize() {
+    w = canvas.width  = hero.offsetWidth;
+    h = canvas.height = hero.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // 4×4 Bayer ordered dither matrix
+  const bayer4 = [
+     0,  8,  2, 10,
+    12,  4, 14,  6,
+     3, 11,  1,  9,
+    15,  7, 13,  5
+  ];
+
+  function getDitherColor() {
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    // [r, g, b] of the accent dot color — matched to theme
+    return isDark ? [124, 106, 247] : [91, 71, 240];
+  }
+
+  // Smooth warp-noise using layered sines — slow & organic
+  function warpNoise(x, y, t) {
+    const s = 0.0022;
+    const px = x * s, py = y * s;
+    const q0 = Math.sin(px * 1.4 + t * 0.7) * Math.cos(py * 1.8 - t * 0.5);
+    const q1 = Math.cos(px * 1.9 - t * 0.8) * Math.sin(py * 1.3 + t * 0.6);
+    const fx = px + 0.7 * q0;
+    const fy = py + 0.7 * q1;
+    const n = Math.sin(fx * 3.2 + t) * Math.cos(fy * 2.8 - t * 0.6)
+            + Math.cos(fx * 2.1 - t * 0.4) * Math.sin(fy * 3.5 + t * 0.7) * 0.5;
+    return (n / 1.5 + 1) * 0.5; // → [0, 1]
+  }
+
+  function render() {
+    time += SPEED;
+
+    const cols = Math.ceil(w / PIXEL);
+    const rows = Math.ceil(h / PIXEL);
+    const imageData = ctx.createImageData(w, h);
+    const data = imageData.data;
+    const [fr, fg, fb] = getDitherColor();
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const cx = col * PIXEL + PIXEL * 0.5;
+        const cy = row * PIXEL + PIXEL * 0.5;
+        const noise = warpNoise(cx, cy, time);
+
+        // Bayer threshold
+        const bx = col & 3, by = row & 3;
+        const threshold = (bayer4[by * 4 + bx] + 0.5) / 16;
+        const lit = noise > threshold;
+
+        if (!lit) continue; // background stays fully transparent
+
+        // Shape: strong radial mask — bright band wrapping the outer ring,
+        // transparent in the center so text is always readable
+        const nx = cx / w - 0.5;   // -0.5 → +0.5
+        const ny = cy / h - 0.5;
+        const dist = Math.sqrt(nx * nx + ny * ny) * 2; // 0 center → ~1.4 corner
+
+        // Fade shape: invisible at center (dist<0.4), peaks at edges (dist~1.0+)
+        // Also fade the bottom quarter smoothly (the CSS overlay handles this too, belt-and-suspenders)
+        const radialAlpha = Math.max(0, (dist - 0.38) / 0.62);          // 0→1 from center to edge
+        const bottomFade  = Math.max(0, 1 - Math.max(0, (cy / h - 0.6) / 0.4)); // fade last 40% of height
+
+        // Overall max opacity very low so it never competes with text
+        const alpha = Math.round(radialAlpha * bottomFade * 0.22 * 255);
+        if (alpha < 3) continue;
+
+        // Write the PIXEL×PIXEL block
+        for (let py = 0; py < PIXEL; py++) {
+          for (let px2 = 0; px2 < PIXEL; px2++) {
+            const px3 = Math.min(col * PIXEL + px2, w - 1);
+            const py3 = Math.min(row * PIXEL + py,  h - 1);
+            const i = (py3 * w + px3) * 4;
+            data[i]     = fr;
+            data[i + 1] = fg;
+            data[i + 2] = fb;
+            data[i + 3] = alpha;
+          }
+        }
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    requestAnimationFrame(render);
+  }
+
+  // Gentle fade-in so the canvas doesn't pop in
+  setTimeout(() => canvas.classList.add('ready'), 200);
+  render();
+})();
+
+/* ─── SCROLL REVEAL ─── */
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.08 }
+);
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
