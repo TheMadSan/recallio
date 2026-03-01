@@ -479,6 +479,22 @@
       $activateBtn.textContent = "✓ Pro Activated!";
       $activateBtn.style.background = "linear-gradient(135deg, #34d399, #059669)";
       showToast("Nestiq Pro is now active! 🎉");
+
+      // Ask the extension which AI tabs are open, redirect to the most recent one
+  setTimeout(() => {
+    chrome.runtime.sendMessage(
+      EXTENSION_ID,
+      { action: "getActiveAiTab" },
+      (response) => {
+        if (response?.url) {
+          window.location.href = response.url;
+        } else {
+          // No AI tab open — send them to ChatGPT as fallback
+          window.location.href = "https://chatgpt.com";
+        }
+      }
+    );
+  }, 1500);
     } else {
       // Extension not reachable — show manual instructions
       $activateBtn.disabled = false;
