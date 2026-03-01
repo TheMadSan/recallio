@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're Pro — Nestiq</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #080810;
+      --bg2:     #0e0e1a;
+      --surface: rgba(255,255,255,0.04);
+      --border:  rgba(255,255,255,0.08);
+      --text:    #f0f0f8;
+      --text2:   #8888aa;
+      --accent:  #7c6af7;
+      --accent2: #b06af7;
+      --green:   #34d399;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* ── Loading state ── */
+    #loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: var(--text2);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(124,106,247,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Main card ── */
+    #success-card {
+      display: none;
+      max-width: 520px;
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid rgba(124,106,247,0.2);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 80px rgba(124,106,247,0.1);
+      text-align: center;
+    }
+
+    .check-circle {
+      width: 64px;
+      height: 64px;
+      background: rgba(52,211,153,0.12);
+      border: 2px solid rgba(52,211,153,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 24px;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sub {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .email-badge {
+      display: inline-block;
+      background: rgba(124,106,247,0.1);
+      border: 1px solid rgba(124,106,247,0.2);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+
+    /* ── Pro features list ── */
+    .pro-features {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .pro-features h3 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text2);
+      margin-bottom: 14px;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .feature-row + .feature-row {
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .feat-icon {
+      font-size: 16px;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* ── License key block ── */
+    .license-section {
+      margin-bottom: 28px;
+    }
+
+    .license-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text2);
+      margin-bottom: 10px;
+    }
+
+    .license-box {
+      display: flex;
+      align-items: center;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(124,106,247,0.25);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .license-key {
+      flex: 1;
+      padding: 11px 14px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text);
+      word-break: break-all;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      flex-shrink: 0;
+      padding: 11px 14px;
+      border: none;
+      background: rgba(124,106,247,0.12);
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      transition: background 0.2s;
+      border-left: 1px solid rgba(124,106,247,0.2);
+    }
+
+    .copy-btn:hover { background: rgba(124,106,247,0.22); }
+
+    .license-note {
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ── Activate button ── */
+    .activate-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 0 30px rgba(124,106,247,0.3);
+      margin-bottom: 16px;
+    }
+
+    .activate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(124,106,247,0.4);
+    }
+
+    .activate-btn:active { transform: translateY(0); }
+
+    .activate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Manual instructions (shown if extension not detected) ── */
+    #manual-instructions {
+      display: none;
+      background: rgba(52,211,153,0.05);
+      border: 1px solid rgba(52,211,153,0.15);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.7;
+      text-align: left;
+      margin-top: 12px;
+    }
+
+    #manual-instructions strong { color: var(--text); }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: rgba(124,106,247,0.2);
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── Error state ── */
+    #error-card {
+      display: none;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    #error-card h2 {
+      font-size: 20px;
+      color: #f87171;
+      margin-bottom: 8px;
+    }
+
+    #error-card p {
+      color: var(--text2);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--text2);
+      text-align: center;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(30,30,50,0.95);
+      border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 100px;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: var(--text);
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <span>Verifying your payment…</span>
+  </div>
+
+  <!-- Success card -->
+  <div id="success-card">
+    <div class="check-circle">✓</div>
+    <h1>You're now Pro!</h1>
+    <p class="sub" id="success-sub">Welcome to Nestiq Pro. Here's what you've unlocked:</p>
+
+    <div id="email-badge-wrap"></div>
+
+    <div class="pro-features">
+      <h3>What you get</h3>
+      <div class="feature-row"><span class="feat-icon">💬</span> 400 conversations saved</div>
+      <div class="feature-row"><span class="feat-icon">📋</span> Unlimited saved prompts</div>
+      <div class="feature-row"><span class="feat-icon">📁</span> Collections &amp; folders</div>
+      <div class="feature-row"><span class="feat-icon">📤</span> Export as PDF / Markdown</div>
+      <div class="feature-row"><span class="feat-icon">📊</span> Full analytics &amp; insights</div>
+      <div class="feature-row"><span class="feat-icon">🔥</span> Streak &amp; milestone cards</div>
+    </div>
+
+    <div class="license-section">
+      <div class="license-label">Your License Key</div>
+      <div class="license-box">
+        <span class="license-key" id="license-key-display">Loading…</span>
+        <button class="copy-btn" id="copy-btn">Copy</button>
+      </div>
+      <p class="license-note">💡 Save this key somewhere safe — you'll need it if you reinstall the extension.</p>
+    </div>
+
+    <button class="activate-btn" id="activate-btn">
+      ⚡ Activate Pro in Extension
+    </button>
+
+    <div id="manual-instructions">
+      <strong>Extension not detected?</strong> You can activate manually:<br><br>
+      <span class="step-num">1</span> Make sure the Nestiq extension is installed in Chrome<br>
+      <span class="step-num">2</span> Click the Nestiq icon on any ChatGPT or Claude page<br>
+      <span class="step-num">3</span> Open any conversation to load the extension<br>
+      <span class="step-num">4</span> Return here and click Activate Pro again
+    </div>
+  </div>
+
+  <!-- Error card -->
+  <div id="error-card">
+    <h2>Something went wrong</h2>
+    <p id="error-msg">We couldn't verify your payment. Please <a href="mailto:support@nestiq.app">contact support</a> with your order details.</p>
+  </div>
+
+  <footer>
+    <a href="/">← Back to Nestiq</a> &nbsp;·&nbsp;
+    <a href="mailto:support@nestiq.app">support@nestiq.app</a>
+  </footer>
+
+  <div id="toast"></div>
+
+<script>
+  // ── Config ──────────────────────────────────────────────────────────────
+  // Replace with your actual Supabase project URL
+  const ACTIVATE_ENDPOINT = "https://cfefjqixkpxgiquwowhm.supabase.co/functions/v1/activate-license";
+  const EXTENSION_ID      = "YOUR_EXTENSION_ID_HERE"; // from chrome://extensions
+  // ────────────────────────────────────────────────────────────────────────
+
+  const params    = new URLSearchParams(window.location.search);
+  const sessionId = params.get("session_id");
+
+  const $loading    = document.getElementById("loading");
+  const $card       = document.getElementById("success-card");
+  const $errorCard  = document.getElementById("error-card");
+  const $errorMsg   = document.getElementById("error-msg");
+  const $keyDisplay = document.getElementById("license-key-display");
+  const $copyBtn    = document.getElementById("copy-btn");
+  const $activateBtn = document.getElementById("activate-btn");
+  const $manualInstructions = document.getElementById("manual-instructions");
+
+  let licenseKey = null;
+  let customerEmail = null;
+
+  // ── Boot ────────────────────────────────────────────────────────────────
+  if (!sessionId) {
+    showError("No session ID found in the URL. If you just completed payment, please check your email for the confirmation.");
+  } else {
+    fetchLicenseKey(sessionId);
+  }
+
+  // ── Fetch license key from edge function ────────────────────────────────
+  async function fetchLicenseKey(sid) {
+    try {
+      const res  = await fetch(ACTIVATE_ENDPOINT, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ session_id: sid }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.licenseKey) {
+        throw new Error(data.error || `Server error ${res.status}`);
+      }
+
+      licenseKey    = data.licenseKey;
+      customerEmail = data.email;
+
+      showSuccess(data);
+    } catch (err) {
+      console.error("fetchLicenseKey:", err);
+      showError("Payment verification failed: " + err.message);
+    }
+  }
+
+  // ── Show success UI ──────────────────────────────────────────────────────
+  function showSuccess(data) {
+    $loading.style.display = "none";
+    $card.style.display    = "block";
+
+    $keyDisplay.textContent = data.licenseKey;
+
+    if (data.email && data.email !== "unknown") {
+      document.getElementById("email-badge-wrap").innerHTML =
+        `<div class="email-badge">📧 ${data.email}</div>`;
+    }
+  }
+
+  // ── Show error UI ────────────────────────────────────────────────────────
+  function showError(msg) {
+    $loading.style.display  = "none";
+    $errorCard.style.display = "block";
+    $errorMsg.textContent   = msg;
+  }
+
+  // ── Copy key ─────────────────────────────────────────────────────────────
+  $copyBtn.addEventListener("click", () => {
+    if (!licenseKey) return;
+    navigator.clipboard.writeText(licenseKey).then(() => {
+      $copyBtn.textContent = "✓ Copied";
+      setTimeout(() => { $copyBtn.textContent = "Copy"; }, 2000);
+    });
+  });
+
+  // ── Activate button ──────────────────────────────────────────────────────
+  $activateBtn.addEventListener("click", async () => {
+    if (!licenseKey) return;
+
+    $activateBtn.disabled = true;
+    $activateBtn.textContent = "Activating…";
+
+    const success = await tryActivateViaExtension(licenseKey);
+
+    if (success) {
+      $activateBtn.textContent = "✓ Pro Activated!";
+      $activateBtn.style.background = "linear-gradient(135deg, #34d399, #059669)";
+      showToast("Nestiq Pro is now active! 🎉");
+    } else {
+      // Extension not reachable — show manual instructions
+      $activateBtn.disabled = false;
+      $activateBtn.textContent = "⚡ Activate Pro in Extension";
+      $manualInstructions.style.display = "block";
+      showToast("Extension not detected — see instructions below");
+    }
+  });
+
+  // ── Try to message the extension via chrome.runtime ──────────────────────
+  // This works because success.html is hosted on GitHub Pages (external site).
+  // The extension must declare this origin in manifest.json externally_connectable.
+  async function tryActivateViaExtension(key) {
+    return new Promise((resolve) => {
+      try {
+        if (typeof chrome === "undefined" || !chrome.runtime) {
+          resolve(false);
+          return;
+        }
+
+        const timeout = setTimeout(() => resolve(false), 3000);
+
+        chrome.runtime.sendMessage(
+          EXTENSION_ID,
+          { action: "activatePro", licenseKey: key },
+          (response) => {
+            clearTimeout(timeout);
+            if (chrome.runtime.lastError) {
+              resolve(false);
+            } else {
+              resolve(response?.success === true);
+            }
+          }
+        );
+      } catch (e) {
+        resolve(false);
+      }
+    });
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+  }
+</script>
+</body>
+</html>

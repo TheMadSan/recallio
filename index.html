@@ -555,8 +555,24 @@
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
       box-shadow: 0 4px 24px var(--glow);
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
     }
-    .p-btn-glow:hover { transform: translateY(-1px); box-shadow: 0 8px 32px var(--glow); }
+    .p-btn-glow:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 32px var(--glow); }
+    .p-btn-glow:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+    /* Checkout error message */
+    .checkout-error {
+      color: #f87171;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 8px;
+      display: none;
+    }
 
     /* ─── FINAL CTA ─── */
     .final-section {
@@ -1320,7 +1336,8 @@
           <li><span class="p-check">✓</span>Export PDF / Markdown</li>
           <li><span class="p-check">✓</span>Analytics + milestone cards</li>
         </ul>
-        <a href="#" class="p-btn p-btn-glow">Start Free Trial</a>
+        <button id="checkout-btn" class="p-btn p-btn-glow">Start Free Trial</button>
+        <div class="checkout-error" id="checkout-error">Something went wrong. Please try again.</div>
       </div>
     </div>
   </section>
@@ -1366,7 +1383,62 @@
 </footer>
 
 <script>
-/* ─── THEME ─── */
+/* ─── STRIPE CHECKOUT ────────────────────────────────────────────────
+   Replace the two config values below with your own.
+   Everything else is wired automatically.
+─────────────────────────────────────────────────────────────────── */
+(function () {
+  // ── CONFIG — update these two values ──────────────────────────────
+  const SUPABASE_CHECKOUT_URL = 'https://cfefjqixkpxgiquwowhm.supabase.co/functions/v1/create-checkout';
+  const STRIPE_PRICE_ID       = 'price_1T65mnHJ99C5KnoXshYxCFoH';
+  // ──────────────────────────────────────────────────────────────────
+
+  const btn      = document.getElementById('checkout-btn');
+  const errorEl  = document.getElementById('checkout-error');
+
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    // Reset error state
+    errorEl.style.display = 'none';
+
+    // Visual loading feedback
+    const originalText    = btn.textContent;
+    btn.textContent       = 'Loading…';
+    btn.disabled          = true;
+
+    try {
+      const res = await fetch(SUPABASE_CHECKOUT_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ priceId: STRIPE_PRICE_ID }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      // Redirect to Stripe hosted checkout
+      window.location.href = data.url;
+
+    } catch (err) {
+      console.error('[Nestiq] Checkout error:', err);
+
+      // Restore button
+      btn.textContent = originalText;
+      btn.disabled    = false;
+
+      // Show inline error
+      errorEl.textContent   = 'Something went wrong. Please try again.';
+      errorEl.style.display = 'block';
+      setTimeout(() => { errorEl.style.display = 'none'; }, 5000);
+    }
+  });
+})();
+
+
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
