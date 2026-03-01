@@ -482,19 +482,24 @@
 
       // Ask the extension which AI tabs are open, redirect to the most recent one
   setTimeout(() => {
-    chrome.runtime.sendMessage(
-      EXTENSION_ID,
-      { action: "getActiveAiTab" },
-      (response) => {
-        if (response?.url) {
-          window.location.href = response.url;
-        } else {
-          // No AI tab open — send them to ChatGPT as fallback
-          window.location.href = "https://chatgpt.com";
-        }
+  chrome.runtime.sendMessage(
+    EXTENSION_ID,
+    { action: "getActiveAiTab" },
+    (response) => {
+      if (response?.tabId) {
+        // Focus the existing tab and its window — don't open a new one
+        chrome.runtime.sendMessage(
+          EXTENSION_ID,
+          { action: "focusTab", tabId: response.tabId, windowId: response.windowId },
+          () => window.close() // close the success page tab
+        );
+      } else {
+        // No AI tab open — navigate this tab to ChatGPT
+        window.location.href = "https://chatgpt.com";
       }
-    );
-  }, 1500);
+    }
+  );
+}, 1500);
     } else {
       // Extension not reachable — show manual instructions
       $activateBtn.disabled = false;
