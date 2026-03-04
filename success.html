@@ -1,25 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>You're Pro — Nestiq</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:      #080810;
-      --bg2:     #0e0e1a;
-      --surface: rgba(255,255,255,0.04);
-      --border:  rgba(255,255,255,0.08);
-      --text:    #f0f0f8;
-      --text2:   #8888aa;
+      --bg:      #07070f;
+      --bg2:     #0d0d1c;
+      --bg3:     #111128;
+      --text:    #eeeef8;
+      --text2:   #7777a0;
+      --text3:   #a0a0c8;
       --accent:  #7c6af7;
       --accent2: #b06af7;
       --green:   #34d399;
+      --border:  rgba(255,255,255,0.06);
+      --border2: rgba(124,106,247,0.18);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
@@ -30,160 +34,258 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 40px 20px;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    /* ── Loading state ── */
+    /* ── Atmosphere ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(124,106,247,0.07) 0%, transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -10%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(176,106,247,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    canvas#cc {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ── Loading ── */
     #loading {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       color: var(--text2);
-      font-size: 14px;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
     }
 
     .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid rgba(124,106,247,0.2);
+      width: 30px;
+      height: 30px;
+      border: 2px solid rgba(124,106,247,0.12);
       border-top-color: var(--accent);
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.85s linear infinite;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Main card ── */
+    /* ── Success layout ── */
     #success-card {
       display: none;
-      max-width: 520px;
+      position: relative;
+      z-index: 1;
       width: 100%;
-      background: var(--bg2);
-      border: 1px solid rgba(124,106,247,0.2);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 0 80px rgba(124,106,247,0.1);
+      max-width: 500px;
+    }
+
+    /* ── Hero ── */
+    .hero {
       text-align: center;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: rise 0.7s cubic-bezier(0.22,1,0.36,1) 0.05s forwards;
     }
 
-    .check-circle {
-      width: 64px;
-      height: 64px;
-      background: rgba(52,211,153,0.12);
-      border: 2px solid rgba(52,211,153,0.3);
-      border-radius: 50%;
-      display: flex;
+    .status-pill {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin: 0 auto 24px;
-      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      gap: 7px;
+      background: rgba(52,211,153,0.07);
+      border: 1px solid rgba(52,211,153,0.2);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6ee7b7;
+      margin-bottom: 28px;
     }
 
-    @keyframes popIn {
-      from { transform: scale(0.6); opacity: 0; }
-      to   { transform: scale(1);   opacity: 1; }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2.2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.85); }
     }
 
     h1 {
       font-family: 'DM Serif Display', serif;
-      font-size: 28px;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      font-size: clamp(40px, 7vw, 58px);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    h1 em {
+      font-style: italic;
+      background: linear-gradient(125deg, #a78bfa 0%, #e879f9 50%, #818cf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .sub {
+      font-size: 15px;
       color: var(--text2);
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 32px;
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0 auto;
     }
 
-    .email-badge {
-      display: inline-block;
-      background: rgba(124,106,247,0.1);
-      border: 1px solid rgba(124,106,247,0.2);
-      border-radius: 100px;
-      padding: 4px 14px;
-      font-size: 12px;
-      color: var(--accent);
-      margin-bottom: 32px;
-    }
-
-    /* ── Pro features list ── */
-    .pro-features {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 28px;
-      text-align: left;
-    }
-
-    .pro-features h3 {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text2);
+    /* ── Card ── */
+    .card {
+      background: linear-gradient(160deg, rgba(255,255,255,0.028) 0%, rgba(255,255,255,0.012) 100%);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 32px;
       margin-bottom: 14px;
+      opacity: 0;
+      animation: rise 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.4) inset, 0 32px 64px rgba(0,0,0,0.3);
     }
 
-    .feature-row {
+    .card-email { animation-delay: 0.18s; }
+    .card-features { animation-delay: 0.28s; }
+    .card-key { animation-delay: 0.38s; }
+
+    /* ── Email ── */
+    .email-row {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 6px 0;
+      font-size: 13px;
+      color: var(--text3);
+    }
+
+    .email-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(124,106,247,0.1);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 14px;
-      color: var(--text);
-    }
-
-    .feature-row + .feature-row {
-      border-top: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .feat-icon {
-      font-size: 16px;
-      width: 24px;
-      text-align: center;
       flex-shrink: 0;
     }
 
-    /* ── License key block ── */
-    .license-section {
-      margin-bottom: 28px;
+    .email-addr {
+      color: var(--text);
+      font-weight: 500;
     }
 
-    .license-label {
+    .pro-tag {
+      margin-left: auto;
+      background: linear-gradient(135deg, rgba(124,106,247,0.2), rgba(176,106,247,0.2));
+      border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 100px;
+      padding: 3px 10px;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 1.5px;
+      letter-spacing: 0.06em;
+      color: #c4b5fd;
+      text-transform: uppercase;
+    }
+
+    /* ── Features grid ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text2);
+      margin-bottom: 16px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .feat {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 12px 12px;
+      text-align: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .feat:hover {
+      background: rgba(124,106,247,0.06);
+      border-color: rgba(124,106,247,0.2);
+      transform: translateY(-2px);
+    }
+
+    .feat-ico  { font-size: 18px; margin-bottom: 7px; }
+    .feat-name { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .feat-hint { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+    /* ── License key ── */
+    .license-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 10px;
     }
 
     .license-box {
       display: flex;
       align-items: center;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(124,106,247,0.25);
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(124,106,247,0.2);
       border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 8px;
+      margin-bottom: 9px;
     }
 
     .license-key {
       flex: 1;
-      padding: 11px 14px;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      padding: 11px 13px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
       font-size: 11px;
-      color: var(--text);
+      color: var(--text3);
       word-break: break-all;
-      text-align: left;
       line-height: 1.5;
     }
 
@@ -191,66 +293,112 @@
       flex-shrink: 0;
       padding: 11px 14px;
       border: none;
-      background: rgba(124,106,247,0.12);
+      background: rgba(124,106,247,0.1);
+      border-left: 1px solid rgba(124,106,247,0.18);
       color: var(--accent);
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 600;
       font-family: inherit;
-      transition: background 0.2s;
-      border-left: 1px solid rgba(124,106,247,0.2);
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.03em;
     }
 
-    .copy-btn:hover { background: rgba(124,106,247,0.22); }
+    .copy-btn:hover { background: rgba(124,106,247,0.2); }
+    .copy-btn.copied { color: var(--green); }
 
     .license-note {
       font-size: 11px;
       color: var(--text2);
-      line-height: 1.5;
+      line-height: 1.55;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
     }
 
-    /* ── Activate button ── */
+    .license-note::before {
+      content: '↗';
+      font-size: 11px;
+      color: var(--text2);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── CTA ── */
+    .cta-wrap {
+      opacity: 0;
+      animation: rise 0.6s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+    }
+
     .activate-btn {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       width: 100%;
-      padding: 15px;
+      padding: 17px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 15px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
       transition: all 0.25s;
-      box-shadow: 0 0 30px rgba(124,106,247,0.3);
-      margin-bottom: 16px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 4px 40px rgba(124,106,247,0.3);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
     }
+
+    .activate-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+      transition: left 0.6s;
+    }
+
+    .activate-btn:hover::before { left: 160%; }
 
     .activate-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 40px rgba(124,106,247,0.4);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1) inset, 0 12px 50px rgba(124,106,247,0.42);
     }
 
     .activate-btn:active { transform: translateY(0); }
 
     .activate-btn:disabled {
-      opacity: 0.6;
+      opacity: 0.55;
       cursor: not-allowed;
       transform: none;
     }
 
-    /* ── Manual instructions (shown if extension not detected) ── */
+    .activate-btn.success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 4px 40px rgba(16,185,129,0.28);
+    }
+
+    .btn-arrow {
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+
+    .activate-btn:not(:disabled):hover .btn-arrow { transform: translateX(3px); }
+
+    /* ── Manual fallback ── */
     #manual-instructions {
       display: none;
-      background: rgba(52,211,153,0.05);
-      border: 1px solid rgba(52,211,153,0.15);
+      margin-top: 12px;
+      background: rgba(52,211,153,0.035);
+      border: 1px solid rgba(52,211,153,0.13);
       border-radius: 12px;
-      padding: 16px;
+      padding: 16px 18px;
       font-size: 12px;
       color: var(--text2);
-      line-height: 1.7;
-      text-align: left;
-      margin-top: 12px;
+      line-height: 1.8;
     }
 
     #manual-instructions strong { color: var(--text); }
@@ -259,160 +407,204 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 18px;
-      height: 18px;
-      background: rgba(124,106,247,0.2);
+      width: 17px;
+      height: 17px;
+      background: rgba(124,106,247,0.18);
       border-radius: 50%;
       font-size: 10px;
       font-weight: 700;
-      color: var(--accent);
+      color: #a78bfa;
       margin-right: 6px;
       vertical-align: middle;
     }
 
-    /* ── Error state ── */
+    /* ── Error ── */
     #error-card {
       display: none;
-      max-width: 420px;
+      max-width: 400px;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
-    #error-card h2 {
-      font-size: 20px;
-      color: #f87171;
-      margin-bottom: 8px;
-    }
-
-    #error-card p {
-      color: var(--text2);
-      font-size: 13px;
-      line-height: 1.6;
-    }
+    #error-card h2 { font-size: 20px; color: #f87171; margin-bottom: 8px; }
+    #error-card p  { color: var(--text2); font-size: 13px; line-height: 1.6; }
+    #error-card a  { color: var(--accent); }
 
     /* ── Footer ── */
     footer {
-      margin-top: 32px;
+      margin-top: 28px;
       font-size: 12px;
       color: var(--text2);
       text-align: center;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: rise 0.5s ease 0.65s forwards;
     }
 
-    footer a { color: var(--accent); text-decoration: none; }
+    footer a {
+      color: var(--text2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--text3); }
 
     /* ── Toast ── */
     #toast {
       position: fixed;
       bottom: 24px;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(30,30,50,0.95);
-      border: 1px solid rgba(124,106,247,0.3);
+      transform: translateX(-50%) translateY(12px);
+      background: rgba(10,10,22,0.96);
+      border: 1px solid var(--border2);
       border-radius: 100px;
-      padding: 10px 20px;
+      padding: 10px 22px;
       font-size: 13px;
       color: var(--text);
       opacity: 0;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
       pointer-events: none;
+      z-index: 200;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
     #toast.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* ── Animations ── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid .feat:last-child { grid-column: 1 / -1; }
+      h1 { font-size: 38px; }
+      .card { padding: 24px; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Loading -->
-  <div id="loading">
-    <div class="spinner"></div>
-    <span>Verifying your payment…</span>
+<canvas id="cc"></canvas>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="spinner"></div>
+  <span>Verifying payment…</span>
+</div>
+
+<!-- Success -->
+<div id="success-card">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="status-pill">
+      <div class="pulse-dot"></div>
+      Pro — Active
+    </div>
+    <h1>You'll never lose<br><em>a great conversation.</em></h1>
+    <p class="sub">Pro is active. 400 conversations, unlimited prompts, and everything else — ready now.</p>
   </div>
 
-  <!-- Success card -->
-  <div id="success-card">
-    <div class="check-circle">✓</div>
-    <h1>You're now Pro!</h1>
-    <p class="sub" id="success-sub">Welcome to Nestiq Pro. Here's what you've unlocked:</p>
+  <!-- Email badge -->
+  <div id="email-card-wrap"></div>
 
-    <div id="email-badge-wrap"></div>
-
-    <div class="pro-features">
-      <h3>What you get</h3>
-      <div class="feature-row"><span class="feat-icon">💬</span> 400 conversations saved</div>
-      <div class="feature-row"><span class="feat-icon">📋</span> Unlimited saved prompts</div>
-      <div class="feature-row"><span class="feat-icon">📁</span> Collections &amp; folders</div>
-      <div class="feature-row"><span class="feat-icon">📤</span> Export as PDF / Markdown</div>
-      <div class="feature-row"><span class="feat-icon">📊</span> Full analytics &amp; insights</div>
-      <div class="feature-row"><span class="feat-icon">🔥</span> Streak &amp; milestone cards</div>
+  <!-- Features -->
+  <div class="card card-features">
+    <div class="section-label">What you've unlocked</div>
+    <div class="features-grid">
+      <div class="feat"><div class="feat-ico">💬</div><div class="feat-name">400 conversations</div><div class="feat-hint">8× free tier</div></div>
+      <div class="feat"><div class="feat-ico">📋</div><div class="feat-name">Unlimited prompts</div><div class="feat-hint">Save anything</div></div>
+      <div class="feat"><div class="feat-ico">📁</div><div class="feat-name">Collections</div><div class="feat-hint">Group & organise</div></div>
+      <div class="feat"><div class="feat-ico">📤</div><div class="feat-name">Export</div><div class="feat-hint">PDF & Markdown</div></div>
+      <div class="feat"><div class="feat-ico">📊</div><div class="feat-name">Analytics</div><div class="feat-hint">Streaks & peaks</div></div>
+      <div class="feat"><div class="feat-ico">🔥</div><div class="feat-name">Milestones</div><div class="feat-hint">Share progress</div></div>
     </div>
+  </div>
 
-    <div class="license-section">
-      <div class="license-label">Your License Key</div>
-      <div class="license-box">
-        <span class="license-key" id="license-key-display">Loading…</span>
-        <button class="copy-btn" id="copy-btn">Copy</button>
-      </div>
-      <p class="license-note">💡 Save this key somewhere safe — you'll need it if you reinstall the extension.</p>
+  <!-- License key -->
+  <div class="card card-key">
+    <div class="license-header">
+      <div class="section-label" style="margin-bottom:0">License key</div>
     </div>
+    <div class="license-box">
+      <span class="license-key" id="license-key-display">Loading…</span>
+      <button class="copy-btn" id="copy-btn">Copy</button>
+    </div>
+    <p class="license-note">Save this somewhere safe — you'll need it if you reinstall the extension.</p>
+  </div>
 
+  <!-- CTA -->
+  <div class="cta-wrap">
     <button class="activate-btn" id="activate-btn">
-      ⚡ Activate Pro in Extension
+      <span>Activate Pro in extension</span>
+      <span class="btn-arrow">→</span>
     </button>
-
     <div id="manual-instructions">
-      <strong>Extension not detected?</strong> You can activate manually:<br><br>
-      <span class="step-num">1</span> Make sure the Nestiq extension is installed in Chrome<br>
-      <span class="step-num">2</span> Click the Nestiq icon on any ChatGPT or Claude page<br>
-      <span class="step-num">3</span> Open any conversation to load the extension<br>
-      <span class="step-num">4</span> Return here and click Activate Pro again
+      <strong>Extension not detected?</strong><br><br>
+      <span class="step-num">1</span>Install Nestiq from the Chrome Web Store<br>
+      <span class="step-num">2</span>Open any ChatGPT or Claude tab<br>
+      <span class="step-num">3</span>Return here and click the button again
     </div>
   </div>
 
-  <!-- Error card -->
-  <div id="error-card">
-    <h2>Something went wrong</h2>
-    <p id="error-msg">We couldn't verify your payment. Please <a href="mailto:support@nestiq.app">contact support</a> with your order details.</p>
-  </div>
+</div>
 
-  <footer>
-    <a href="/">← Back to Nestiq</a> &nbsp;·&nbsp;
-    <a href="mailto:support@nestiq.app">support@nestiq.app</a>
-  </footer>
+<!-- Error -->
+<div id="error-card">
+  <h2>Something went wrong</h2>
+  <p id="error-msg">We couldn't verify your payment. Please <a href="mailto:support@nestiq.app">contact support</a> with your order details.</p>
+</div>
 
-  <div id="toast"></div>
+<footer>
+  <a href="https://themadsan.github.io/recallio">← Nestiq</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="mailto:support@nestiq.app">support</a>
+</footer>
+
+<div id="toast"></div>
 
 <script>
   // ── Config ──────────────────────────────────────────────────────────────
-  // Replace with your actual Supabase project URL
   const ACTIVATE_ENDPOINT = "https://cfefjqixkpxgiquwowhm.supabase.co/functions/v1/activate-license";
-  const EXTENSION_ID      = "mgindofpbackcchpgbmgicmojkajhgoh"; // from chrome://extensions
+  const EXTENSION_ID      = "mgindofpbackcchpgbmgicmojkajhgoh";
   // ────────────────────────────────────────────────────────────────────────
 
   const params    = new URLSearchParams(window.location.search);
   const sessionId = params.get("session_id");
 
-  const $loading    = document.getElementById("loading");
-  const $card       = document.getElementById("success-card");
-  const $errorCard  = document.getElementById("error-card");
-  const $errorMsg   = document.getElementById("error-msg");
-  const $keyDisplay = document.getElementById("license-key-display");
-  const $copyBtn    = document.getElementById("copy-btn");
+  const $loading     = document.getElementById("loading");
+  const $card        = document.getElementById("success-card");
+  const $errorCard   = document.getElementById("error-card");
+  const $errorMsg    = document.getElementById("error-msg");
+  const $keyDisplay  = document.getElementById("license-key-display");
+  const $copyBtn     = document.getElementById("copy-btn");
   const $activateBtn = document.getElementById("activate-btn");
-  const $manualInstructions = document.getElementById("manual-instructions");
+  const $manual      = document.getElementById("manual-instructions");
 
   let licenseKey = null;
-  let customerEmail = null;
 
   // ── Boot ────────────────────────────────────────────────────────────────
   if (!sessionId) {
-    showError("No session ID found in the URL. If you just completed payment, please check your email for the confirmation.");
+    showError("No session ID found in the URL. If you just completed payment, please check your email for confirmation.");
   } else {
     fetchLicenseKey(sessionId);
   }
 
-  // ── Fetch license key from edge function ────────────────────────────────
+  // ── Fetch license key ────────────────────────────────────────────────────
   async function fetchLicenseKey(sid) {
     try {
       const res  = await fetch(ACTIVATE_ENDPOINT, {
@@ -420,41 +612,40 @@
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({ session_id: sid }),
       });
-
       const data = await res.json();
-
-      if (!res.ok || !data.licenseKey) {
-        throw new Error(data.error || `Server error ${res.status}`);
-      }
-
-      licenseKey    = data.licenseKey;
-      customerEmail = data.email;
-
+      if (!res.ok || !data.licenseKey) throw new Error(data.error || "Server error " + res.status);
+      licenseKey = data.licenseKey;
       showSuccess(data);
     } catch (err) {
-      console.error("fetchLicenseKey:", err);
       showError("Payment verification failed: " + err.message);
     }
   }
 
-  // ── Show success UI ──────────────────────────────────────────────────────
+  // ── Show success ─────────────────────────────────────────────────────────
   function showSuccess(data) {
     $loading.style.display = "none";
     $card.style.display    = "block";
-
     $keyDisplay.textContent = data.licenseKey;
 
     if (data.email && data.email !== "unknown") {
-      document.getElementById("email-badge-wrap").innerHTML =
-        `<div class="email-badge">📧 ${data.email}</div>`;
+      document.getElementById("email-card-wrap").innerHTML = `
+        <div class="card card-email" style="margin-bottom:14px">
+          <div class="email-row">
+            <div class="email-icon">✦</div>
+            <span class="email-addr">${data.email}</span>
+            <span class="pro-tag">Pro</span>
+          </div>
+        </div>`;
     }
+
+    setTimeout(launchConfetti, 380);
   }
 
-  // ── Show error UI ────────────────────────────────────────────────────────
+  // ── Show error ───────────────────────────────────────────────────────────
   function showError(msg) {
-    $loading.style.display  = "none";
+    $loading.style.display   = "none";
     $errorCard.style.display = "block";
-    $errorMsg.textContent   = msg;
+    $errorMsg.textContent    = msg;
   }
 
   // ── Copy key ─────────────────────────────────────────────────────────────
@@ -462,90 +653,117 @@
     if (!licenseKey) return;
     navigator.clipboard.writeText(licenseKey).then(() => {
       $copyBtn.textContent = "✓ Copied";
-      setTimeout(() => { $copyBtn.textContent = "Copy"; }, 2000);
+      $copyBtn.classList.add("copied");
+      setTimeout(() => {
+        $copyBtn.textContent = "Copy";
+        $copyBtn.classList.remove("copied");
+      }, 2200);
     });
   });
 
   // ── Activate button ──────────────────────────────────────────────────────
   $activateBtn.addEventListener("click", async () => {
     if (!licenseKey) return;
-
     $activateBtn.disabled = true;
-    $activateBtn.textContent = "Activating…";
+    $activateBtn.innerHTML = "<span>Activating…</span>";
 
-    const success = await tryActivateViaExtension(licenseKey);
+    const ok = await tryActivateViaExtension(licenseKey);
 
-    if (success) {
-      $activateBtn.textContent = "✓ Pro Activated!";
-      $activateBtn.style.background = "linear-gradient(135deg, #34d399, #059669)";
-      showToast("Nestiq Pro is now active! 🎉");
+    if (ok) {
+      $activateBtn.classList.add("success");
+      $activateBtn.innerHTML = "<span>✓ Pro is live — enjoy!</span>";
+      showToast("Nestiq Pro activated 🎉");
 
-      // Ask the extension which AI tabs are open, redirect to the most recent one
-  setTimeout(() => {
-  chrome.runtime.sendMessage(
-    EXTENSION_ID,
-    { action: "getActiveAiTab" },
-    (response) => {
-      if (response?.tabId) {
-        // Focus the existing tab and its window — don't open a new one
-        chrome.runtime.sendMessage(
-          EXTENSION_ID,
-          { action: "focusTab", tabId: response.tabId, windowId: response.windowId },
-          () => window.close() // close the success page tab
-        );
-      } else {
-        // No AI tab open — navigate this tab to ChatGPT
-        window.location.href = "https://chatgpt.com";
-      }
-    }
-  );
-}, 1500);
+      setTimeout(() => {
+        chrome.runtime.sendMessage(EXTENSION_ID, { action: "getActiveAiTab" }, (response) => {
+          if (response?.tabId) {
+            chrome.runtime.sendMessage(EXTENSION_ID, { action: "focusTab", tabId: response.tabId, windowId: response.windowId }, () => window.close());
+          } else {
+            window.location.href = "https://chatgpt.com";
+          }
+        });
+      }, 1600);
     } else {
-      // Extension not reachable — show manual instructions
       $activateBtn.disabled = false;
-      $activateBtn.textContent = "⚡ Activate Pro in Extension";
-      $manualInstructions.style.display = "block";
-      showToast("Extension not detected — see instructions below");
+      $activateBtn.innerHTML = '<span>Activate Pro in extension</span><span class="btn-arrow">→</span>';
+      $manual.style.display = "block";
+      showToast("Extension not detected — see below");
     }
   });
 
-  // ── Try to message the extension via chrome.runtime ──────────────────────
-  // This works because success.html is hosted on GitHub Pages (external site).
-  // The extension must declare this origin in manifest.json externally_connectable.
+  // ── Extension messaging ──────────────────────────────────────────────────
   async function tryActivateViaExtension(key) {
     return new Promise((resolve) => {
       try {
-        if (typeof chrome === "undefined" || !chrome.runtime) {
-          resolve(false);
-          return;
-        }
-
-        const timeout = setTimeout(() => resolve(false), 3000);
-
-        chrome.runtime.sendMessage(
-          EXTENSION_ID,
-          { action: "activatePro", licenseKey: key },
-          (response) => {
-            clearTimeout(timeout);
-            if (chrome.runtime.lastError) {
-              resolve(false);
-            } else {
-              resolve(response?.success === true);
-            }
-          }
-        );
-      } catch (e) {
-        resolve(false);
-      }
+        if (typeof chrome === "undefined" || !chrome.runtime) { resolve(false); return; }
+        const t = setTimeout(() => resolve(false), 3000);
+        chrome.runtime.sendMessage(EXTENSION_ID, { action: "activatePro", licenseKey: key }, (response) => {
+          clearTimeout(t);
+          resolve(!chrome.runtime.lastError && response?.success === true);
+        });
+      } catch { resolve(false); }
     });
   }
 
-  // ── Toast ─────────────────────────────────────────────────────────────────
+  // ── Toast ────────────────────────────────────────────────────────────────
   function showToast(msg) {
-    const toast = document.getElementById("toast");
-    toast.textContent = msg;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3000);
+    const $t = document.getElementById("toast");
+    $t.textContent = msg;
+    $t.classList.add("show");
+    setTimeout(() => $t.classList.remove("show"), 3200);
+  }
+
+  // ── Confetti ─────────────────────────────────────────────────────────────
+  function launchConfetti() {
+    const cv = document.getElementById("cc");
+    const cx = cv.getContext("2d");
+    cv.width  = innerWidth;
+    cv.height = innerHeight;
+
+    const COLS = ["#7c6af7","#b06af7","#34d399","#a78bfa","#e879f9","#f472b6","#60a5fa","#fbbf24","#fff"];
+
+    const particles = Array.from({ length: 150 }, () => ({
+      x:     Math.random() * cv.width,
+      y:     -20 - Math.random() * cv.height * 0.5,
+      vx:    (Math.random() - 0.5) * 4.5,
+      vy:    1.4 + Math.random() * 3.5,
+      rot:   Math.random() * 360,
+      vr:    (Math.random() - 0.5) * 8,
+      w:     4 + Math.random() * 8,
+      h:     3 + Math.random() * 4.5,
+      c:     COLS[Math.floor(Math.random() * COLS.length)],
+      shape: Math.random() > 0.35 ? "rect" : "circle",
+      a:     1,
+    }));
+
+    let frame = 0;
+    (function draw() {
+      cx.clearRect(0, 0, cv.width, cv.height);
+      let alive = false;
+      particles.forEach(p => {
+        p.x  += p.vx;
+        p.y  += p.vy;
+        p.vy += 0.06;
+        p.rot += p.vr;
+        if (frame > 90) p.a = Math.max(0, p.a - 0.013);
+        if (p.y < cv.height + 40 && p.a > 0) alive = true;
+        cx.save();
+        cx.globalAlpha = p.a;
+        cx.translate(p.x, p.y);
+        cx.rotate(p.rot * Math.PI / 180);
+        cx.fillStyle = p.c;
+        if (p.shape === "circle") {
+          cx.beginPath();
+          cx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+          cx.fill();
+        } else {
+          cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        }
+        cx.restore();
+      });
+      frame++;
+      if (alive) requestAnimationFrame(draw);
+    })();
   }
 </script>
 </body>
