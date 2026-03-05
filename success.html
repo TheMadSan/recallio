@@ -181,9 +181,8 @@
       box-shadow: 0 0 0 1px rgba(0,0,0,0.4) inset, 0 32px 64px rgba(0,0,0,0.3);
     }
 
-    .card-email { animation-delay: 0.18s; }
+    .card-email    { animation-delay: 0.18s; }
     .card-features { animation-delay: 0.28s; }
-    .card-key { animation-delay: 0.38s; }
 
     /* ── Email ── */
     .email-row {
@@ -260,69 +259,6 @@
     .feat-ico  { font-size: 18px; margin-bottom: 7px; }
     .feat-name { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; }
     .feat-hint { font-size: 10px; color: var(--text2); margin-top: 2px; }
-
-    /* ── License key ── */
-    .license-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .license-box {
-      display: flex;
-      align-items: center;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(124,106,247,0.2);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 9px;
-    }
-
-    .license-key {
-      flex: 1;
-      padding: 11px 13px;
-      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-      font-size: 11px;
-      color: var(--text3);
-      word-break: break-all;
-      line-height: 1.5;
-    }
-
-    .copy-btn {
-      flex-shrink: 0;
-      padding: 11px 14px;
-      border: none;
-      background: rgba(124,106,247,0.1);
-      border-left: 1px solid rgba(124,106,247,0.18);
-      color: var(--accent);
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-      font-family: inherit;
-      transition: background 0.2s, color 0.2s;
-      letter-spacing: 0.03em;
-    }
-
-    .copy-btn:hover { background: rgba(124,106,247,0.2); }
-    .copy-btn.copied { color: var(--green); }
-
-    .license-note {
-      font-size: 11px;
-      color: var(--text2);
-      line-height: 1.55;
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-    }
-
-    .license-note::before {
-      content: '↗';
-      font-size: 11px;
-      color: var(--text2);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
 
     /* ── CTA ── */
     .cta-wrap {
@@ -476,13 +412,6 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ── Divider ── */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 20px 0;
-    }
-
     /* ── Animations ── */
     @keyframes rise {
       from { opacity: 0; transform: translateY(18px); }
@@ -521,7 +450,7 @@
     <p class="sub">Pro is active. 400 conversations, unlimited prompts, and everything else — ready now.</p>
   </div>
 
-  <!-- Email badge -->
+  <!-- Email badge (injected by JS if email is available) -->
   <div id="email-card-wrap"></div>
 
   <!-- Features -->
@@ -530,23 +459,11 @@
     <div class="features-grid">
       <div class="feat"><div class="feat-ico">💬</div><div class="feat-name">400 conversations</div><div class="feat-hint">8× free tier</div></div>
       <div class="feat"><div class="feat-ico">📋</div><div class="feat-name">Unlimited prompts</div><div class="feat-hint">Save anything</div></div>
-      <div class="feat"><div class="feat-ico">📁</div><div class="feat-name">Collections</div><div class="feat-hint">Group & organise</div></div>
-      <div class="feat"><div class="feat-ico">📤</div><div class="feat-name">Export</div><div class="feat-hint">PDF & Markdown</div></div>
-      <div class="feat"><div class="feat-ico">📊</div><div class="feat-name">Analytics</div><div class="feat-hint">Streaks & peaks</div></div>
+      <div class="feat"><div class="feat-ico">📁</div><div class="feat-name">Collections</div><div class="feat-hint">Group &amp; organise</div></div>
+      <div class="feat"><div class="feat-ico">📤</div><div class="feat-name">Export</div><div class="feat-hint">PDF &amp; Markdown</div></div>
+      <div class="feat"><div class="feat-ico">📊</div><div class="feat-name">Analytics</div><div class="feat-hint">Streaks &amp; peaks</div></div>
       <div class="feat"><div class="feat-ico">🔥</div><div class="feat-name">Milestones</div><div class="feat-hint">Share progress</div></div>
     </div>
-  </div>
-
-  <!-- License key -->
-  <div class="card card-key">
-    <div class="license-header">
-      <div class="section-label" style="margin-bottom:0">License key</div>
-    </div>
-    <div class="license-box">
-      <span class="license-key" id="license-key-display">Loading…</span>
-      <button class="copy-btn" id="copy-btn">Copy</button>
-    </div>
-    <p class="license-note">Save this somewhere safe — you'll need it if you reinstall the extension.</p>
   </div>
 
   <!-- CTA -->
@@ -590,8 +507,6 @@
   const $card        = document.getElementById("success-card");
   const $errorCard   = document.getElementById("error-card");
   const $errorMsg    = document.getElementById("error-msg");
-  const $keyDisplay  = document.getElementById("license-key-display");
-  const $copyBtn     = document.getElementById("copy-btn");
   const $activateBtn = document.getElementById("activate-btn");
   const $manual      = document.getElementById("manual-instructions");
 
@@ -604,7 +519,7 @@
     fetchLicenseKey(sessionId);
   }
 
-  // ── Fetch license key ────────────────────────────────────────────────────
+  // ── Fetch license key from backend (stored internally, never shown to user) ──
   async function fetchLicenseKey(sid) {
     try {
       const res  = await fetch(ACTIVATE_ENDPOINT, {
@@ -625,7 +540,6 @@
   function showSuccess(data) {
     $loading.style.display = "none";
     $card.style.display    = "block";
-    $keyDisplay.textContent = data.licenseKey;
 
     if (data.email && data.email !== "unknown") {
       document.getElementById("email-card-wrap").innerHTML = `
@@ -647,19 +561,6 @@
     $errorCard.style.display = "block";
     $errorMsg.textContent    = msg;
   }
-
-  // ── Copy key ─────────────────────────────────────────────────────────────
-  $copyBtn.addEventListener("click", () => {
-    if (!licenseKey) return;
-    navigator.clipboard.writeText(licenseKey).then(() => {
-      $copyBtn.textContent = "✓ Copied";
-      $copyBtn.classList.add("copied");
-      setTimeout(() => {
-        $copyBtn.textContent = "Copy";
-        $copyBtn.classList.remove("copied");
-      }, 2200);
-    });
-  });
 
   // ── Activate button ──────────────────────────────────────────────────────
   $activateBtn.addEventListener("click", async () => {
@@ -741,9 +642,9 @@
       cx.clearRect(0, 0, cv.width, cv.height);
       let alive = false;
       particles.forEach(p => {
-        p.x  += p.vx;
-        p.y  += p.vy;
-        p.vy += 0.06;
+        p.x   += p.vx;
+        p.y   += p.vy;
+        p.vy  += 0.06;
         p.rot += p.vr;
         if (frame > 90) p.a = Math.max(0, p.a - 0.013);
         if (p.y < cv.height + 40 && p.a > 0) alive = true;
