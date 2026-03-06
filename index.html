@@ -1378,6 +1378,7 @@
     <li><a href="#">Terms</a></li>
     <li><a href="#">GitHub</a></li>
     <li><a href="#">Contact</a></li>
+    <li><a href="#" id="manage-sub-link" style="display:none;">Manage Plan</a></li>
   </ul>
   <span class="footer-copy">© 2025 Nestiq. All rights reserved.</span>
 </footer>
@@ -1438,6 +1439,38 @@
   });
 })();
 
+// ── Show "Manage Plan" link to pro users visiting the landing page ──
+(function () {
+  const EXTENSION_ID = 'mgindofpbackcchpgbmgicmojkajhgoh';
+  const SUPABASE_PORTAL_URL = 'https://cfefjqixkpxgiquwowhm.supabase.co/functions/v1/create-portal-session';
+  const link = document.getElementById('manage-sub-link');
+  if (!link) return;
+
+  // Only show the link if the extension is installed and user is pro
+  try {
+    if (typeof chrome === 'undefined' || !chrome.runtime) return;
+    chrome.runtime.sendMessage(EXTENSION_ID, { action: 'checkLicense' }, (response) => {
+      if (chrome.runtime.lastError || !response?.isPro) return;
+      link.style.display = 'inline';
+
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        link.textContent = 'Opening…';
+
+        // Ask extension background for portal URL
+        chrome.runtime.sendMessage(EXTENSION_ID, { action: 'openPortal' }, (res) => {
+          if (chrome.runtime.lastError || !res?.success) {
+            link.textContent = 'Manage Plan';
+            alert('Could not open billing portal. Please try from inside the extension.');
+            return;
+          }
+          link.textContent = 'Manage Plan';
+          window.open(res.url, '_blank');
+        });
+      });
+    });
+  } catch (e) {}
+})();
 
 function toggleTheme() {
   const html = document.documentElement;
