@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recallio – Demo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Nestiq – Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #04040d;
-      --accent1: #6366f1;
-      --accent2: #a855f7;
-      --accent3: #06b6d4;
+      --a1: #6366f1;
+      --a2: #a855f7;
+      --a3: #06b6d4;
       --text: #f1f5f9;
       --text2: #94a3b8;
-      --text3: #334155;
+      --text3: #2d3348;
       --glass: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.08);
-      --chatgpt: #10a37f;
-      --claude: #f97316;
+      --gb: rgba(255,255,255,0.08);
+      --gpt: #10a37f;
+      --cld: #f97316;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,28 +34,23 @@
       overflow-x: hidden;
     }
 
-    /* Ambient orbs */
     body::before {
       content: '';
       position: fixed;
-      top: -20%;
-      left: -10%;
+      top: -20%; left: -10%;
       width: 60vw; height: 60vw;
-      background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 65%);
       pointer-events: none;
     }
-
     body::after {
       content: '';
       position: fixed;
-      bottom: -20%;
-      right: -10%;
+      bottom: -20%; right: -10%;
       width: 50vw; height: 50vw;
-      background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 65%);
       pointer-events: none;
     }
 
-    /* ── DEMO WRAPPER ── */
     .demo-wrapper {
       width: 100%;
       max-width: 960px;
@@ -63,28 +58,26 @@
       z-index: 1;
     }
 
-    /* Header */
+    /* ── HEADER ── */
     .demo-header {
       text-align: center;
       margin-bottom: 40px;
     }
-
     .demo-tag {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       background: var(--glass);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--gb);
       border-radius: 100px;
       padding: 5px 16px;
-      font-size: 12px;
-      color: var(--accent3);
-      font-weight: 500;
-      letter-spacing: 1px;
+      font-size: 11px;
+      color: var(--a3);
+      font-weight: 600;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       margin-bottom: 16px;
     }
-
     .demo-title {
       font-size: clamp(28px, 4vw, 42px);
       font-weight: 700;
@@ -92,1142 +85,1005 @@
       line-height: 1.1;
       margin-bottom: 12px;
     }
-
     .demo-title span {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+      background: linear-gradient(135deg, var(--a1), var(--a2), var(--a3));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .demo-sub {
-      font-size: 16px;
+      font-size: 15px;
       color: var(--text2);
       font-weight: 300;
+    }
+
+    /* ── PAIN STRIP ── */
+    .pain-strip {
+      background: rgba(239,68,68,0.04);
+      border: 1px solid rgba(239,68,68,0.12);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .ps-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(248,113,113,0.7);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ps-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(239,68,68,0.15);
+      flex-shrink: 0;
+    }
+    .ps-convos {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .ps-conv {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.14);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .ps-conv.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .ps-conv-icon { font-size: 12px; opacity: 0.5; }
+    .ps-lost-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: #f87171;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 100px;
+      padding: 1px 6px;
+    }
+    .ps-arrow {
+      font-size: 18px;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+    .ps-solution {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.22);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--a1);
+      flex-shrink: 0;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s ease 0.7s, transform 0.4s ease 0.7s;
+    }
+    .ps-solution.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* ── STAGE ── */
     .stage {
       position: relative;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--glass-border);
+      background: rgba(4,4,13,0.98);
+      border: 1px solid var(--gb);
       border-radius: 20px;
       overflow: hidden;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+      box-shadow:
+        0 40px 100px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
-    /* Stage top bar */
-    .stage-bar {
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--glass-border);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .stage-dots { display: flex; gap: 6px; }
-    .stage-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; }
-    .dot-y { background: #febc2e; }
-    .dot-g { background: #28c840; }
-
-    .stage-title {
-      font-size: 12px;
-      color: var(--text2);
-      margin: 0 auto;
-      letter-spacing: 0.5px;
-    }
-
-    /* Step indicators */
-    .step-indicators {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .step-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--glass-border);
-      transition: all 0.4s ease;
-    }
-
-    .step-dot.active {
-      background: var(--accent1);
-      box-shadow: 0 0 8px rgba(99,102,241,0.6);
-    }
-
-    .step-dot.done {
-      background: var(--accent2);
-    }
-
-    /* ── SCENE CONTAINER ── */
-    .scenes {
-      position: relative;
-      height: 480px;
-      overflow: hidden;
-    }
-
-    .scene {
-      position: absolute;
-      inset: 0;
-      padding: 32px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-    }
-
-    .scene.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
-
-    .scene.exit {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-
-    /* ── SCENE LAYOUTS ── */
-    .scene-left {
-      flex: 1;
-      max-width: 380px;
-    }
-
-    .scene-right {
-      flex: 1;
-      max-width: 340px;
-    }
-
-    .scene-step-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--accent1);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .step-num-badge {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: rgba(99,102,241,0.2);
-      border: 1px solid rgba(99,102,241,0.4);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700;
-      color: var(--accent1);
-    }
-
-    .scene-heading {
-      font-size: clamp(20px, 2.5vw, 28px);
-      font-weight: 700;
-      letter-spacing: -0.8px;
-      line-height: 1.2;
-      margin-bottom: 12px;
-    }
-
-    .scene-heading .highlight {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .scene-body {
-      font-size: 15px;
-      color: var(--text2);
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    /* ── MOCK BROWSER ── */
-    .mock-browser {
-      background: rgba(4,4,13,0.9);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-
-    .browser-top {
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--glass-border);
-      padding: 10px 14px;
+    /* Chrome bar */
+    .chrome-bar {
+      background: rgba(22,22,36,0.98);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
+    .chrome-dots { display: flex; gap: 6px; }
+    .chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-    .b-dots { display: flex; gap: 5px; }
-    .b-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-    .b-url {
+    .chrome-tabs {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      padding-left: 6px;
       flex: 1;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--glass-border);
-      border-radius: 6px;
-      padding: 4px 10px;
+    }
+    .chrome-tab {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 5px 14px 5px 9px;
       font-size: 10px;
       color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+    .chrome-tab.active { background: rgba(255,255,255,0.06); color: var(--text); }
+    .tab-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+
+    .chrome-omnibox {
+      width: 260px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 11px;
+      color: var(--text2);
+      text-align: center;
+      transition: color 0.4s ease;
     }
 
-    /* ChatGPT mock content */
-    .chatgpt-content {
-      padding: 16px;
+    /* Viewport */
+    .viewport {
+      display: flex;
+      height: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ChatGPT sidebar */
+    .gpt-sidebar {
+      width: 200px;
+      background: #171717;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      padding: 10px 6px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .gpt-s-heading {
+      font-size: 9px;
+      color: rgba(255,255,255,0.25);
+      padding: 6px 8px 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .gpt-s-item {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .gpt-s-item.active { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+    .gpt-s-item.dim { color: rgba(255,255,255,0.18); }
+
+    /* ChatGPT main */
+    .gpt-main {
+      flex: 1;
+      background: #212121;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .gpt-top {
+      background: #212121;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 11px 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .gpt-top-icon {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #10a37f;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .chat-area {
+      flex: 1;
+      padding: 20px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+      position: relative;
     }
 
     .chat-msg {
       display: flex;
       gap: 10px;
-      margin-bottom: 14px;
       opacity: 0;
       transform: translateY(8px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
-
-    .chat-msg.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
+    .chat-msg.show { opacity: 1; transform: translateY(0); }
+    .chat-msg.user { flex-direction: row-reverse; }
     .chat-avatar {
-      width: 28px; height: 28px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
+      font-size: 10px; font-weight: 700;
     }
-
-    .avatar-user {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
-    }
-
-    .avatar-gpt {
-      background: rgba(16,163,127,0.2);
-      border: 1px solid rgba(16,163,127,0.3);
-      color: var(--chatgpt);
-    }
-
+    .av-gpt { background: #10a37f; color: #fff; }
+    .av-user { background: linear-gradient(135deg, var(--a1), var(--a2)); color: #fff; }
     .chat-bubble {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--glass-border);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 11px;
-      color: var(--text);
-      line-height: 1.6;
-      flex: 1;
+      max-width: 360px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 9px 13px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.65;
     }
+    .chat-msg.user .chat-bubble { background: rgba(255,255,255,0.08); }
 
-    .chat-bubble.user-bubble {
-      background: rgba(99,102,241,0.1);
-      border-color: rgba(99,102,241,0.2);
-    }
-
-    /* Typing indicator */
-    .typing {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      padding: 4px 0;
-    }
-
-    .typing span {
+    .typing-dots { display: flex; gap: 4px; align-items: center; padding: 2px 0; }
+    .typing-dots span {
       width: 5px; height: 5px;
       border-radius: 50%;
-      background: var(--text2);
-      animation: typing-bounce 1.2s infinite;
+      background: rgba(255,255,255,0.35);
+      animation: tdot 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes tdot {
+      0%,60%,100% { transform: translateY(0); opacity: 0.35; }
+      30% { transform: translateY(-5px); opacity: 1; }
     }
 
-    .typing span:nth-child(2) { animation-delay: 0.2s; }
-    .typing span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing-bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-      30% { transform: translateY(-4px); opacity: 1; }
+    .gpt-input-bar {
+      padding: 12px 18px;
+      background: #212121;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    .gpt-input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
     }
 
-    /* Recallio saving indicator */
+    /* Saving toast */
     .saving-toast {
       position: absolute;
-      bottom: 14px;
-      right: 14px;
-      background: rgba(99,102,241,0.15);
-      border: 1px solid rgba(99,102,241,0.3);
+      bottom: 14px; left: 16px;
+      background: rgba(99,102,241,0.14);
+      border: 1px solid rgba(99,102,241,0.28);
       border-radius: 100px;
       padding: 5px 12px;
       font-size: 10px;
-      color: var(--accent1);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: var(--a1);
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 600;
       opacity: 0;
       transform: translateY(8px);
-      transition: opacity 0.3s, transform 0.3s;
-      font-weight: 500;
+      transition: opacity 0.3s ease, transform 0.3s ease,
+                  border-color 0.4s ease, color 0.4s ease;
     }
-
-    .saving-toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .saving-dot {
+    .saving-toast.show { opacity: 1; transform: translateY(0); }
+    .s-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--accent1);
-      animation: pulse-dot 1s infinite;
+      background: var(--a1);
+      animation: sdot 1s infinite;
+    }
+    @keyframes sdot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.65); }
     }
 
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
+    /* Caption overlay */
+    .caption-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(4,4,13,0.96) 0%, rgba(4,4,13,0.55) 55%, transparent 100%);
+      padding: 36px 28px 18px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .caption-overlay.show { opacity: 1; }
+    .caption-text {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 1.35;
+      color: var(--text);
+    }
+    .caption-text em {
+      font-style: italic;
+      color: var(--a2);
     }
 
-    /* ── MOCK EXTENSION POPUP ── */
-    .mock-popup {
-      background: rgba(4,4,13,0.95);
-      border: 1px solid rgba(99,102,241,0.2);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.08);
-      width: 100%;
-    }
-
-    .popup-header {
-      padding: 12px 14px 10px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--glass-border);
-    }
-
-    .popup-logo-row {
+    /* Hook button */
+    .hook-btn {
+      position: absolute;
+      right: -42px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      background: linear-gradient(160deg, var(--a1), var(--a2));
+      border-radius: 8px 0 0 8px;
+      padding: 10px 7px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      gap: 5px;
+      cursor: pointer;
+      box-shadow: -3px 0 18px rgba(99,102,241,0.35);
+      transition: right 0.55s cubic-bezier(0.4,0,0.2,1);
+      z-index: 10;
+    }
+    .hook-btn.visible { right: 0; }
+    .hook-icon { font-size: 13px; }
+    .hook-label {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      writing-mode: vertical-rl;
+    }
+    .hook-pulse {
+      position: absolute;
+      top: -4px; right: -4px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--a3);
+      animation: hpulse 2s infinite;
+    }
+    @keyframes hpulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.7); opacity: 0; }
+    }
+
+    /* Drawer */
+    .drawer {
+      position: absolute;
+      top: 0; bottom: 0; right: -296px;
+      width: 280px;
+      background: rgba(4,4,13,0.99);
+      border-left: 1px solid rgba(99,102,241,0.18);
+      display: flex;
+      flex-direction: column;
+      transition: right 0.5s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -14px 0 44px rgba(0,0,0,0.5);
+      z-index: 20;
+    }
+    .drawer.open { right: 0; }
+
+    .drawer-head {
+      padding: 13px 13px 10px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--gb);
+    }
+    .drawer-logo-row {
+      display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 10px;
     }
-
-    .popup-logo {
+    .drawer-logo {
       font-size: 15px;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--a1), var(--a2), var(--a3));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
-    .popup-chips {
-      display: flex;
-      gap: 5px;
+    .drawer-chips { display: flex; gap: 5px; }
+    .d-chip {
+      display: flex; align-items: center; gap: 3px;
+      background: var(--glass); border: 1px solid var(--gb);
+      border-radius: 100px; padding: 3px 8px;
+      font-size: 9px; color: var(--text2); font-weight: 600;
     }
+    .chip-dot { width: 5px; height: 5px; border-radius: 50%; }
 
-    .popup-chip {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 100px;
-      padding: 2px 8px;
-      font-size: 9px;
-      color: var(--text2);
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .p-dot { width: 4px; height: 4px; border-radius: 50%; }
-
-    .popup-search {
+    .drawer-search {
       background: rgba(99,102,241,0.07);
-      border: 1px solid rgba(99,102,241,0.25);
-      border-radius: 8px;
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 9px;
       padding: 7px 10px;
       font-size: 11px;
       color: var(--text2);
-      box-shadow: 0 0 12px rgba(99,102,241,0.1);
-      position: relative;
-      overflow: hidden;
+      display: flex; align-items: center; gap: 6px;
+      box-shadow: 0 0 12px rgba(99,102,241,0.08);
     }
-
-    .search-cursor {
+    .d-cursor {
       display: inline-block;
-      width: 1px;
-      height: 12px;
-      background: var(--accent1);
+      width: 1px; height: 12px;
+      background: var(--a1);
+      animation: dblink 1s infinite;
       vertical-align: middle;
       margin-left: 1px;
-      animation: blink-cursor 1s infinite;
     }
+    @keyframes dblink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
 
-    @keyframes blink-cursor {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+    .drawer-filters {
+      display: flex; gap: 5px;
+      padding: 8px 13px;
+      border-bottom: 1px solid var(--gb);
     }
+    .d-filter { border-radius: 100px; padding: 3px 10px; font-size: 9px; font-weight: 600; }
+    .d-f-on  { background: linear-gradient(135deg, var(--a1), var(--a2)); color: #fff; }
+    .d-f-off { background: var(--glass); border: 1px solid var(--gb); color: var(--text2); }
 
-    .popup-filters {
-      display: flex;
-      gap: 5px;
-      padding: 8px 14px;
-      border-bottom: 1px solid var(--glass-border);
-    }
-
-    .p-filter {
-      border-radius: 100px;
-      padding: 3px 10px;
-      font-size: 10px;
-    }
-
-    .p-filter-active {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      color: white;
-      font-weight: 500;
-    }
-
-    .p-filter-inactive {
+    .drawer-results { padding: 7px; flex: 1; overflow: hidden; }
+    .d-result {
       background: var(--glass);
-      border: 1px solid var(--glass-border);
-      color: var(--text2);
-    }
-
-    .popup-results {
-      padding: 8px;
-    }
-
-    .popup-result {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--gb);
       border-radius: 10px;
       padding: 9px 11px;
       margin-bottom: 5px;
       opacity: 0;
-      transform: translateX(-8px);
-      transition: all 0.35s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .popup-result.show {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .popup-result.highlighted {
-      border-color: rgba(99,102,241,0.4);
-      background: rgba(99,102,241,0.08);
-      box-shadow: 0 0 20px rgba(99,102,241,0.08);
-    }
-
-    /* Scanning line effect */
-    .popup-result.highlighted::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.12), transparent);
-      animation: scan 1.5s ease infinite;
-    }
-
-    @keyframes scan {
-      from { left: -60%; }
-      to { left: 120%; }
-    }
-
-    .pr-top {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-
-    .pr-badge {
-      width: 16px; height: 16px;
-      border-radius: 5px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 8px; font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .pr-badge-g { background: rgba(16,163,127,0.15); border: 1px solid rgba(16,163,127,0.2); color: var(--chatgpt); }
-    .pr-badge-c { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.2); color: var(--claude); }
-
-    .pr-title { font-size: 11px; font-weight: 500; color: var(--text); }
-    .pr-preview { font-size: 10px; color: var(--text2); line-height: 1.4; }
-
-    .pr-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
-    }
-
-    .pr-date { font-size: 9px; color: var(--text3); }
-    .pr-msgs { font-size: 9px; color: var(--text3); background: var(--glass); border-radius: 6px; padding: 1px 5px; }
-
-    /* Highlight text in search results */
-    .search-match {
-      background: rgba(99,102,241,0.3);
-      border-radius: 2px;
-      padding: 0 1px;
-      color: var(--text);
-    }
-
-    /* ── SCENE 3: Problem ── */
-    .pain-visual {
-      width: 100%;
-    }
-
-    .chat-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .chat-list-item {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      opacity: 0;
       transform: translateX(10px);
-      transition: all 0.3s ease;
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      position: relative; overflow: hidden;
     }
-
-    .chat-list-item.show { opacity: 1; transform: translateX(0); }
-
-    .chat-list-item.lost {
-      border-color: rgba(239,68,68,0.2);
-      background: rgba(239,68,68,0.04);
+    .d-result.show { opacity: 1; transform: translateX(0); }
+    .d-result.hl {
+      border-color: rgba(99,102,241,0.4);
+      background: rgba(99,102,241,0.07);
+      box-shadow: 0 0 20px rgba(99,102,241,0.1);
     }
-
-    .chat-list-icon { font-size: 14px; flex-shrink: 0; }
-    .chat-list-name { font-size: 11px; color: var(--text2); flex: 1; }
-    .chat-list-date { font-size: 10px; color: var(--text3); }
-
-    .lost-badge {
-      font-size: 9px;
-      color: #f87171;
-      background: rgba(248,113,113,0.1);
-      border: 1px solid rgba(248,113,113,0.2);
-      border-radius: 100px;
-      padding: 2px 7px;
-      font-weight: 500;
+    .d-result.hl::after {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
+      animation: scan 1.8s ease infinite;
     }
+    @keyframes scan { from{left:-60%} to{left:120%} }
 
-    /* ── PROGRESS BAR ── */
-    .progress-wrap {
-      padding: 16px 20px;
-      background: rgba(255,255,255,0.02);
-      border-top: 1px solid var(--glass-border);
+    .dr-top { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .dr-badge {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700; flex-shrink: 0;
     }
+    .db-g { background: rgba(16,163,127,0.15); border: 1px solid rgba(16,163,127,0.22); color: var(--gpt); }
+    .db-c { background: rgba(249,115,22,0.15);  border: 1px solid rgba(249,115,22,0.22);  color: var(--cld); }
+    .dr-title   { font-size: 11px; font-weight: 600; color: var(--text); }
+    .dr-preview { font-size: 10px; color: var(--text2); line-height: 1.45; }
+    .dr-meta    { display: flex; justify-content: space-between; margin-top: 4px; }
+    .dr-date    { font-size: 9px; color: var(--text3); }
+    .dr-msgs    { font-size: 9px; color: var(--text3); background: var(--glass); border-radius: 4px; padding: 1px 5px; }
+    .smatch     { background: rgba(99,102,241,0.28); border-radius: 2px; padding: 0 2px; color: var(--text); }
 
-    .progress-header {
+    .drawer-nav {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      border-top: 1px solid var(--gb);
+      background: rgba(2,2,10,0.7);
+    }
+    .dn-btn {
+      flex: 1; padding: 9px 4px; text-align: center;
+      font-size: 7.5px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; color: var(--text3);
+      border: none; background: none;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer; transition: color 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+    }
+    .dn-btn.on { color: var(--a1); }
+    .dn-icon { font-size: 13px; }
+
+    /* ── PROGRESS + CONTROLS ── */
+    .progress-wrap {
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid var(--gb);
+    }
+    .progress-header {
+      display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 10px;
     }
-
-    .progress-steps {
-      display: flex;
-      gap: 8px;
+    .progress-steps { display: flex; gap: 6px; }
+    .p-step {
+      font-size: 10px; font-weight: 600;
+      padding: 4px 12px; border-radius: 100px;
+      cursor: pointer; transition: all 0.2s;
+      color: var(--text3); background: var(--glass); border: 1px solid var(--gb);
     }
-
-    .progress-step {
-      font-size: 11px;
-      color: var(--text3);
-      padding: 4px 12px;
+    .p-step.active  { color: var(--text);  border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.1); }
+    .p-step.done    { color: var(--a2);    border-color: rgba(168,85,247,0.3); }
+    .p-timer { font-size: 10px; color: var(--text3); }
+    .p-bar-track { height: 2px; background: var(--gb); border-radius: 100px; overflow: hidden; }
+    .p-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
       border-radius: 100px;
-      border: 1px solid var(--glass-border);
-      cursor: pointer;
-      transition: all 0.2s;
-      background: var(--glass);
+      transition: width 0.06s linear;
     }
 
-    .progress-step.active {
-      color: var(--text);
-      border-color: rgba(99,102,241,0.4);
-      background: rgba(99,102,241,0.1);
-    }
-
-    .progress-step.done {
-      color: var(--accent2);
-      border-color: rgba(168,85,247,0.3);
-    }
-
-    .progress-timer {
-      font-size: 11px;
-      color: var(--text3);
-    }
-
-    .progress-bar-track {
-      height: 3px;
-      background: var(--glass-border);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
-      border-radius: 100px;
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-
-    /* ── CONTROLS ── */
     .controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 24px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-top: 22px;
     }
-
     .ctrl-btn {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 100px;
-      padding: 10px 24px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text2);
-      cursor: pointer;
-      transition: all 0.2s;
+      background: var(--glass); border: 1px solid var(--gb);
+      border-radius: 100px; padding: 9px 22px;
+      font-size: 13px; font-weight: 500; color: var(--text2);
+      cursor: pointer; transition: all 0.2s;
       font-family: 'Outfit', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(10px);
     }
-
-    .ctrl-btn:hover {
-      border-color: rgba(99,102,241,0.4);
-      color: var(--text);
-    }
-
+    .ctrl-btn:hover { border-color: rgba(99,102,241,0.4); color: var(--text); }
+    .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     .ctrl-btn.primary {
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      border-color: transparent;
-      color: white;
-      box-shadow: 0 0 24px rgba(99,102,241,0.3);
+      background: linear-gradient(135deg, var(--a1), var(--a2));
+      border-color: transparent; color: #fff;
+      box-shadow: 0 0 22px rgba(99,102,241,0.3);
+      animation: pglow 2.2s ease-in-out infinite;
     }
-
-    .ctrl-btn.primary:hover {
-      box-shadow: 0 0 40px rgba(99,102,241,0.5);
-      transform: translateY(-1px);
+    .ctrl-btn.primary:hover { box-shadow: 0 0 38px rgba(99,102,241,0.55); transform: translateY(-1px); }
+    @keyframes pglow {
+      0%,100% { box-shadow: 0 0 22px rgba(99,102,241,0.3); }
+      50%      { box-shadow: 0 0 42px rgba(99,102,241,0.6); }
     }
-
-    .ctrl-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* Pulse animation for play button */
-    .play-pulse {
-      animation: play-glow 2s ease-in-out infinite;
-    }
-
-    @keyframes play-glow {
-      0%, 100% { box-shadow: 0 0 24px rgba(99,102,241,0.3); }
-      50% { box-shadow: 0 0 48px rgba(99,102,241,0.6); }
-    }
-
   </style>
 </head>
 <body>
-
 <div class="demo-wrapper">
 
   <!-- Header -->
   <div class="demo-header">
     <div class="demo-tag">✦ Live Demo</div>
-    <h2 class="demo-title">See <span>Recallio in action</span></h2>
-    <p class="demo-sub">Watch how Recallio saves and finds your AI conversations automatically</p>
+    <h2 class="demo-title">See <span>Nestiq in action</span></h2>
+    <p class="demo-sub">Watch how Nestiq saves and finds your AI conversations automatically</p>
+  </div>
+
+  <!-- Pain Strip -->
+  <div class="pain-strip" id="painStrip">
+    <span class="ps-label">Without Nestiq</span>
+    <div class="ps-divider"></div>
+    <div class="ps-convos">
+      <div class="ps-conv" id="pc0"><span class="ps-conv-icon">💬</span>New conversation<span class="ps-lost-badge">lost</span></div>
+      <div class="ps-conv" id="pc1"><span class="ps-conv-icon">💬</span>New conversation<span class="ps-lost-badge">lost</span></div>
+      <div class="ps-conv" id="pc2"><span class="ps-conv-icon">💬</span>New conversation<span class="ps-lost-badge">lost</span></div>
+      <div class="ps-conv" id="pc3"><span class="ps-conv-icon">💬</span>New conversation<span class="ps-lost-badge">lost</span></div>
+      <div class="ps-conv" id="pc4"><span class="ps-conv-icon">💬</span>New conversation<span class="ps-lost-badge">lost</span></div>
+    </div>
+    <span class="ps-arrow">→</span>
+    <div class="ps-solution show" id="psSolution">🔍 Nestiq finds it instantly</div>
   </div>
 
   <!-- Stage -->
   <div class="stage">
 
-    <!-- Stage top bar -->
-    <div class="stage-bar">
-      <div class="stage-dots">
-        <div class="stage-dot dot-r"></div>
-        <div class="stage-dot dot-y"></div>
-        <div class="stage-dot dot-g"></div>
+    <div class="chrome-bar">
+      <div class="chrome-dots">
+        <div class="chrome-dot" style="background:#ff5f57"></div>
+        <div class="chrome-dot" style="background:#febc2e"></div>
+        <div class="chrome-dot" style="background:#28c840"></div>
       </div>
-      <div class="stage-title" id="stageTitle">Recallio — Interactive Demo</div>
-      <div class="step-indicators">
-        <div class="step-dot active" id="sd0"></div>
-        <div class="step-dot" id="sd1"></div>
-        <div class="step-dot" id="sd2"></div>
-        <div class="step-dot" id="sd3"></div>
+      <div class="chrome-tabs">
+        <div class="chrome-tab active">
+          <div class="tab-dot" style="background:#10a37f"></div>
+          ChatGPT
+        </div>
+        <div class="chrome-tab">
+          <div class="tab-dot" style="background:#f97316"></div>
+          Claude
+        </div>
       </div>
+      <div class="chrome-omnibox" id="omnibox">chatgpt.com</div>
     </div>
 
-    <!-- Scenes -->
-    <div class="scenes">
+    <div class="viewport">
 
-      <!-- SCENE 0: Welcome -->
-      <div class="scene active" id="scene0">
-        <div class="scene-left">
-          <div class="scene-step-label">
-            <div class="step-num-badge">★</div>
-            Welcome
-          </div>
-          <h3 class="scene-heading">
-            You've had <span class="highlight">hundreds</span> of AI conversations.<br>
-            Can you find them?
-          </h3>
-          <p class="scene-body">
-            ChatGPT and Claude have no real search. Great conversations get buried and lost forever. Recallio fixes this — automatically, privately, and instantly.
-          </p>
+      <!-- Sidebar -->
+      <div class="gpt-sidebar">
+        <div class="gpt-s-heading">Today</div>
+        <div class="gpt-s-item active">Salary negotiation tips</div>
+        <div class="gpt-s-heading" style="margin-top:6px;">Yesterday</div>
+        <div class="gpt-s-item dim">Python async patterns</div>
+        <div class="gpt-s-item dim">React hooks deep dive</div>
+        <div class="gpt-s-heading" style="margin-top:6px;">3 weeks ago</div>
+        <div class="gpt-s-item dim">New conversation</div>
+        <div class="gpt-s-item dim">New conversation</div>
+        <div class="gpt-s-item dim">New conversation</div>
+      </div>
+
+      <!-- Main chat area -->
+      <div class="gpt-main">
+        <div class="gpt-top">
+          <div class="gpt-top-icon">G</div>
+          ChatGPT
         </div>
-        <div class="scene-right">
-          <div class="chat-list pain-visual">
-            <div class="chat-list-item lost" id="lost0">
-              <span class="chat-list-icon">💬</span>
-              <span class="chat-list-name">New conversation</span>
-              <span class="lost-badge">lost</span>
-            </div>
-            <div class="chat-list-item lost" id="lost1">
-              <span class="chat-list-icon">💬</span>
-              <span class="chat-list-name">New conversation</span>
-              <span class="lost-badge">lost</span>
-            </div>
-            <div class="chat-list-item lost" id="lost2">
-              <span class="chat-list-icon">💬</span>
-              <span class="chat-list-name">New conversation</span>
-              <span class="lost-badge">lost</span>
-            </div>
-            <div class="chat-list-item" id="lost3" style="border-color:rgba(99,102,241,0.3); background:rgba(99,102,241,0.06);">
-              <span class="chat-list-icon">🔍</span>
-              <span class="chat-list-name" style="color:var(--text);">With Recallio — find anything instantly</span>
-            </div>
-          </div>
+        <div class="chat-area" id="chatArea"></div>
+        <div class="gpt-input-bar">
+          <div class="gpt-input">Message ChatGPT</div>
+        </div>
+
+        <!-- Saving toast -->
+        <div class="saving-toast" id="savingToast">
+          <div class="s-dot" id="sDot"></div>
+          <span id="savingText">Nestiq saving…</span>
+        </div>
+
+        <!-- Caption -->
+        <div class="caption-overlay" id="captionOverlay">
+          <div class="caption-text" id="captionText"></div>
         </div>
       </div>
 
-      <!-- SCENE 1: Saving -->
-      <div class="scene" id="scene1">
-        <div class="scene-left">
-          <div class="scene-step-label">
-            <div class="step-num-badge">1</div>
-            Step 1 of 3
-          </div>
-          <h3 class="scene-heading">
-            Chat normally.<br>
-            <span class="highlight">Recallio saves silently.</span>
-          </h3>
-          <p class="scene-body">
-            Use ChatGPT and Claude exactly as you always do. Recallio watches in the background and automatically saves every conversation to your device — no clicks needed.
-          </p>
-        </div>
-        <div class="scene-right">
-          <div class="mock-browser">
-            <div class="browser-top">
-              <div class="b-dots">
-                <div class="b-dot" style="background:#ff5f57"></div>
-                <div class="b-dot" style="background:#febc2e"></div>
-                <div class="b-dot" style="background:#28c840"></div>
-              </div>
-              <div class="b-url">chatgpt.com/c/a3b9...</div>
-            </div>
-            <div class="chatgpt-content" style="position:relative;">
-              <div class="chat-msg" id="msg0">
-                <div class="chat-avatar avatar-user">S</div>
-                <div class="chat-bubble user-bubble">How do I negotiate a higher salary at a startup? I have an offer for $95k.</div>
-              </div>
-              <div class="chat-msg" id="msg1">
-                <div class="chat-avatar avatar-gpt">G</div>
-                <div class="chat-bubble">
-                  <div class="typing" id="typing1">
-                    <span></span><span></span><span></span>
-                  </div>
-                  <div id="reply1" style="display:none;">Great position to negotiate from. Here are 3 key strategies: Lead with market data, not personal need. Reference the $110k median for this role...</div>
-                </div>
-              </div>
-              <div class="saving-toast" id="savingToast">
-                <div class="saving-dot"></div>
-                Recallio saving...
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Hook button -->
+      <div class="hook-btn" id="hookBtn">
+        <div class="hook-pulse" id="hookPulse"></div>
+        <div class="hook-icon">⚡</div>
+        <div class="hook-label">nestiq</div>
       </div>
 
-      <!-- SCENE 2: Searching -->
-      <div class="scene" id="scene2">
-        <div class="scene-left">
-          <div class="scene-step-label">
-            <div class="step-num-badge">2</div>
-            Step 2 of 3
+      <!-- Drawer -->
+      <div class="drawer" id="drawer">
+        <div class="drawer-head">
+          <div class="drawer-logo-row">
+            <div class="drawer-logo">nestiq</div>
+            <div class="drawer-chips">
+              <div class="d-chip"><div class="chip-dot" style="background:var(--gpt)"></div>54</div>
+              <div class="d-chip"><div class="chip-dot" style="background:var(--cld)"></div>35</div>
+            </div>
           </div>
-          <h3 class="scene-heading">
-            Weeks later —<br>
-            <span class="highlight">find it in seconds.</span>
-          </h3>
-          <p class="scene-body">
-            Click the Recallio icon. Type any keyword from the conversation. It searches through the actual content — not just titles. Your entire AI history, instantly searchable.
-          </p>
+          <div class="drawer-search">
+            <span>🔍</span>&nbsp;<span id="searchTyped"></span><span class="d-cursor"></span>
+          </div>
         </div>
-        <div class="scene-right">
-          <div class="mock-popup">
-            <div class="popup-header">
-              <div class="popup-logo-row">
-                <div class="popup-logo">recallio</div>
-                <div class="popup-chips">
-                  <div class="popup-chip"><span class="p-dot" style="background:var(--accent1)"></span>89</div>
-                  <div class="popup-chip"><span class="p-dot" style="background:var(--chatgpt)"></span>54</div>
-                  <div class="popup-chip"><span class="p-dot" style="background:var(--claude)"></span>35</div>
-                </div>
-              </div>
-              <div class="popup-search" id="popupSearch">
-                <span id="searchText">🔍 &nbsp;</span><span class="search-cursor" id="searchCursor"></span>
-              </div>
-            </div>
-            <div class="popup-filters">
-              <span class="p-filter p-filter-active">All</span>
-              <span class="p-filter p-filter-inactive">ChatGPT</span>
-              <span class="p-filter p-filter-inactive">Claude</span>
-            </div>
-            <div class="popup-results">
-              <div class="popup-result" id="pr0">
-                <div class="pr-top">
-                  <div class="pr-badge pr-badge-g">G</div>
-                  <div class="pr-title">Salary negotiation at <span class="search-match" id="sm0"></span></div>
-                </div>
-                <div class="pr-preview">Lead with market data, not personal need. Reference the $110k median...</div>
-                <div class="pr-meta"><span class="pr-date">3 weeks ago</span><span class="pr-msgs">8 msgs</span></div>
-              </div>
-              <div class="popup-result" id="pr1">
-                <div class="pr-top">
-                  <div class="pr-badge pr-badge-c">C</div>
-                  <div class="pr-title">Python async explained simply</div>
-                </div>
-                <div class="pr-preview">Can you explain async functions like I'm a beginner...</div>
-                <div class="pr-meta"><span class="pr-date">2 weeks ago</span><span class="pr-msgs">12 msgs</span></div>
-              </div>
-              <div class="popup-result" id="pr2">
-                <div class="pr-top">
-                  <div class="pr-badge pr-badge-g">G</div>
-                  <div class="pr-title">Marketing email for product launch</div>
-                </div>
-                <div class="pr-preview">Write a compelling announcement email...</div>
-                <div class="pr-meta"><span class="pr-date">1 week ago</span><span class="pr-msgs">6 msgs</span></div>
-              </div>
-            </div>
+        <div class="drawer-filters">
+          <span class="d-filter d-f-on">All</span>
+          <span class="d-filter d-f-off">ChatGPT</span>
+          <span class="d-filter d-f-off">Claude</span>
+        </div>
+        <div class="drawer-results">
+          <div class="d-result" id="dr0">
+            <div class="dr-top"><div class="dr-badge db-g">G</div><div class="dr-title">Salary negotiation at <span class="smatch">startup</span></div></div>
+            <div class="dr-preview">Lead with market data, not personal need. Reference the $110k median…</div>
+            <div class="dr-meta"><span class="dr-date">3 weeks ago</span><span class="dr-msgs">8 msgs</span></div>
           </div>
+          <div class="d-result" id="dr1">
+            <div class="dr-top"><div class="dr-badge db-c">C</div><div class="dr-title">Python async explained</div></div>
+            <div class="dr-preview">async/await is syntactic sugar over coroutines — the key insight is…</div>
+            <div class="dr-meta"><span class="dr-date">2 weeks ago</span><span class="dr-msgs">12 msgs</span></div>
+          </div>
+          <div class="d-result" id="dr2">
+            <div class="dr-top"><div class="dr-badge db-g">G</div><div class="dr-title">Marketing email for launch</div></div>
+            <div class="dr-preview">Write a compelling announcement with urgency and social proof…</div>
+            <div class="dr-meta"><span class="dr-date">1 week ago</span><span class="dr-msgs">6 msgs</span></div>
+          </div>
+        </div>
+        <div class="drawer-nav">
+          <button class="dn-btn on"><div class="dn-icon">🕐</div>History</button>
+          <button class="dn-btn"><div class="dn-icon">⚡</div>Prompts</button>
+          <button class="dn-btn"><div class="dn-icon">📁</div>Collections</button>
+          <button class="dn-btn"><div class="dn-icon">📊</div>Analytics</button>
         </div>
       </div>
-
-      <!-- SCENE 3: Result -->
-      <div class="scene" id="scene3">
-        <div class="scene-left">
-          <div class="scene-step-label">
-            <div class="step-num-badge">3</div>
-            Step 3 of 3
-          </div>
-          <h3 class="scene-heading">
-            One click —<br>
-            <span class="highlight">back to that conversation.</span>
-          </h3>
-          <p class="scene-body">
-            Click any result to jump straight back to that exact conversation in ChatGPT or Claude. Your history is yours forever — stored locally, completely private, always searchable.
-          </p>
-        </div>
-        <div class="scene-right">
-          <div class="mock-browser">
-            <div class="browser-top">
-              <div class="b-dots">
-                <div class="b-dot" style="background:#ff5f57"></div>
-                <div class="b-dot" style="background:#febc2e"></div>
-                <div class="b-dot" style="background:#28c840"></div>
-              </div>
-              <div class="b-url" id="finalUrl">chatgpt.com/c/a3b9...</div>
-            </div>
-            <div class="chatgpt-content">
-              <div class="chat-msg visible" style="opacity:1; transform:none;">
-                <div class="chat-avatar avatar-user">S</div>
-                <div class="chat-bubble user-bubble">How do I negotiate a higher salary at a startup? I have an offer for $95k.</div>
-              </div>
-              <div class="chat-msg visible" id="finalReply" style="opacity:0; transform:translateY(8px); transition: all 0.5s ease 0.3s;">
-                <div class="chat-avatar avatar-gpt">G</div>
-                <div class="chat-bubble">Great position to negotiate from. Here are 3 key strategies: Lead with market data, not personal need. Reference the $110k median for this role...</div>
-              </div>
-              <div class="chat-msg visible" id="finalTag" style="opacity:0; transform:translateY(8px); transition: all 0.5s ease 0.6s;">
-                <div style="width:100%; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:10px; padding:10px 14px; font-size:11px; color:var(--accent1); text-align:center;">
-                  ✓ Found via Recallio search · Saved 3 weeks ago · Stored locally on your device
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <!-- Progress -->
     <div class="progress-wrap">
       <div class="progress-header">
         <div class="progress-steps">
-          <div class="progress-step active" onclick="goToScene(0)" id="ps0">Intro</div>
-          <div class="progress-step" onclick="goToScene(1)" id="ps1">Auto-save</div>
-          <div class="progress-step" onclick="goToScene(2)" id="ps2">Search</div>
-          <div class="progress-step" onclick="goToScene(3)" id="ps3">Result</div>
+          <div class="p-step active" id="ps0" onclick="goTo(0)">Intro</div>
+          <div class="p-step"        id="ps1" onclick="goTo(1)">Auto-save</div>
+          <div class="p-step"        id="ps2" onclick="goTo(2)">Search</div>
+          <div class="p-step"        id="ps3" onclick="goTo(3)">Found it</div>
         </div>
-        <div class="progress-timer" id="timerLabel">Auto-advancing in 8s</div>
+        <div class="p-timer" id="timerLabel">Auto-advancing in 5s</div>
       </div>
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill" id="progressFill"></div>
+      <div class="p-bar-track">
+        <div class="p-bar-fill" id="progFill"></div>
       </div>
     </div>
-
   </div>
 
   <!-- Controls -->
   <div class="controls">
     <button class="ctrl-btn" id="prevBtn" onclick="prevScene()" disabled>← Prev</button>
-    <button class="ctrl-btn primary play-pulse" id="playBtn" onclick="togglePlay()">⏸ Pause</button>
+    <button class="ctrl-btn primary" id="playBtn" onclick="togglePlay()">⏸ Pause</button>
     <button class="ctrl-btn" id="nextBtn" onclick="nextScene()">Next →</button>
   </div>
 
 </div>
 
 <script>
+  // ── Helpers ──
+  function g(id) { return document.getElementById(id); }
+
   // ── State ──
-  let currentScene = 0;
-  let isPlaying = true;
-  let progressInterval = null;
-  let sceneTimeout = null;
-  let progressValue = 0;
-
-  const SCENE_DURATION = 8000; // ms per scene
-  const TICK = 50;
-
-  const scenes = [
-    { id: 'scene0', title: 'The Problem — Lost Conversations', onEnter: enterScene0 },
-    { id: 'scene1', title: 'Step 1 — Auto-saving your chats',  onEnter: enterScene1 },
-    { id: 'scene2', title: 'Step 2 — Search your history',     onEnter: enterScene2 },
-    { id: 'scene3', title: 'Step 3 — Jump back instantly',     onEnter: enterScene3 },
-  ];
+  let cur = 0, playing = true, timers = [], progInt = null;
+  const DURATION = 5000, TICK = 60;
 
   // ── Navigation ──
-  function goToScene(index) {
-    if (index === currentScene) return;
-    clearTimers();
-
-    const oldEl = document.getElementById(scenes[currentScene].id);
-    oldEl.classList.remove('active');
-    oldEl.classList.add('exit');
-    setTimeout(() => oldEl.classList.remove('exit'), 500);
-
-    currentScene = index;
-    const newEl = document.getElementById(scenes[currentScene].id);
-    newEl.classList.add('active');
-
+  function goTo(idx) {
+    if (idx === cur) return;
+    clearAll(); reset();
+    cur = idx;
     updateUI();
-    scenes[currentScene].onEnter();
-
-    if (isPlaying) startProgress();
+    enterScene(cur);
+    if (playing) startProg();
   }
-
-  function nextScene() {
-    goToScene((currentScene + 1) % scenes.length);
-  }
-
-  function prevScene() {
-    goToScene((currentScene - 1 + scenes.length) % scenes.length);
-  }
+  function nextScene() { goTo((cur + 1) % 4); }
+  function prevScene() { goTo((cur - 1 + 4) % 4); }
 
   function togglePlay() {
-    isPlaying = !isPlaying;
-    const btn = document.getElementById('playBtn');
-    if (isPlaying) {
+    playing = !playing;
+    const btn = g('playBtn');
+    if (playing) {
       btn.textContent = '⏸ Pause';
-      btn.classList.add('primary', 'play-pulse');
-      startProgress();
+      btn.classList.add('primary');
+      enterScene(cur);
+      startProg();
     } else {
       btn.textContent = '▶ Play';
-      btn.classList.remove('primary', 'play-pulse');
-      clearTimers();
+      btn.classList.remove('primary');
+      clearAll();
     }
   }
 
-  function clearTimers() {
-    clearInterval(progressInterval);
-    clearTimeout(sceneTimeout);
-    progressValue = 0;
-    document.getElementById('progressFill').style.width = '0%';
+  function clearAll() {
+    timers.forEach(t => { clearTimeout(t); clearInterval(t); });
+    timers = [];
+    clearInterval(progInt);
+    const pf = g('progFill'); if (pf) pf.style.width = '0%';
   }
 
-  function startProgress() {
-    clearTimers();
-    progressValue = 0;
-    const totalTicks = SCENE_DURATION / TICK;
-
-    progressInterval = setInterval(() => {
-      progressValue++;
-      const pct = (progressValue / totalTicks) * 100;
-      document.getElementById('progressFill').style.width = pct + '%';
-
-      const remaining = Math.ceil((SCENE_DURATION - progressValue * TICK) / 1000);
-      document.getElementById('timerLabel').textContent = `Auto-advancing in ${remaining}s`;
-
-      if (progressValue >= totalTicks) {
-        clearInterval(progressInterval);
-        nextScene();
-      }
+  function startProg() {
+    clearInterval(progInt);
+    let v = 0; const total = DURATION / TICK;
+    progInt = setInterval(() => {
+      v++;
+      const pf = g('progFill'); if (pf) pf.style.width = (v / total * 100) + '%';
+      const rem = Math.ceil((DURATION - v * TICK) / 1000);
+      const tl = g('timerLabel'); if (tl) tl.textContent = 'Auto-advancing in ' + rem + 's';
+      if (v >= total) { clearInterval(progInt); nextScene(); }
     }, TICK);
   }
 
   function updateUI() {
-    // Step dots
     for (let i = 0; i < 4; i++) {
-      const dot = document.getElementById('sd' + i);
-      dot.classList.remove('active', 'done');
-      if (i === currentScene) dot.classList.add('active');
-      else if (i < currentScene) dot.classList.add('done');
+      const s = g('ps' + i); if (!s) continue;
+      s.classList.remove('active', 'done');
+      if (i === cur) s.classList.add('active');
+      else if (i < cur) s.classList.add('done');
     }
+    const pb = g('prevBtn'); if (pb) pb.disabled = cur === 0;
+  }
 
-    // Progress steps
-    for (let i = 0; i < 4; i++) {
-      const ps = document.getElementById('ps' + i);
-      ps.classList.remove('active', 'done');
-      if (i === currentScene) ps.classList.add('active');
-      else if (i < currentScene) ps.classList.add('done');
+  // ── Reset all animated UI to clean state ──
+  function reset() {
+    const hook = g('hookBtn'); if (hook) hook.classList.remove('visible');
+    const pulse = g('hookPulse'); if (pulse) pulse.style.display = 'block';
+    const drawer = g('drawer'); if (drawer) drawer.classList.remove('open');
+    const cap = g('captionOverlay'); if (cap) cap.classList.remove('show');
+    const toast = g('savingToast');
+    if (toast) {
+      toast.classList.remove('show');
+      toast.style.borderColor = '';
+      toast.style.color = '';
     }
-
-    // Stage title
-    document.getElementById('stageTitle').textContent = scenes[currentScene].title;
-
-    // Buttons
-    document.getElementById('prevBtn').disabled = currentScene === 0;
+    const st = g('savingText'); if (st) st.textContent = 'Nestiq saving…';
+    const sd = g('sDot'); if (sd) sd.style.background = 'var(--a1)';
+    ['dr0','dr1','dr2'].forEach(id => { const r = g(id); if (r) r.classList.remove('show','hl'); });
+    const typed = g('searchTyped'); if (typed) typed.textContent = '';
+    const omni = g('omnibox'); if (omni) { omni.textContent = 'chatgpt.com'; omni.style.color = ''; }
+    const area = g('chatArea'); if (area) area.innerHTML = '';
   }
 
-  // ── Scene Animations ──
-
-  function enterScene0() {
-    // Animate the lost items staggered
-    const items = ['lost0','lost1','lost2','lost3'];
-    items.forEach((id, i) => {
-      const el = document.getElementById(id);
-      el.classList.remove('show');
-      el.style.opacity = '0';
-      el.style.transform = 'translateX(10px)';
-      setTimeout(() => {
-        el.style.transition = 'all 0.4s ease';
-        el.style.opacity = '1';
-        el.style.transform = 'translateX(0)';
-      }, 200 + i * 150);
-    });
+  // ── Scene dispatcher ──
+  function enterScene(idx) {
+    if (idx === 0) scene0();
+    else if (idx === 1) scene1();
+    else if (idx === 2) scene2();
+    else scene3();
   }
 
-  function enterScene1() {
-    // Reset
-    ['msg0','msg1'].forEach(id => {
-      document.getElementById(id).classList.remove('visible');
-    });
-    document.getElementById('typing1').style.display = 'flex';
-    document.getElementById('reply1').style.display = 'none';
-    document.getElementById('savingToast').classList.remove('show');
+  // ── SCENE 0: The conversation in progress ──
+  function scene0() {
+    const area = g('chatArea'); if (!area) return;
+    area.innerHTML = '';
 
-    // Sequence
-    setTimeout(() => {
-      document.getElementById('msg0').classList.add('visible');
-    }, 400);
+    addMsg(area, false, 'G', 'How can I help you today?', 0);
+    addMsg(area, true,  'S', 'How do I negotiate a higher salary at a startup? I have an offer for $95k but I know the market rate is higher.', 350);
+    addMsg(area, false, 'G', 'Great position — you have leverage. <strong>Lead with market data:</strong> the $110k median for this role is your anchor. Counter at $115k and let them close the gap.', 1100);
 
-    setTimeout(() => {
-      document.getElementById('msg1').classList.add('visible');
-    }, 1200);
+    timers.push(setTimeout(() => {
+      const ct = g('captionText'); if (ct) ct.innerHTML = 'Every conversation holds<br>a <em>breakthrough moment.</em>';
+      const co = g('captionOverlay'); if (co) co.classList.add('show');
+    }, 3000));
 
-    setTimeout(() => {
-      document.getElementById('typing1').style.display = 'none';
-      document.getElementById('reply1').style.display = 'block';
-    }, 3000);
-
-    setTimeout(() => {
-      document.getElementById('savingToast').classList.add('show');
-    }, 3800);
-
-    setTimeout(() => {
-      document.getElementById('savingToast').textContent = '';
-      document.getElementById('savingToast').innerHTML = '<div class="saving-dot" style="background:#10a37f"></div> Saved to Recallio ✓';
-      document.getElementById('savingToast').style.borderColor = 'rgba(16,163,127,0.4)';
-      document.getElementById('savingToast').style.color = '#10a37f';
-    }, 5500);
+    timers.push(setTimeout(() => {
+      const h = g('hookBtn'); if (h) h.classList.add('visible');
+    }, 4800));
   }
 
-  function enterScene2() {
-    // Reset search and results
-    document.getElementById('searchText').textContent = '🔍 \u00a0';
-    ['pr0','pr1','pr2'].forEach(id => {
-      document.getElementById(id).classList.remove('show','highlighted');
-    });
-    document.getElementById('sm0').textContent = '';
+  // ── SCENE 1: Nestiq saves silently ──
+  function scene1() {
+    const area = g('chatArea'); if (!area) return;
+    area.innerHTML = '';
 
-    const searchQuery = 'salary';
-    const letters = searchQuery.split('');
+    addMsg(area, true, 'S', 'How do I negotiate a higher salary at a startup?', 0);
+
+    // Typing → reply
+    timers.push(setTimeout(() => {
+      const a = g('chatArea'); if (!a) return;
+      const row = makeMsg(false, 'G', '');
+      const bub = row.querySelector('.chat-bubble');
+      bub.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      row.id = 'typingRow';
+      a.appendChild(row);
+      setTimeout(() => row.classList.add('show'), 40);
+    }, 600));
+
+    timers.push(setTimeout(() => {
+      const tr = g('typingRow');
+      if (tr) tr.querySelector('.chat-bubble').innerHTML =
+        'Lead with market data, not personal need. The <strong>$110k median</strong> for this role is your anchor — counter at $115k.';
+    }, 2200));
+
+    // Hook + toast
+    timers.push(setTimeout(() => {
+      const h = g('hookBtn'); if (h) h.classList.add('visible');
+      const t = g('savingToast'); if (t) t.classList.add('show');
+    }, 3200));
+
+    // Saved confirmation
+    timers.push(setTimeout(() => {
+      const pulse = g('hookPulse'); if (pulse) pulse.style.display = 'none';
+      const t = g('savingToast');
+      if (t) {
+        t.innerHTML = '<div class="s-dot" style="background:var(--gpt)"></div><span>Saved to Nestiq ✓</span>';
+        t.style.borderColor = 'rgba(16,163,127,0.3)';
+        t.style.color = 'var(--gpt)';
+      }
+    }, 5400));
+
+    timers.push(setTimeout(() => {
+      const ct = g('captionText'); if (ct) ct.innerHTML = 'Saved <em>silently.</em><br>No clicks. No interruption.';
+      const co = g('captionOverlay'); if (co) co.classList.add('show');
+    }, 3400));
+  }
+
+  // ── SCENE 2: Search 3 weeks later ──
+  function scene2() {
+    const omni = g('omnibox');
+    if (omni) omni.textContent = 'chatgpt.com  ·  3 weeks later';
+    const h = g('hookBtn'); if (h) h.classList.add('visible');
+
+    timers.push(setTimeout(() => {
+      const d = g('drawer'); if (d) d.classList.add('open');
+    }, 500));
+
+    const query = 'salary';
     let typed = '';
-
-    // Type the search query character by character
-    letters.forEach((letter, i) => {
-      setTimeout(() => {
-        typed += letter;
-        document.getElementById('searchText').textContent = '🔍 \u00a0' + typed;
-
-        // Show results as typing progresses
-        if (i === 1) {
-          document.getElementById('pr2').classList.add('show');
-        }
+    query.split('').forEach((ch, i) => {
+      timers.push(setTimeout(() => {
+        typed += ch;
+        const st = g('searchTyped'); if (st) st.textContent = typed;
+        if (i === 1) { const r = g('dr2'); if (r) r.classList.add('show'); }
         if (i === 3) {
-          document.getElementById('pr1').classList.add('show');
-          document.getElementById('pr0').classList.add('show');
-          document.getElementById('sm0').textContent = 'startup';
+          const r1 = g('dr1'); if (r1) r1.classList.add('show');
+          const r0 = g('dr0'); if (r0) r0.classList.add('show');
         }
-        if (i === letters.length - 1) {
-          setTimeout(() => {
-            document.getElementById('pr0').classList.add('highlighted');
-          }, 400);
+        if (i === query.length - 1) {
+          timers.push(setTimeout(() => { const r = g('dr0'); if (r) r.classList.add('hl'); }, 320));
         }
-      }, 600 + i * 180);
+      }, 900 + i * 190));
     });
+
+    timers.push(setTimeout(() => {
+      const ct = g('captionText'); if (ct) ct.innerHTML = '3 weeks later.<br>One word. <em>Found it.</em>';
+      const co = g('captionOverlay'); if (co) co.classList.add('show');
+    }, 3000));
   }
 
-  function enterScene3() {
-    // Show final reply and tag with delay
-    const reply = document.getElementById('finalReply');
-    const tag = document.getElementById('finalTag');
-    reply.style.opacity = '0';
-    tag.style.opacity = '0';
+  // ── SCENE 3: Back in the conversation ──
+  function scene3() {
+    const h = g('hookBtn'); if (h) h.classList.add('visible');
+    const d = g('drawer'); if (d) d.classList.add('open');
 
-    setTimeout(() => { reply.style.opacity = '1'; }, 300);
-    setTimeout(() => { tag.style.opacity = '1'; }, 700);
+    ['dr0','dr1','dr2'].forEach((id, i) => {
+      timers.push(setTimeout(() => { const r = g(id); if (r) r.classList.add('show'); }, i * 80));
+    });
+    const dr0 = g('dr0'); if (dr0) dr0.classList.add('hl');
+    const st = g('searchTyped'); if (st) st.textContent = 'salary';
 
-    // Animate URL bar
-    const urlBar = document.getElementById('finalUrl');
-    urlBar.style.transition = 'color 0.3s';
-    setTimeout(() => {
-      urlBar.style.color = '#10a37f';
-      urlBar.textContent = '✓ chatgpt.com/c/a3b9... (opened)';
-    }, 500);
+    timers.push(setTimeout(() => {
+      const omni = g('omnibox');
+      if (omni) { omni.textContent = '✓ chatgpt.com/c/a3b9...  (opened)'; omni.style.color = 'var(--gpt)'; }
+    }, 1000));
+
+    timers.push(setTimeout(() => {
+      const area = g('chatArea'); if (!area) return;
+      area.innerHTML = '';
+
+      // Found tag
+      const tag = document.createElement('div');
+      tag.style.cssText = [
+        'background:rgba(16,163,127,0.07)',
+        'border:1px solid rgba(16,163,127,0.18)',
+        'border-radius:9px',
+        'padding:8px 12px',
+        'font-size:10px',
+        'color:var(--gpt)',
+        'text-align:center',
+        'margin-bottom:12px',
+      ].join(';');
+      tag.textContent = '✓ Found via Nestiq · Saved 3 weeks ago · Stored locally on your device';
+      area.appendChild(tag);
+
+      addMsg(area, true,  'S', 'How do I negotiate a higher salary at a startup?', 50);
+      addMsg(area, false, 'G', 'Lead with market data, not personal need. The <strong>$110k median</strong> for this role is your anchor — counter at $115k.', 500);
+    }, 1200));
+
+    timers.push(setTimeout(() => {
+      const ct = g('captionText'); if (ct) ct.innerHTML = 'Your memory,<br><em>perfectly preserved.</em>';
+      const co = g('captionOverlay'); if (co) co.classList.add('show');
+    }, 2000));
+  }
+
+  // ── Helpers ──
+  function makeMsg(isUser, av, text) {
+    const row = document.createElement('div');
+    row.className = 'chat-msg' + (isUser ? ' user' : '');
+    row.innerHTML =
+      '<div class="chat-avatar ' + (isUser ? 'av-user' : 'av-gpt') + '">' + av + '</div>' +
+      '<div class="chat-bubble">' + text + '</div>';
+    return row;
+  }
+
+  function addMsg(area, isUser, av, text, delay) {
+    timers.push(setTimeout(() => {
+      const a = g('chatArea'); if (!a) return;
+      const row = makeMsg(isUser, av, text);
+      a.appendChild(row);
+      requestAnimationFrame(() => setTimeout(() => row.classList.add('show'), 30));
+    }, delay));
+  }
+
+  // ── Pain strip entrance ──
+  function animatePainStrip() {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        const pc = g('pc' + i); if (pc) pc.classList.add('show');
+      }, 200 + i * 120);
+    }
   }
 
   // ── Init ──
+  animatePainStrip();
   updateUI();
-  enterScene0();
-  startProgress();
+  enterScene(0);
+  startProg();
 </script>
-
 </body>
 </html>
