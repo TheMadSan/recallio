@@ -867,134 +867,137 @@
       </h2>
     </div>
 
+    <!-- Pain strip -->
+    <div class="idemo-pain-strip">
+      <span class="idemo-pain-label">Without Nestiq</span>
+      <div class="idemo-pain-div"></div>
+      <div class="idemo-pain-convos">
+        <div class="idemo-pain-conv" id="ipc0">💬 New conversation <span class="idemo-lost-tag">lost</span></div>
+        <div class="idemo-pain-conv" id="ipc1">💬 New conversation <span class="idemo-lost-tag">lost</span></div>
+        <div class="idemo-pain-conv" id="ipc2">💬 New conversation <span class="idemo-lost-tag">lost</span></div>
+        <div class="idemo-pain-conv" id="ipc3">💬 New conversation <span class="idemo-lost-tag">lost</span></div>
+        <div class="idemo-pain-conv" id="ipc4">💬 New conversation <span class="idemo-lost-tag">lost</span></div>
+      </div>
+      <span class="idemo-pain-arrow">→</span>
+      <div class="idemo-pain-solution">🔍 Nestiq finds it instantly</div>
+    </div>
+
     <!-- Inline interactive demo (no iframe) -->
     <div class="idemo-wrap">
 
-      <!-- Top bar -->
+      <!-- Chrome bar -->
       <div class="idemo-bar">
         <div class="idemo-dots">
           <span class="idemo-dot" style="background:#ff5f57"></span>
           <span class="idemo-dot" style="background:#febc2e"></span>
           <span class="idemo-dot" style="background:#28c840"></span>
         </div>
-        <div class="idemo-title" id="idemoTitle">The Problem — Lost Conversations</div>
-        <div class="idemo-stepdots">
-          <span class="idemo-sd" id="isd0"></span>
-          <span class="idemo-sd" id="isd1"></span>
-          <span class="idemo-sd" id="isd2"></span>
-          <span class="idemo-sd" id="isd3"></span>
+        <div class="idemo-chrome-tabs">
+          <div class="idemo-chrome-tab active"><div class="idemo-tab-dot" style="background:#10a37f"></div>ChatGPT</div>
+          <div class="idemo-chrome-tab"><div class="idemo-tab-dot" style="background:#f97316"></div>Claude</div>
         </div>
+        <div class="idemo-omnibox" id="idemoOmnibox">chatgpt.com</div>
       </div>
 
-      <!-- Scenes -->
-      <div class="idemo-scenes">
+      <!-- Viewport -->
+      <div class="idemo-viewport">
 
-        <!-- Scene 0: Problem -->
-        <div class="idemo-scene" id="iscene0">
-          <div class="idemo-left">
-            <div class="idemo-steplabel"><span class="idemo-stepbadge">!</span> The Problem</div>
-            <h3 class="idemo-heading">Your AI history is <span class="idemo-hl">scattered & unsearchable.</span></h3>
-            <p class="idemo-body">You've had hundreds of brilliant AI conversations. But without a way to find them, they're as good as deleted. ChatGPT and Claude only search titles — not the actual content where your thinking lives.</p>
+        <!-- GPT Sidebar -->
+        <div class="idemo-gpt-sidebar">
+          <div class="idemo-gpt-s-head">Today</div>
+          <div class="idemo-gpt-s-item active">Salary negotiation tips</div>
+          <div class="idemo-gpt-s-head" style="margin-top:6px">Yesterday</div>
+          <div class="idemo-gpt-s-item dim">Python async patterns</div>
+          <div class="idemo-gpt-s-item dim">React hooks deep dive</div>
+          <div class="idemo-gpt-s-head" style="margin-top:6px">3 weeks ago</div>
+          <div class="idemo-gpt-s-item dim">New conversation</div>
+          <div class="idemo-gpt-s-item dim">New conversation</div>
+          <div class="idemo-gpt-s-item dim">New conversation</div>
+        </div>
+
+        <!-- Chat main -->
+        <div class="idemo-gpt-main">
+          <div class="idemo-gpt-top">
+            <div class="idemo-gpt-top-icon">G</div>ChatGPT
           </div>
-          <div class="idemo-right">
-            <div class="idemo-lost-list">
-              <div class="idemo-lost-item" id="ilost0"><span class="idemo-lost-icon">💭</span><div><div class="idemo-lost-title">That marketing email framework…</div><div class="idemo-lost-sub">3 weeks ago · ChatGPT · Can't find it</div></div></div>
-              <div class="idemo-lost-item" id="ilost1"><span class="idemo-lost-icon">💭</span><div><div class="idemo-lost-title">The Python refactor pattern I used…</div><div class="idemo-lost-sub">2 weeks ago · Claude · Scrolled past forever</div></div></div>
-              <div class="idemo-lost-item" id="ilost2"><span class="idemo-lost-icon">💭</span><div><div class="idemo-lost-title">Salary negotiation script that worked…</div><div class="idemo-lost-sub">Last month · ChatGPT · Lost in 300+ chats</div></div></div>
-              <div class="idemo-lost-item" id="ilost3"><span class="idemo-lost-icon">✨</span><div><div class="idemo-lost-title" style="color:var(--accent)">Nestiq finds them all. Instantly.</div><div class="idemo-lost-sub" style="color:var(--accent3)">Full-text search · Both platforms · Local only</div></div></div>
-            </div>
+          <div class="idemo-chat-area" id="iChatArea"></div>
+          <div class="idemo-input-bar"><div class="idemo-input-mock">Message ChatGPT</div></div>
+
+          <!-- Saving toast -->
+          <div class="idemo-save-toast" id="iSavingToast">
+            <div class="idemo-save-dot" id="iSaveDot"></div>
+            <span id="iSavingText">Nestiq saving…</span>
+          </div>
+
+          <!-- Caption -->
+          <div class="idemo-caption" id="iCaption">
+            <div class="idemo-caption-text" id="iCaptionText"></div>
           </div>
         </div>
 
-        <!-- Scene 1: Auto-save -->
-        <div class="idemo-scene" id="iscene1">
-          <div class="idemo-left">
-            <div class="idemo-steplabel"><span class="idemo-stepbadge">1</span> Auto-Capture</div>
-            <h3 class="idemo-heading">Every conversation <span class="idemo-hl">saved automatically.</span></h3>
-            <p class="idemo-body">Nestiq silently watches your ChatGPT and Claude tabs. The moment a conversation happens, it's captured — title, date, platform, and full content. Nothing to click. Nothing to remember.</p>
-          </div>
-          <div class="idemo-right">
-            <div class="idemo-browser">
-              <div class="idemo-browser-bar">
-                <div class="idemo-b-dots"><span class="idemo-dot" style="background:#ff5f57;width:8px;height:8px"></span><span class="idemo-dot" style="background:#febc2e;width:8px;height:8px"></span><span class="idemo-dot" style="background:#28c840;width:8px;height:8px"></span></div>
-                <div class="idemo-url">chatgpt.com</div>
-              </div>
-              <div class="idemo-chat">
-                <div class="idemo-cmsg idemo-cuser" id="imsg0"><div class="idemo-cav" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">Y</div><div class="idemo-cbubble idemo-cuser-b">How do I set up CI/CD with GitHub Actions for a Node.js app?</div></div>
-                <div class="idemo-cmsg" id="imsg1"><div class="idemo-cav" style="background:var(--chatgpt)">G</div><div id="itypingwrap"><div class="idemo-typing" id="ityping1"><span></span><span></span><span></span></div><div class="idemo-cbubble" id="ireply1" style="display:none">Here's a complete workflow: Create <code>.github/workflows/ci.yml</code>, define your Node version matrix, run <code>npm ci</code> then <code>npm test</code> on push…</div></div></div>
-                <div class="idemo-save-toast" id="isavetoast"><div class="idemo-save-dot"></div> Saving to Nestiq…</div>
+        <!-- Hook button -->
+        <div class="idemo-hook" id="iHook">
+          <div class="idemo-hook-pulse" id="iHookPulse"></div>
+          <div class="idemo-hook-icon">⚡</div>
+          <div class="idemo-hook-label">nestiq</div>
+        </div>
+
+        <!-- Drawer -->
+        <div class="idemo-drawer" id="iDrawer">
+          <div class="idemo-drawer-head">
+            <div class="idemo-drawer-logo-row">
+              <div class="idemo-drawer-logo">nestiq</div>
+              <div class="idemo-drawer-chips">
+                <div class="idemo-d-chip"><div class="idemo-chip-dot" style="background:#10a37f"></div>54</div>
+                <div class="idemo-d-chip"><div class="idemo-chip-dot" style="background:#f97316"></div>35</div>
               </div>
             </div>
+            <div class="idemo-drawer-search">
+              🔍&nbsp;<span id="iSearchTyped"></span><span class="idemo-d-cursor"></span>
+            </div>
+          </div>
+          <div class="idemo-drawer-filters">
+            <span class="idemo-d-filter idemo-d-f-on">All</span>
+            <span class="idemo-d-filter idemo-d-f-off">ChatGPT</span>
+            <span class="idemo-d-filter idemo-d-f-off">Claude</span>
+          </div>
+          <div class="idemo-drawer-results">
+            <div class="idemo-d-result" id="idr0">
+              <div class="idemo-dr-top"><div class="idemo-dr-badge idemo-db-g">G</div><div class="idemo-dr-title">Salary negotiation at startup</div></div>
+              <div class="idemo-dr-preview">Lead with market data, not personal need. The $110k median…</div>
+              <div class="idemo-dr-meta"><span class="idemo-dr-date">3 weeks ago</span><span class="idemo-dr-msgs">8 msgs</span></div>
+            </div>
+            <div class="idemo-d-result" id="idr1">
+              <div class="idemo-dr-top"><div class="idemo-dr-badge idemo-db-c">C</div><div class="idemo-dr-title">Python async explained</div></div>
+              <div class="idemo-dr-preview">async/await is syntactic sugar over coroutines — the key insight…</div>
+              <div class="idemo-dr-meta"><span class="idemo-dr-date">2 weeks ago</span><span class="idemo-dr-msgs">12 msgs</span></div>
+            </div>
+            <div class="idemo-d-result" id="idr2">
+              <div class="idemo-dr-top"><div class="idemo-dr-badge idemo-db-g">G</div><div class="idemo-dr-title">Marketing email for launch</div></div>
+              <div class="idemo-dr-preview">Write a compelling announcement with urgency and social proof…</div>
+              <div class="idemo-dr-meta"><span class="idemo-dr-date">1 week ago</span><span class="idemo-dr-msgs">6 msgs</span></div>
+            </div>
+          </div>
+          <div class="idemo-drawer-nav">
+            <button class="idemo-dn-btn idemo-dn-on"><div class="idemo-dn-icon">🕐</div>History</button>
+            <button class="idemo-dn-btn"><div class="idemo-dn-icon">⚡</div>Prompts</button>
+            <button class="idemo-dn-btn"><div class="idemo-dn-icon">📁</div>Collections</button>
+            <button class="idemo-dn-btn"><div class="idemo-dn-icon">📊</div>Analytics</button>
           </div>
         </div>
 
-        <!-- Scene 2: Search -->
-        <div class="idemo-scene" id="iscene2">
-          <div class="idemo-left">
-            <div class="idemo-steplabel"><span class="idemo-stepbadge">2</span> Full-Text Search</div>
-            <h3 class="idemo-heading">Find anything <span class="idemo-hl">in milliseconds.</span></h3>
-            <p class="idemo-body">Type any word or phrase — Nestiq searches the actual content of every saved conversation, not just titles. Results appear as you type, across both ChatGPT and Claude simultaneously.</p>
-          </div>
-          <div class="idemo-right">
-            <div class="idemo-sidebar">
-              <div class="idemo-search-box"><span>🔍</span><span class="idemo-search-text" id="isearchtext">Search conversations…</span><span class="idemo-cursor" id="isearchcursor">|</span></div>
-              <div class="idemo-filter-row">
-                <span class="idemo-filter idemo-f-active">All</span>
-                <span class="idemo-filter" style="color:var(--chatgpt)">ChatGPT</span>
-                <span class="idemo-filter" style="color:var(--claude)">Claude</span>
-              </div>
-              <div class="idemo-results" id="iresults">
-                <div class="idemo-result" id="ires0">
-                  <div class="idemo-res-top"><div class="idemo-res-badge" style="background:var(--chatgpt)">G</div><div class="idemo-res-title">Salary negotiation at a startup</div></div>
-                  <div class="idemo-res-preview">…lead with market data, the median for this role is $110k. Reference competing <mark id="ism0"></mark>…</div>
-                </div>
-                <div class="idemo-result" id="ires1">
-                  <div class="idemo-res-top"><div class="idemo-res-badge" style="background:var(--claude)">C</div><div class="idemo-res-title">Job offer evaluation framework</div></div>
-                  <div class="idemo-res-preview">…total comp matters: base + equity + benefits. For a <mark id="ism1"></mark> role at this stage…</div>
-                </div>
-                <div class="idemo-result" id="ires2">
-                  <div class="idemo-res-top"><div class="idemo-res-badge" style="background:var(--chatgpt)">G</div><div class="idemo-res-title">Resume for senior engineering role</div></div>
-                  <div class="idemo-res-preview">…quantify impact: "reduced deploy time by 60%". Mention the <mark id="ism2"></mark> tools you used…</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scene 3: Result -->
-        <div class="idemo-scene" id="iscene3">
-          <div class="idemo-left">
-            <div class="idemo-steplabel"><span class="idemo-stepbadge">3</span> Jump Back</div>
-            <h3 class="idemo-heading">One click back to <span class="idemo-hl">any conversation.</span></h3>
-            <p class="idemo-body">Found it? Click the result and Nestiq opens the exact ChatGPT or Claude conversation in a new tab — right where you left off. Your past work, always one search away.</p>
-          </div>
-          <div class="idemo-right">
-            <div class="idemo-browser">
-              <div class="idemo-browser-bar">
-                <div class="idemo-b-dots"><span style="width:8px;height:8px;border-radius:50%;background:#ff5f57;display:inline-block"></span><span style="width:8px;height:8px;border-radius:50%;background:#febc2e;display:inline-block;margin:0 3px"></span><span style="width:8px;height:8px;border-radius:50%;background:#28c840;display:inline-block"></span></div>
-                <div class="idemo-url" id="ifinalurl">chatgpt.com/c/a3b9…</div>
-              </div>
-              <div class="idemo-chat">
-                <div class="idemo-cmsg idemo-cuser"><div class="idemo-cav" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">Y</div><div class="idemo-cbubble idemo-cuser-b">I have a job offer for $95k. How do I negotiate higher?</div></div>
-                <div class="idemo-cmsg" id="ifinalreply" style="opacity:0;transition:opacity 0.5s ease 0.3s"><div class="idemo-cav" style="background:var(--chatgpt)">G</div><div class="idemo-cbubble">Lead with market data — $110k median for this role. Frame it as alignment, not demand. Have a walk-away number ready…</div></div>
-                <div class="idemo-nestiq-tag" id="ifinaltag" style="opacity:0;transition:opacity 0.5s ease 0.7s">✓ Found via Nestiq · Saved 3 weeks ago · Stored locally on your device</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /scenes -->
+      </div><!-- /viewport -->
 
       <!-- Progress + controls -->
       <div class="idemo-footer">
         <div class="idemo-progress-row">
           <div class="idemo-steps-nav">
-            <div class="idemo-step-btn" id="ips0" onclick="iGoTo(0)">Problem</div>
+            <div class="idemo-step-btn" id="ips0" onclick="iGoTo(0)">Intro</div>
             <div class="idemo-step-btn" id="ips1" onclick="iGoTo(1)">Auto-save</div>
             <div class="idemo-step-btn" id="ips2" onclick="iGoTo(2)">Search</div>
-            <div class="idemo-step-btn" id="ips3" onclick="iGoTo(3)">Result</div>
+            <div class="idemo-step-btn" id="ips3" onclick="iGoTo(3)">Found it</div>
           </div>
-          <div class="idemo-timer-label" id="itimerLabel">Auto-advancing in 8s</div>
+          <div class="idemo-timer-label" id="itimerLabel">Auto-advancing in 9s</div>
         </div>
         <div class="idemo-progress-track"><div class="idemo-progress-fill" id="iprogressFill"></div></div>
         <div class="idemo-ctrl-row">
@@ -1008,7 +1011,50 @@
   </section>
 
   <style>
-    /* ── INLINE DEMO STYLES ── */
+    /* ── PAIN STRIP ── */
+    .idemo-pain-strip {
+      background: rgba(239,68,68,0.04);
+      border: 1px solid rgba(239,68,68,0.12);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .idemo-pain-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(248,113,113,0.7);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .idemo-pain-div { width: 1px; height: 24px; background: rgba(239,68,68,0.15); flex-shrink: 0; }
+    .idemo-pain-convos { display: flex; gap: 7px; flex: 1; flex-wrap: wrap; }
+    .idemo-pain-conv {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.13);
+      border-radius: 7px; padding: 5px 9px;
+      font-size: 11px; color: rgba(255,255,255,0.28);
+      opacity: 0; transform: translateY(5px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .idemo-pain-conv.show { opacity: 1; transform: translateY(0); }
+    .idemo-lost-tag {
+      font-size: 9px; font-weight: 700;
+      color: #f87171; background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 100px; padding: 1px 6px;
+    }
+    .idemo-pain-arrow { font-size: 16px; color: var(--border-strong); flex-shrink: 0; }
+    .idemo-pain-solution {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(124,106,247,0.08); border: 1px solid rgba(124,106,247,0.22);
+      border-radius: 8px; padding: 7px 13px;
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── WRAP ── */
     .idemo-wrap {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -1018,289 +1064,368 @@
       backdrop-filter: blur(20px);
     }
 
+    /* ── CHROME BAR ── */
     .idemo-bar {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 10px;
     }
     .idemo-dots { display: flex; gap: 6px; }
-    .idemo-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .idemo-title { font-size: 12px; color: var(--text2); flex: 1; text-align: center; }
-    .idemo-stepdots { display: flex; gap: 5px; }
-    .idemo-sd { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); transition: all 0.4s; }
-    .idemo-sd.active { background: var(--accent); box-shadow: 0 0 6px var(--glow); }
-    .idemo-sd.done { background: var(--accent2); }
-
-    .idemo-scenes { position: relative; height: 420px; overflow: hidden; }
-
-    .idemo-scene {
-      position: absolute; inset: 0;
-      padding: 36px 44px;
-      display: flex; align-items: center; gap: 48px;
-      opacity: 0; transform: translateY(16px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-      pointer-events: none;
+    .idemo-dot  { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .idemo-chrome-tabs { display: flex; align-items: flex-end; gap: 2px; padding-left: 6px; flex: 1; }
+    .idemo-chrome-tab {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-bottom: none; border-radius: 6px 6px 0 0;
+      padding: 5px 13px 5px 8px; font-size: 10px; color: var(--text2);
+      display: flex; align-items: center; gap: 6px;
     }
-    .idemo-scene.active { opacity: 1; transform: none; pointer-events: all; }
-    .idemo-scene.exit   { opacity: 0; transform: translateY(-16px); }
-
-    .idemo-left { flex: 1; max-width: 380px; }
-    .idemo-right { flex: 1; max-width: 360px; }
-
-    .idemo-steplabel {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-size: 11px; font-weight: 600; color: var(--accent);
-      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+    .idemo-chrome-tab.active { background: rgba(255,255,255,0.06); color: var(--text); }
+    .idemo-tab-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .idemo-omnibox {
+      width: 240px; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 4px 14px; font-size: 11px; color: var(--text2);
+      text-align: center; transition: color 0.4s ease;
     }
-    .idemo-stepbadge {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: rgba(124,106,247,0.18); border: 1px solid rgba(124,106,247,0.35);
+
+    /* ── VIEWPORT ── */
+    .idemo-viewport {
+      display: flex; height: 420px;
+      position: relative; overflow: hidden;
+    }
+
+    /* GPT Sidebar */
+    .idemo-gpt-sidebar {
+      width: 190px; background: #171717;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      padding: 10px 6px; flex-shrink: 0; overflow: hidden;
+    }
+    .idemo-gpt-s-head { font-size: 9px; color: rgba(255,255,255,0.25); padding: 6px 8px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .idemo-gpt-s-item { padding: 6px 10px; border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .idemo-gpt-s-item.active { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+    .idemo-gpt-s-item.dim { color: rgba(255,255,255,0.18); }
+
+    /* GPT Main */
+    .idemo-gpt-main { flex: 1; background: #212121; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .idemo-gpt-top {
+      background: #212121; border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 10px 18px; font-size: 12px; color: rgba(255,255,255,0.6);
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+    }
+    .idemo-gpt-top-icon {
+      width: 20px; height: 20px; border-radius: 50%; background: #10a37f;
       display: flex; align-items: center; justify-content: center;
-      font-size: 10px; color: var(--accent); font-weight: 700;
+      font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0;
     }
-    .idemo-heading { font-family: 'DM Serif Display', serif; font-size: clamp(18px,2.4vw,26px); line-height: 1.25; margin-bottom: 12px; }
-    .idemo-hl { background: linear-gradient(125deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-style:italic; }
-    .idemo-body { font-size: 14px; color: var(--text2); line-height: 1.75; font-weight: 300; }
+    .idemo-chat-area { flex: 1; padding: 16px 18px 12px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+    .idemo-input-bar { padding: 10px 16px; background: #212121; border-top: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+    .idemo-input-mock { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 8px 12px; font-size: 11px; color: rgba(255,255,255,0.25); }
 
-    /* Lost list */
-    .idemo-lost-list { display: flex; flex-direction: column; gap: 10px; }
-    .idemo-lost-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 11px 14px;
-      opacity: 0; transform: translateX(10px);
-      transition: opacity 0.35s ease, transform 0.35s ease;
-    }
-    .idemo-lost-item.show { opacity: 1; transform: none; }
-    .idemo-lost-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .idemo-lost-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
-    .idemo-lost-sub { font-size: 11px; color: var(--text2); }
-
-    /* Browser mock */
-    .idemo-browser {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-    }
-    .idemo-browser-bar {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 9px 12px; display: flex; align-items: center; gap: 9px;
-    }
-    .idemo-b-dots { display: flex; gap: 4px; }
-    .idemo-url {
-      flex: 1; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 5px; padding: 3px 9px; font-size: 10px; color: var(--text2);
-      transition: color 0.3s;
-    }
-
-    /* Chat */
-    .idemo-chat { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-    .idemo-cmsg { display: flex; gap: 8px; align-items: flex-start; }
-    .idemo-cuser { flex-direction: row-reverse; }
-    .idemo-cav { width: 26px; height: 26px; border-radius: 7px; font-size: 11px; font-weight: 600; display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0; }
-    .idemo-cbubble { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:8px 12px; font-size:12px; color:var(--text); line-height:1.6; }
-    .idemo-cbubble code { background:rgba(124,106,247,0.12);border-radius:4px;padding:1px 5px;font-size:11px;color:var(--accent); }
-    .idemo-cuser-b { background:linear-gradient(135deg,rgba(124,106,247,0.15),rgba(176,106,247,0.09)); border-color:rgba(124,106,247,0.22); }
-    .idemo-cmsg.visible { opacity:1!important; }
-
-    /* Typing indicator */
-    .idemo-typing { display:flex;gap:4px;align-items:center;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;width:fit-content; }
-    .idemo-typing span { width:5px;height:5px;border-radius:50%;background:var(--text3);animation:iTypePulse 1.2s infinite; }
-    .idemo-typing span:nth-child(2){animation-delay:0.2s}
-    .idemo-typing span:nth-child(3){animation-delay:0.4s}
-    @keyframes iTypePulse {0%,100%{opacity:0.3}50%{opacity:1;transform:translateY(-2px)}}
+    /* Chat messages */
+    .idemo-chat-msg { display: flex; gap: 9px; opacity: 0; transform: translateY(7px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .idemo-chat-msg.show { opacity: 1; transform: translateY(0); }
+    .idemo-chat-msg.user { flex-direction: row-reverse; }
+    .idemo-chat-av { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+    .idemo-av-gpt  { background: #10a37f; color: #fff; }
+    .idemo-av-user { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+    .idemo-chat-bubble { max-width: 320px; background: rgba(255,255,255,0.05); border-radius: 11px; padding: 8px 12px; font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.65; }
+    .idemo-chat-msg.user .idemo-chat-bubble { background: rgba(255,255,255,0.08); }
+    .idemo-typing-dots { display: flex; gap: 4px; align-items: center; padding: 2px 0; }
+    .idemo-typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); animation: idTypeDot 1.2s infinite; }
+    .idemo-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .idemo-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes idTypeDot { 0%,60%,100%{transform:translateY(0);opacity:0.3} 30%{transform:translateY(-4px);opacity:1} }
 
     /* Save toast */
     .idemo-save-toast {
-      display:flex;align-items:center;gap:7px;
-      font-size:11px;font-weight:500;color:var(--text2);
-      background:var(--surface);border:1px solid var(--border);
-      border-radius:8px;padding:7px 12px;width:fit-content;
-      opacity:0;transform:translateY(4px);
-      transition:opacity 0.4s ease,transform 0.4s ease;
+      position: absolute; bottom: 60px; left: 14px;
+      background: rgba(124,106,247,0.12); border: 1px solid rgba(124,106,247,0.25);
+      border-radius: 100px; padding: 5px 12px;
+      font-size: 10px; color: var(--accent); font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      opacity: 0; transform: translateY(7px);
+      transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.4s ease, color 0.4s ease;
     }
-    .idemo-save-toast.show { opacity:1;transform:none; }
-    .idemo-save-dot { width:7px;height:7px;border-radius:50%;background:var(--text3);animation:iSavePulse 1s infinite; }
-    @keyframes iSavePulse{0%,100%{opacity:0.4}50%{opacity:1}}
+    .idemo-save-toast.show { opacity: 1; transform: translateY(0); }
+    .idemo-save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: idSaveDot 1s infinite; }
+    @keyframes idSaveDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
 
-    /* Sidebar */
-    .idemo-sidebar { background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;padding:12px; }
-    .idemo-search-box { background:var(--surface);border:1px solid var(--border-strong);border-radius:9px;padding:8px 12px;font-size:12px;color:var(--text2);display:flex;gap:7px;align-items:center;margin-bottom:9px; }
-    .idemo-search-text { flex:1; }
-    .idemo-cursor { animation:iCursorBlink 1s step-end infinite;color:var(--accent); }
-    @keyframes iCursorBlink{0%,100%{opacity:1}50%{opacity:0}}
-    .idemo-filter-row { display:flex;gap:5px;margin-bottom:9px; }
-    .idemo-filter { font-size:11px;font-weight:500;padding:3px 11px;border-radius:100px;border:1px solid var(--border);cursor:pointer; }
-    .idemo-f-active { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent; }
-    .idemo-results { display:flex;flex-direction:column;gap:6px; }
-    .idemo-result {
-      background:var(--surface);border:1px solid var(--border);border-radius:10px;
-      padding:10px 12px;cursor:pointer;transition:all 0.2s;
-      opacity:0;transform:translateY(6px);
+    /* Caption */
+    .idemo-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(4,4,13,0.96) 0%, rgba(4,4,13,0.5) 55%, transparent 100%);
+      padding: 32px 22px 14px; pointer-events: none;
+      opacity: 0; transition: opacity 0.5s ease;
     }
-    .idemo-result.show { opacity:1;transform:none; }
-    .idemo-result.highlighted { border-color:var(--accent);background:rgba(124,106,247,0.07); }
-    .idemo-res-top { display:flex;align-items:center;gap:7px;margin-bottom:3px; }
-    .idemo-res-badge { width:16px;height:16px;border-radius:4px;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0; }
-    .idemo-res-title { font-size:12px;font-weight:500;color:var(--text); }
-    .idemo-res-preview { font-size:11px;color:var(--text2);line-height:1.5; }
-    .idemo-res-preview mark { background:rgba(124,106,247,0.25);color:var(--accent);border-radius:2px;padding:0 2px; }
+    .idemo-caption.show { opacity: 1; }
+    .idemo-caption-text { font-size: clamp(14px,1.8vw,18px); font-weight: 600; letter-spacing: -0.3px; line-height: 1.35; color: var(--text); }
+    .idemo-caption-text em { font-style: italic; color: var(--accent2); }
 
-    /* Nestiq tag */
-    .idemo-nestiq-tag { background:rgba(124,106,247,0.07);border:1px solid rgba(124,106,247,0.18);border-radius:9px;padding:8px 12px;font-size:11px;color:var(--accent);text-align:center; }
+    /* Hook button */
+    .idemo-hook {
+      position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
+      width: 32px; background: linear-gradient(160deg, var(--accent), var(--accent2));
+      border-radius: 8px 0 0 8px; padding: 10px 6px;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      box-shadow: -3px 0 16px rgba(124,106,247,0.35);
+      transition: right 0.5s cubic-bezier(0.4,0,0.2,1);
+      z-index: 10; cursor: pointer;
+    }
+    .idemo-hook.visible { right: 0; }
+    .idemo-hook-pulse {
+      position: absolute; top: -4px; right: -4px;
+      width: 9px; height: 9px; border-radius: 50%; background: var(--accent3);
+      animation: idHookPulse 2s infinite;
+    }
+    @keyframes idHookPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.8);opacity:0} }
+    .idemo-hook-icon { font-size: 12px; }
+    .idemo-hook-label { font-size: 7px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.7); writing-mode: vertical-rl; }
 
-    /* Footer */
-    .idemo-footer { border-top:1px solid var(--border);padding:14px 20px 16px; }
-    .idemo-progress-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
-    .idemo-steps-nav { display:flex;gap:4px; }
-    .idemo-step-btn { font-size:11px;padding:4px 12px;border-radius:100px;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all 0.2s; }
-    .idemo-step-btn:hover { border-color:var(--accent);color:var(--accent); }
-    .idemo-step-btn.active { background:var(--accent);color:#fff;border-color:var(--accent); }
-    .idemo-step-btn.done { color:var(--text);border-color:var(--border-strong); }
-    .idemo-timer-label { font-size:11px;color:var(--text3); }
-    .idemo-progress-track { height:2px;background:var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden; }
-    .idemo-progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:none; }
-    .idemo-ctrl-row { display:flex;gap:8px;justify-content:center; }
-    .idemo-btn { background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:100px;padding:6px 18px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s; }
-    .idemo-btn:hover:not(:disabled) { border-color:var(--border-strong);color:var(--text); }
-    .idemo-btn:disabled { opacity:0.3;cursor:default; }
-    .idemo-btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent; }
-    .idemo-btn-primary:hover { opacity:0.9; }
+    /* Drawer */
+    .idemo-drawer {
+      position: absolute; top: 0; bottom: 0; right: -282px; width: 268px;
+      background: var(--bg); border-left: 1px solid rgba(124,106,247,0.18);
+      display: flex; flex-direction: column;
+      transition: right 0.5s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -12px 0 40px rgba(0,0,0,0.5); z-index: 20;
+    }
+    .idemo-drawer.open { right: 0; }
+    .idemo-drawer-head { padding: 12px 12px 9px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); }
+    .idemo-drawer-logo-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+    .idemo-drawer-logo { font-size: 14px; font-weight: 800; background: linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .idemo-drawer-chips { display: flex; gap: 5px; }
+    .idemo-d-chip { display: flex; align-items: center; gap: 3px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 2px 7px; font-size: 9px; color: var(--text2); font-weight: 600; }
+    .idemo-chip-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .idemo-drawer-search { background: rgba(124,106,247,0.07); border: 1px solid rgba(124,106,247,0.2); border-radius: 8px; padding: 6px 10px; font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 5px; }
+    .idemo-d-cursor { display: inline-block; width: 1px; height: 11px; background: var(--accent); animation: idCursorBlink 1s infinite; vertical-align: middle; margin-left: 1px; }
+    @keyframes idCursorBlink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+    .idemo-drawer-filters { display: flex; gap: 5px; padding: 7px 12px; border-bottom: 1px solid var(--border); }
+    .idemo-d-filter { border-radius: 100px; padding: 3px 9px; font-size: 9px; font-weight: 600; }
+    .idemo-d-f-on  { background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; }
+    .idemo-d-f-off { background: var(--surface); border: 1px solid var(--border); color: var(--text2); }
+    .idemo-drawer-results { padding: 7px; flex: 1; overflow: hidden; }
+    .idemo-d-result {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 9px; padding: 8px 10px; margin-bottom: 5px;
+      opacity: 0; transform: translateX(10px);
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .idemo-d-result.show { opacity: 1; transform: translateX(0); }
+    .idemo-d-result.hl { border-color: rgba(124,106,247,0.4); background: rgba(124,106,247,0.07); box-shadow: 0 0 16px rgba(124,106,247,0.1); }
+    .idemo-dr-top { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .idemo-dr-badge { width: 15px; height: 15px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 700; flex-shrink: 0; }
+    .idemo-db-g { background: rgba(16,163,127,0.15); border: 1px solid rgba(16,163,127,0.2); color: #10a37f; }
+    .idemo-db-c { background: rgba(249,115,22,0.15);  border: 1px solid rgba(249,115,22,0.2);  color: #f97316; }
+    .idemo-dr-title   { font-size: 11px; font-weight: 600; color: var(--text); }
+    .idemo-dr-preview { font-size: 10px; color: var(--text2); line-height: 1.45; }
+    .idemo-dr-meta    { display: flex; justify-content: space-between; margin-top: 4px; }
+    .idemo-dr-date    { font-size: 9px; color: var(--text3); }
+    .idemo-dr-msgs    { font-size: 9px; color: var(--text3); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+    .idemo-drawer-nav { display: flex; border-top: 1px solid var(--border); background: var(--bg2); }
+    .idemo-dn-btn { flex: 1; padding: 8px 4px; text-align: center; font-size: 7px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text3); border: none; background: none; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .idemo-dn-btn.idemo-dn-on { color: var(--accent); }
+    .idemo-dn-icon { font-size: 12px; }
+
+    /* ── FOOTER ── */
+    .idemo-footer { border-top: 1px solid var(--border); padding: 13px 18px 15px; }
+    .idemo-progress-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .idemo-steps-nav { display: flex; gap: 4px; }
+    .idemo-step-btn { font-size: 10px; padding: 4px 12px; border-radius: 100px; border: 1px solid var(--border); color: var(--text2); cursor: pointer; transition: all 0.2s; }
+    .idemo-step-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .idemo-step-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .idemo-step-btn.done { color: var(--text); border-color: var(--border-strong); }
+    .idemo-timer-label { font-size: 10px; color: var(--text3); }
+    .idemo-progress-track { height: 2px; background: var(--border); border-radius: 2px; margin-bottom: 12px; overflow: hidden; }
+    .idemo-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; width: 0%; transition: none; }
+    .idemo-ctrl-row { display: flex; gap: 8px; justify-content: center; }
+    .idemo-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text2); border-radius: 100px; padding: 6px 18px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .idemo-btn:hover:not(:disabled) { border-color: var(--border-strong); color: var(--text); }
+    .idemo-btn:disabled { opacity: 0.3; cursor: default; }
+    .idemo-btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-color: transparent; }
+    .idemo-btn-primary:hover { opacity: 0.9; }
   </style>
 
   <script>
-  /* ── INLINE DEMO LOGIC ── */
-  (function(){
-    let cur = 0, playing = true, pInterval = null, pTimeout = null, pVal = 0;
-    const DUR = 4500, TICK = 50;
-    const sceneIds = ['iscene0','iscene1','iscene2','iscene3'];
-    const enterFns = [enter0, enter1, enter2, enter3];
+  /* ── NESTIQ DEMO LOGIC ── */
+  (function() {
+    function g(id) { return document.getElementById(id); }
+
+    let cur = 0, playing = true, timers = [], progInt = null;
+    const DUR = 9000, TICK = 60;
 
     function goTo(idx) {
       if (idx === cur) return;
-      clearTimers();
-      const old = document.getElementById(sceneIds[cur]);
-      old.classList.remove('active'); old.classList.add('exit');
-      setTimeout(() => old.classList.remove('exit'), 450);
-      cur = idx;
-      document.getElementById(sceneIds[cur]).classList.add('active');
-      updateUI(); enterFns[cur]();
-      if (playing) startProgress();
+      clearAll(); reset();
+      cur = idx; updateUI(); enterScene(cur);
+      if (playing) startProg();
     }
     window.iGoTo = goTo;
     window.iNext = () => goTo((cur + 1) % 4);
     window.iPrev = () => goTo((cur - 1 + 4) % 4);
     window.iTogglePlay = function() {
       playing = !playing;
-      const btn = document.getElementById('iplayBtn');
-      if (playing) { btn.textContent = '⏸ Pause'; btn.classList.add('idemo-btn-primary'); startProgress(); }
-      else          { btn.textContent = '▶ Play';  btn.classList.remove('idemo-btn-primary'); clearTimers(); }
+      const btn = g('iplayBtn');
+      if (playing) { btn.textContent = '⏸ Pause'; btn.classList.add('idemo-btn-primary'); enterScene(cur); startProg(); }
+      else          { btn.textContent = '▶ Play';  btn.classList.remove('idemo-btn-primary'); clearAll(); }
     };
 
-    function clearTimers() {
-      clearInterval(pInterval); clearTimeout(pTimeout);
-      pVal = 0; document.getElementById('iprogressFill').style.width = '0%';
+    function clearAll() {
+      timers.forEach(t => { clearTimeout(t); clearInterval(t); });
+      timers = []; clearInterval(progInt);
+      const pf = g('iprogressFill'); if (pf) pf.style.width = '0%';
     }
-    function startProgress() {
-      clearTimers(); pVal = 0;
-      const total = DUR / TICK;
-      pInterval = setInterval(() => {
-        pVal++;
-        document.getElementById('iprogressFill').style.width = (pVal / total * 100) + '%';
-        const rem = Math.ceil((DUR - pVal * TICK) / 1000);
-        document.getElementById('itimerLabel').textContent = 'Auto-advancing in ' + rem + 's';
-        if (pVal >= total) { clearInterval(pInterval); window.iNext(); }
+    function startProg() {
+      clearInterval(progInt);
+      let v = 0; const total = DUR / TICK;
+      progInt = setInterval(() => {
+        v++;
+        const pf = g('iprogressFill'); if (pf) pf.style.width = (v / total * 100) + '%';
+        const rem = Math.ceil((DUR - v * TICK) / 1000);
+        const tl = g('itimerLabel'); if (tl) tl.textContent = 'Auto-advancing in ' + rem + 's';
+        if (v >= total) { clearInterval(progInt); window.iNext(); }
       }, TICK);
     }
-
     function updateUI() {
       for (let i = 0; i < 4; i++) {
-        const sd = document.getElementById('isd' + i);
-        const ps = document.getElementById('ips' + i);
-        sd.className = 'idemo-sd' + (i === cur ? ' active' : i < cur ? ' done' : '');
-        ps.className = 'idemo-step-btn' + (i === cur ? ' active' : i < cur ? ' done' : '');
+        const s = g('ips' + i); if (!s) continue;
+        s.className = 'idemo-step-btn' + (i === cur ? ' active' : i < cur ? ' done' : '');
       }
-      document.getElementById('iprevBtn').disabled = cur === 0;
-      const titles = ['The Problem — Lost Conversations','Step 1 — Auto-saving your chats','Step 2 — Search your history','Step 3 — Jump back instantly'];
-      document.getElementById('idemoTitle').textContent = titles[cur];
+      const pb = g('iprevBtn'); if (pb) pb.disabled = cur === 0;
     }
 
-    function enter0() {
-      const ids = ['ilost0','ilost1','ilost2','ilost3'];
-      // Strip show class first, then re-add with stagger so animation fires every time
-      ids.forEach(id => document.getElementById(id).classList.remove('show'));
-      // rAF ensures the removal paints before we re-add
-      requestAnimationFrame(() => {
-        ids.forEach((id, i) => {
-          setTimeout(() => document.getElementById(id).classList.add('show'), 80 + i * 140);
-        });
-      });
+    function reset() {
+      const hook = g('iHook'); if (hook) hook.classList.remove('visible');
+      const pulse = g('iHookPulse'); if (pulse) pulse.style.display = 'block';
+      const drawer = g('iDrawer'); if (drawer) drawer.classList.remove('open');
+      const cap = g('iCaption'); if (cap) cap.classList.remove('show');
+      const toast = g('iSavingToast');
+      if (toast) { toast.classList.remove('show'); toast.style.borderColor = ''; toast.style.color = ''; }
+      const st = g('iSavingText'); if (st) st.textContent = 'Nestiq saving…';
+      const sd = g('iSaveDot'); if (sd) sd.style.background = 'var(--accent)';
+      ['idr0','idr1','idr2'].forEach(id => { const r = g(id); if (r) r.classList.remove('show','hl'); });
+      const typed = g('iSearchTyped'); if (typed) typed.textContent = '';
+      const omni = g('idemoOmnibox'); if (omni) { omni.textContent = 'chatgpt.com'; omni.style.color = ''; }
+      const area = g('iChatArea'); if (area) area.innerHTML = '';
     }
 
-    function enter1() {
-      const msg0 = document.getElementById('imsg0');
-      const msg1 = document.getElementById('imsg1');
-      const typing = document.getElementById('ityping1');
-      const reply  = document.getElementById('ireply1');
-      const toast  = document.getElementById('isavetoast');
-      const saveDot = toast.querySelector('.idemo-save-dot');
-      msg0.style.opacity='0'; msg0.style.transform='translateY(8px)';
-      msg1.style.opacity='0'; msg1.style.transform='translateY(8px)';
-      typing.style.display='flex'; reply.style.display='none';
-      toast.classList.remove('show'); toast.style.borderColor=''; toast.style.color='';
-      saveDot.style.background = 'var(--text3)';
-      toast.innerHTML = '<div class="idemo-save-dot"></div> Saving to Nestiq…';
-      setTimeout(() => { msg0.style.transition='all 0.4s'; msg0.style.opacity='1'; msg0.style.transform='none'; }, 300);
-      setTimeout(() => { msg1.style.transition='all 0.4s'; msg1.style.opacity='1'; msg1.style.transform='none'; }, 900);
-      setTimeout(() => { typing.style.display='none'; reply.style.display='block'; }, 2800);
-      setTimeout(() => { toast.classList.add('show'); }, 3600);
-      setTimeout(() => {
-        toast.style.borderColor='rgba(16,163,127,0.35)'; toast.style.color='#10a37f';
-        toast.innerHTML = '<div class="idemo-save-dot" style="background:#10a37f"></div> Saved to Nestiq ✓';
-      }, 5200);
+    function enterScene(idx) {
+      if (idx === 0) scene0();
+      else if (idx === 1) scene1();
+      else if (idx === 2) scene2();
+      else scene3();
     }
 
-    function enter2() {
-      document.getElementById('isearchtext').textContent = '';
-      ['ires0','ires1','ires2'].forEach(id => document.getElementById(id).classList.remove('show','highlighted'));
-      ['ism0','ism1','ism2'].forEach(id => { document.getElementById(id).textContent=''; });
+    function addMsg(isUser, av, text, delay) {
+      timers.push(setTimeout(() => {
+        const area = g('iChatArea'); if (!area) return;
+        const row = document.createElement('div');
+        row.className = 'idemo-chat-msg' + (isUser ? ' user' : '');
+        row.innerHTML = '<div class="idemo-chat-av ' + (isUser ? 'idemo-av-user' : 'idemo-av-gpt') + '">' + av + '</div>'
+          + '<div class="idemo-chat-bubble">' + text + '</div>';
+        area.appendChild(row);
+        requestAnimationFrame(() => setTimeout(() => row.classList.add('show'), 30));
+      }, delay));
+    }
+
+    function scene0() {
+      addMsg(false, 'G', 'How can I help you today?', 0);
+      addMsg(true,  'S', 'How do I negotiate a higher salary at a startup? I have an offer for $95k but the market rate is higher.', 350);
+      addMsg(false, 'G', '<strong>Lead with market data:</strong> the $110k median for this role is your anchor. Counter at $115k and let them close the gap.', 1100);
+      timers.push(setTimeout(() => {
+        const ct = g('iCaptionText'); if (ct) ct.innerHTML = 'Every conversation holds<br>a <em>breakthrough moment.</em>';
+        const c = g('iCaption'); if (c) c.classList.add('show');
+      }, 3000));
+      timers.push(setTimeout(() => { const h = g('iHook'); if (h) h.classList.add('visible'); }, 4800));
+    }
+
+    function scene1() {
+      addMsg(true, 'S', 'How do I negotiate a higher salary at a startup?', 0);
+      timers.push(setTimeout(() => {
+        const area = g('iChatArea'); if (!area) return;
+        const row = document.createElement('div');
+        row.className = 'idemo-chat-msg'; row.id = 'iTypingRow';
+        row.innerHTML = '<div class="idemo-chat-av idemo-av-gpt">G</div>'
+          + '<div class="idemo-chat-bubble"><div class="idemo-typing-dots"><span></span><span></span><span></span></div></div>';
+        area.appendChild(row);
+        setTimeout(() => row.classList.add('show'), 40);
+      }, 600));
+      timers.push(setTimeout(() => {
+        const tr = g('iTypingRow');
+        if (tr) tr.querySelector('.idemo-chat-bubble').innerHTML = 'Lead with market data, not personal need. The <strong>$110k median</strong> for this role is your anchor — counter at $115k.';
+      }, 2200));
+      timers.push(setTimeout(() => {
+        const h = g('iHook'); if (h) h.classList.add('visible');
+        const t = g('iSavingToast'); if (t) t.classList.add('show');
+      }, 3200));
+      timers.push(setTimeout(() => {
+        const pulse = g('iHookPulse'); if (pulse) pulse.style.display = 'none';
+        const t = g('iSavingToast');
+        if (t) {
+          t.innerHTML = '<div class="idemo-save-dot" style="background:#10a37f"></div><span>Saved to Nestiq ✓</span>';
+          t.style.borderColor = 'rgba(16,163,127,0.3)'; t.style.color = '#10a37f';
+        }
+      }, 5400));
+      timers.push(setTimeout(() => {
+        const ct = g('iCaptionText'); if (ct) ct.innerHTML = 'Saved <em>silently.</em><br>No clicks. No interruption.';
+        const c = g('iCaption'); if (c) c.classList.add('show');
+      }, 3400));
+    }
+
+    function scene2() {
+      const omni = g('idemoOmnibox'); if (omni) omni.textContent = 'chatgpt.com  ·  3 weeks later';
+      const h = g('iHook'); if (h) h.classList.add('visible');
+      timers.push(setTimeout(() => { const d = g('iDrawer'); if (d) d.classList.add('open'); }, 500));
       const query = 'salary'; let typed = '';
       query.split('').forEach((ch, i) => {
-        setTimeout(() => {
+        timers.push(setTimeout(() => {
           typed += ch;
-          document.getElementById('isearchtext').textContent = typed;
-          if (i === 1) document.getElementById('ires2').classList.add('show');
-          if (i === 3) {
-            document.getElementById('ires1').classList.add('show');
-            document.getElementById('ires0').classList.add('show');
-            ['ism0','ism1','ism2'].forEach(id => { document.getElementById(id).textContent='salary'; });
-          }
-          if (i === query.length - 1) {
-            setTimeout(() => document.getElementById('ires0').classList.add('highlighted'), 350);
-          }
-        }, 500 + i * 190);
+          const st = g('iSearchTyped'); if (st) st.textContent = typed;
+          if (i === 1) { const r = g('idr2'); if (r) r.classList.add('show'); }
+          if (i === 3) { const r1 = g('idr1'); if (r1) r1.classList.add('show'); const r0 = g('idr0'); if (r0) r0.classList.add('show'); }
+          if (i === query.length - 1) { timers.push(setTimeout(() => { const r = g('idr0'); if (r) r.classList.add('hl'); }, 320)); }
+        }, 900 + i * 190));
       });
+      timers.push(setTimeout(() => {
+        const ct = g('iCaptionText'); if (ct) ct.innerHTML = '3 weeks later.<br>One word. <em>Found it.</em>';
+        const c = g('iCaption'); if (c) c.classList.add('show');
+      }, 3000));
     }
 
-    function enter3() {
-      const reply = document.getElementById('ifinalreply');
-      const tag   = document.getElementById('ifinaltag');
-      const url   = document.getElementById('ifinalurl');
-      reply.style.opacity='0'; tag.style.opacity='0';
-      url.style.color = ''; url.textContent = 'chatgpt.com/c/a3b9…';
-      setTimeout(() => { reply.style.opacity='1'; }, 280);
-      setTimeout(() => { tag.style.opacity='1'; },   700);
-      setTimeout(() => { url.style.color='#10a37f'; url.textContent='✓ chatgpt.com/c/a3b9… (opened)'; }, 500);
+    function scene3() {
+      const h = g('iHook'); if (h) h.classList.add('visible');
+      const d = g('iDrawer'); if (d) d.classList.add('open');
+      ['idr0','idr1','idr2'].forEach((id, i) => { timers.push(setTimeout(() => { const r = g(id); if (r) r.classList.add('show'); }, i * 80)); });
+      const dr0 = g('idr0'); if (dr0) dr0.classList.add('hl');
+      const st = g('iSearchTyped'); if (st) st.textContent = 'salary';
+      timers.push(setTimeout(() => {
+        const omni = g('idemoOmnibox');
+        if (omni) { omni.textContent = '✓ chatgpt.com/c/a3b9…  (opened)'; omni.style.color = '#10a37f'; }
+      }, 1000));
+      timers.push(setTimeout(() => {
+        const area = g('iChatArea'); if (!area) return;
+        area.innerHTML = '';
+        const tag = document.createElement('div');
+        tag.style.cssText = 'background:rgba(16,163,127,0.07);border:1px solid rgba(16,163,127,0.18);border-radius:9px;padding:8px 12px;font-size:10px;color:#10a37f;text-align:center;margin-bottom:10px;';
+        tag.textContent = '✓ Found via Nestiq · Saved 3 weeks ago · Stored locally on your device';
+        area.appendChild(tag);
+        addMsg(true,  'S', 'How do I negotiate a higher salary at a startup?', 50);
+        addMsg(false, 'G', 'Lead with market data, not personal need. The <strong>$110k median</strong> for this role is your anchor — counter at $115k.', 500);
+      }, 1200));
+      timers.push(setTimeout(() => {
+        const ct = g('iCaptionText'); if (ct) ct.innerHTML = 'Your memory,<br><em>perfectly preserved.</em>';
+        const c = g('iCaption'); if (c) c.classList.add('show');
+      }, 2000));
+    }
+
+    // Pain strip entrance
+    for (let i = 0; i < 5; i++) {
+      setTimeout((idx) => { const pc = g('ipc' + idx); if (pc) pc.classList.add('show'); }, 300 + i * 110, i);
     }
 
     // Init
-    document.getElementById(sceneIds[0]).classList.add('active');
     updateUI();
-    // Small delay so the active scene has painted before we trigger animations
-    setTimeout(() => { enter0(); startProgress(); }, 50);
+    setTimeout(() => { enterScene(0); startProg(); }, 80);
   })();
   </script>
 
